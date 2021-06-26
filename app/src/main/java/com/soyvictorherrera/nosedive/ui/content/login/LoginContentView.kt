@@ -1,9 +1,5 @@
-package com.soyvictorherrera.nosedive
+package com.soyvictorherrera.nosedive.ui.content.login
 
-import android.os.Bundle
-import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -25,19 +21,11 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.ui.theme.Alto
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
-
-class LoginActivity : ComponentActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LoginActivityContent()
-        }
-    }
-}
 
 @Composable
 fun LoginActivityContent() {
