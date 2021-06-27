@@ -12,4 +12,5 @@
     <string name="signup_title">Crea tu cuenta</string>
     <string name="signup_name">Nombre</string>
     <string name="signup_login">¿Ya tienes cuenta? Inicia sesión</string>
+    <string name="signup_terms_and_conditions">Al crear tu cuenta aceptas la <annotation target="privacy_policy">política de privacidad</annotation> y los <annotation target="terms_conditions">términoso y condiciones</annotation> del servicio</string>
 </resources>
