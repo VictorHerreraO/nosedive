@@ -23,12 +23,14 @@ import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.soyvictorherrera.nosedive.R
+import com.soyvictorherrera.nosedive.ui.content.signUp.SignUpContent
 import com.soyvictorherrera.nosedive.ui.theme.Alto
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
 
 @Composable
-fun LoginActivityContent() {
+fun SignInContent(navController: NavController? = null) {
     NosediveTheme {
         Surface(color = MaterialTheme.colors.background) {
             Box(modifier = Modifier.fillMaxWidth()) {
@@ -131,7 +133,9 @@ fun LoginActivityContent() {
                     // Create account button
                     Spacer(modifier = Modifier.weight(0.75f))
                     TextButton(
-                        onClick = { /*TODO*/ }
+                        onClick = {
+                            navController?.navigate(R.id.action_signInFragment_to_signUpFragment)
+                        }
                     ) {
                         Text(
                             text = stringResource(R.string.login_create_account).toUpperCase(
@@ -151,6 +155,6 @@ fun LoginActivityContent() {
 @Composable
 fun LoginActivityPreview() {
     NosediveTheme {
-        LoginActivityContent()
+        SignUpContent()
     }
 }
