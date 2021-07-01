@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/signInFragment">
 
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.soyvictorherrera.nosedive.SignInFragment"
-        android:label="fragment_sign_in">
-        <action
-            android:id="@+id/action_signInFragment_to_signUpFragment"
-            app:destination="@id/signUpFragment" />
-    </fragment>
+        android:name="com.soyvictorherrera.nosedive.ui.content.signIn.SignInFragment"
+        android:label="fragment_sign_in" />
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.soyvictorherrera.nosedive.SignUpFragment"
-        android:label="fragment_sign_up"/>
+        android:name="com.soyvictorherrera.nosedive.ui.content.signUp.SignUpFragment"
+        android:label="fragment_sign_up" />
 </navigation>

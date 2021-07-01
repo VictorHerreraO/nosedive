@@ -1,4 +1,4 @@
-package com.soyvictorherrera.nosedive.ui.content.login
+package com.soyvictorherrera.nosedive.ui.content.signIn
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
@@ -23,14 +23,20 @@ import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.soyvictorherrera.nosedive.R
-import com.soyvictorherrera.nosedive.ui.content.signUp.SignUpContent
 import com.soyvictorherrera.nosedive.ui.theme.Alto
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
 
+sealed class SignInEvent {
+    data class SignIn(val email: String, val password: String) : SignInEvent()
+    object SignUp : SignInEvent()
+    object ResetPassword : SignInEvent()
+}
+
 @Composable
-fun SignInContent(navController: NavController? = null) {
+fun SignInContent(
+    onNavigationEvent: (SignInEvent) -> Unit
+) {
     NosediveTheme {
         Surface(color = MaterialTheme.colors.background) {
             Box(modifier = Modifier.fillMaxWidth()) {
@@ -71,10 +77,10 @@ fun SignInContent(navController: NavController? = null) {
                     // Form
                     // User email
                     Spacer(modifier = Modifier.weight(1f))
-                    var username by rememberSaveable { mutableStateOf("") }
+                    var usermail by rememberSaveable { mutableStateOf("") }
                     TextField(
-                        value = username,
-                        onValueChange = { username = it },
+                        value = usermail,
+                        onValueChange = { usermail = it },
                         label = { Text(stringResource(R.string.login_user_email)) },
                         singleLine = true,
                         modifier = Modifier
@@ -110,7 +116,14 @@ fun SignInContent(navController: NavController? = null) {
                     // Login Button
                     Spacer(modifier = Modifier.height(32.dp))
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            onNavigationEvent(
+                                SignInEvent.SignIn(
+                                    email = usermail,
+                                    password = password
+                                )
+                            )
+                        },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
@@ -120,7 +133,9 @@ fun SignInContent(navController: NavController? = null) {
                     }
                     // Forgot password button
                     Spacer(modifier = Modifier.height(8.dp))
-                    TextButton(onClick = { /*TODO*/ }) {
+                    TextButton(onClick = {
+                        onNavigationEvent(SignInEvent.ResetPassword)
+                    }) {
                         Text(
                             text = stringResource(R.string.login_forgot_your_password).toUpperCase(
                                 Locale.current
@@ -134,7 +149,7 @@ fun SignInContent(navController: NavController? = null) {
                     Spacer(modifier = Modifier.weight(0.75f))
                     TextButton(
                         onClick = {
-                            navController?.navigate(R.id.action_signInFragment_to_signUpFragment)
+                            onNavigationEvent(SignInEvent.SignUp)
                         }
                     ) {
                         Text(
@@ -153,8 +168,8 @@ fun SignInContent(navController: NavController? = null) {
 
 @Preview(showBackground = true)
 @Composable
-fun LoginActivityPreview() {
+fun SignInContentPreview() {
     NosediveTheme {
-        SignUpContent()
+        SignInContent {}
     }
 }

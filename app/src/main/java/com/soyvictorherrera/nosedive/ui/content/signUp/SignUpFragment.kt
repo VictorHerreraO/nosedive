@@ -1,4 +1,4 @@
-package com.soyvictorherrera.nosedive
+package com.soyvictorherrera.nosedive.ui.content.signUp
 
 import android.os.Bundle
 import android.view.LayoutInflater
