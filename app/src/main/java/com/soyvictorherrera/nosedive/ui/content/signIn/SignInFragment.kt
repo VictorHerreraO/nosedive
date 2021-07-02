@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.ui.Screen
 import com.soyvictorherrera.nosedive.ui.navigate
+import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
 
 class SignInFragment : Fragment() {
 
@@ -34,19 +35,21 @@ class SignInFragment : Fragment() {
             )
 
             setContent {
-                SignInContent(onNavigationEvent = { event ->
-                    when (event) {
-                        is SignInEvent.SignIn -> {
-                            viewModel.signIn(email = event.email, password = event.password)
+                NosediveTheme {
+                    SignInContent(onNavigationEvent = { event ->
+                        when (event) {
+                            is SignInEvent.SignIn -> {
+                                viewModel.signIn(email = event.email, password = event.password)
+                            }
+                            SignInEvent.SignUp -> {
+                                viewModel.signUp()
+                            }
+                            SignInEvent.ResetPassword -> {
+                                viewModel.resetPassword()
+                            }
                         }
-                        SignInEvent.SignUp -> {
-                            viewModel.signUp()
-                        }
-                        SignInEvent.ResetPassword -> {
-                            viewModel.resetPassword()
-                        }
-                    }
-                })
+                    })
+                }
             }
         }
     }
