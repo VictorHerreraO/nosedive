@@ -16,8 +16,9 @@
 
 package com.soyvictorherrera.nosedive.ui.composable.state
 
-class PasswordState :
-    TextFieldState(validator = ::isPasswordValid, errorFor = ::passwordValidationError)
+class PasswordState(
+    errorFor: (String) -> String
+) : TextFieldState(validator = ::isPasswordValid, errorFor = errorFor)
 
 class ConfirmPasswordState(private val passwordState: PasswordState) : TextFieldState() {
     override val isValid

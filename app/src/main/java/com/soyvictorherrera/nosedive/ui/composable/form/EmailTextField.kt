@@ -6,13 +6,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import com.soyvictorherrera.nosedive.R
-import com.soyvictorherrera.nosedive.ui.composable.state.EmailState
 import com.soyvictorherrera.nosedive.ui.composable.state.TextFieldState
 
 @Composable
@@ -36,7 +35,10 @@ fun EmailTextField(
                 }
             },
         isError = emailState.showErrors(),
-        keyboardOptions = KeyboardOptions.Default.copy(imeAction = imeAction),
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Email,
+            imeAction = imeAction
+        ),
         keyboardActions = KeyboardActions(onAny = {
             onImeAction()
         })

@@ -13,6 +13,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toUpperCase
@@ -130,8 +131,13 @@ fun SignInForm(
 ) {
     Column {
         // User email
+        val errorTemplate = stringResource(id = R.string.login_invalid_email)
         val focusRequester = remember { FocusRequester() }
-        val emailState = remember { EmailState() }
+        val emailState = remember {
+            EmailState(errorFor = { email ->
+                String.format(errorTemplate, email)
+            })
+        }
         EmailTextField(
             emailState = emailState,
             modifier = Modifier.onGloballyPositioned {
@@ -145,7 +151,11 @@ fun SignInForm(
 
         // User password
         Spacer(modifier = Modifier.height(16.dp))
-        val passwordState = remember { PasswordState() }
+        val passwordState = remember {
+            PasswordState(errorFor = { password ->
+                "${password.length}/4"
+            })
+        }
         PasswordTextField(
             label = stringResource(id = R.string.login_password),
             passwordState = passwordState,
@@ -163,7 +173,7 @@ fun SignInForm(
             onClick = {
                 onSignInSubmitted(emailState.text, passwordState.text)
             },
-             modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             enabled = emailState.isValid && passwordState.isValid
         ) {
             Text(
