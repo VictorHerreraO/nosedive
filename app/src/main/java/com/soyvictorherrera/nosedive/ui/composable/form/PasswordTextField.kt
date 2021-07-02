@@ -63,7 +63,7 @@ fun PasswordTextField(
                 }
             },
         isError = passwordState.showErrors(),
-        keyboardActions = KeyboardActions(onDone = { onImeAction() })
+        keyboardActions = KeyboardActions(onAny = { onImeAction() })
     )
 
     passwordState.getError()?.let { error ->

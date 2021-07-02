@@ -17,7 +17,8 @@ import com.soyvictorherrera.nosedive.ui.composable.state.TextFieldState
 
 @Composable
 fun EmailTextField(
-    emailState: TextFieldState = remember { EmailState() },
+    emailState: TextFieldState,
+    modifier: Modifier = Modifier,
     imeAction: ImeAction = ImeAction.Next,
     onImeAction: () -> Unit
 ) {
@@ -26,7 +27,7 @@ fun EmailTextField(
         onValueChange = { emailState.text = it },
         label = { Text(stringResource(id = R.string.login_user_email)) },
         singleLine = true,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
                 emailState.onFocusChange(focusState.isFocused)
@@ -36,7 +37,7 @@ fun EmailTextField(
             },
         isError = emailState.showErrors(),
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = imeAction),
-        keyboardActions = KeyboardActions(onDone = {
+        keyboardActions = KeyboardActions(onAny = {
             onImeAction()
         })
     )

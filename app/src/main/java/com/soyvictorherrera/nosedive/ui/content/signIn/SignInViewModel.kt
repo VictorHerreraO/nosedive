@@ -1,5 +1,6 @@
 package com.soyvictorherrera.nosedive.ui.content.signIn
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +16,7 @@ class SignInViewModel : ViewModel() {
 
     fun signIn(email: String, password: String) {
         // TODO: 30/06/2021 login
+        Log.d("sigIn", "ToDo")
     }
 
     fun signUp() {
