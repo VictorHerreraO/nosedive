@@ -16,6 +16,8 @@
 
 package com.soyvictorherrera.nosedive.ui.composable.state
 
+const val MIN_PASSWORD_LENGTH = 6
+
 class PasswordState(
     errorFor: (String) -> String
 ) : TextFieldState(validator = ::isPasswordValid, errorFor = errorFor)
@@ -38,7 +40,7 @@ private fun passwordAndConfirmationValid(password: String, confirmedPassword: St
 }
 
 private fun isPasswordValid(password: String): Boolean {
-    return password.length > 3
+    return password.length >= MIN_PASSWORD_LENGTH
 }
 
 @Suppress("UNUSED_PARAMETER")

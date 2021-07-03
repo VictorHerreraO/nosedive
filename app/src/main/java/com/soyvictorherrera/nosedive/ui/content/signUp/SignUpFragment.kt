@@ -6,60 +6,56 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import com.soyvictorherrera.nosedive.ui.content.signUp.SignUpContent
+import androidx.fragment.app.viewModels
+import com.soyvictorherrera.nosedive.R
+import com.soyvictorherrera.nosedive.ui.Screen
+import com.soyvictorherrera.nosedive.ui.navigate
+import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SignUpFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SignUpFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private val viewModel: SignUpViewModel by viewModels { SignUpViewModelFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
+        viewModel.navigateTo.observe(viewLifecycleOwner) { navigateToEvent ->
+            navigateToEvent.getContentIfNotHandled()?.let { navigateTo ->
+                navigate(navigateTo, Screen.SignUp)
+            }
+        }
+
         return ComposeView(requireContext()).apply {
+            id = R.id.signUpFragment
+
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+
             setContent {
-                SignUpContent()
+                NosediveTheme {
+                    SignUpContent(onNavigationEvent = { event ->
+                        when (event) {
+                            is SignUpEvent.SignUp -> {
+                                viewModel.signUp(
+                                    name = event.name,
+                                    email = event.email,
+                                    password = event.password
+                                )
+                            }
+                            SignUpEvent.SignIn -> {
+                                viewModel.signIn()
+                            }
+                            SignUpEvent.NavigateBack -> {
+                                viewModel.signIn()
+                            }
+                        }
+                    })
+                }
             }
         }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SignUpFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SignUpFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }

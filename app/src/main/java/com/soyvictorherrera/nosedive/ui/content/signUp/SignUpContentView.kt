@@ -1,31 +1,29 @@
 package com.soyvictorherrera.nosedive.ui.content.signUp
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.text.Annotation
 import android.text.SpannedString
 import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.sharp.ArrowBack
-import androidx.compose.material.icons.sharp.VisibilityOff
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.toUpperCase
@@ -34,181 +32,256 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.ui.composable.common.DefaultProminentTopAppBar
+import com.soyvictorherrera.nosedive.ui.composable.form.EmailTextField
+import com.soyvictorherrera.nosedive.ui.composable.form.NameTextField
+import com.soyvictorherrera.nosedive.ui.composable.form.PasswordTextField
+import com.soyvictorherrera.nosedive.ui.composable.state.*
 import com.soyvictorherrera.nosedive.ui.theme.Alto
 import com.soyvictorherrera.nosedive.ui.theme.Dove_Gray
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
 import com.soyvictorherrera.nosedive.ui.theme.Wild_Watermelon
 
+private const val BASE_URL = "https://soyvictorherrera.com/?target="
+private const val TAG_URL = "URL"
+
+sealed class SignUpEvent {
+    data class SignUp(val name: String, val email: String, val password: String) : SignUpEvent()
+    object SignIn : SignUpEvent()
+    object NavigateBack : SignUpEvent()
+}
+
 @Composable
-fun SignUpContent() {
-    NosediveTheme {
-        Surface(color = MaterialTheme.colors.background) {
+fun SignUpContent(
+    onNavigationEvent: (SignUpEvent) -> Unit
+) {
+    // TODO: 02/07/2021 Extraer strings
+    Scaffold(
+        topBar = {
+            DefaultProminentTopAppBar(
+                title = stringResource(R.string.signup_title),
+                navigationIcon = {
+                    IconButton(onClick = { onNavigationEvent(SignUpEvent.NavigateBack) }) {
+                        Icon(Icons.Sharp.ArrowBack, contentDescription = null)
+                    }
+                }
+            )
+        },
+        content = {
             Column(
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth()
+                    .padding(horizontal = 32.dp)
+                    .padding(bottom = 64.dp)
             ) {
-                DefaultProminentTopAppBar(
-                    title = stringResource(R.string.signup_title),
-                    navigationIcon = {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(Icons.Sharp.ArrowBack, contentDescription = null)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                val nameState = remember {
+                    NameState(errorFor = { name ->
+                        when {
+                            name.isEmpty() -> "Campo requerido"
+                            name.length > MAX_NAME_LENGTH -> "Usa un nombre más corto"
+                            else -> ""
                         }
+                    })
+                }
+                val errorTemplate = stringResource(id = R.string.login_invalid_email)
+                val emailState = remember {
+                    EmailState(errorFor = { email ->
+                        String.format(errorTemplate, email)
+                    })
+                }
+                val passwordState = remember {
+                    PasswordState(errorFor = { password ->
+                        "${password.length}/$MIN_PASSWORD_LENGTH"
+                    })
+                }
+                // Form
+                SignUpForm(
+                    nameState = nameState,
+                    emailState = emailState,
+                    passwordState = passwordState
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                // Actions
+                SignUpActions(
+                    nameState = nameState,
+                    emailState = emailState,
+                    passwordState = passwordState,
+                    onSignUpSubmitted = { name, email, password ->
+                        onNavigationEvent(
+                            SignUpEvent.SignUp(
+                                name = name, email = email, password = password
+                            )
+                        )
+                    },
+                    onCancelSignUp = {
+                        onNavigationEvent(SignUpEvent.SignIn)
                     }
                 )
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 32.dp)
-                ) {
-                    // User name
-                    Spacer(modifier = Modifier.height(16.dp))
-                    var username by rememberSaveable { mutableStateOf("") }
-                    TextField(
-                        value = username,
-                        onValueChange = { username = it },
-                        label = { Text(stringResource(R.string.signup_name)) },
-                        singleLine = true,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
-                    // User email
-                    Spacer(modifier = Modifier.height(16.dp))
-                    var usermail by rememberSaveable { mutableStateOf("") }
-                    TextField(
-                        value = usermail,
-                        onValueChange = { usermail = it },
-                        label = { Text(stringResource(R.string.login_user_email)) },
-                        singleLine = true,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
-                    // User password
-                    Spacer(modifier = Modifier.height(16.dp))
-                    var password by rememberSaveable { mutableStateOf("") }
-                    var passwordHidden by rememberSaveable { mutableStateOf(true) }
-                    TextField(
-                        value = password,
-                        onValueChange = { password = it },
-                        label = { Text(stringResource(R.string.login_password)) },
-                        visualTransformation =
-                        if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        trailingIcon = {
-                            IconButton(onClick = { passwordHidden = !passwordHidden }) {
-                                val visibilityIcon =
-                                    if (passwordHidden) Icons.Filled.Visibility else Icons.Sharp.VisibilityOff
-                                val description =
-                                    if (passwordHidden) stringResource(R.string.login_show_password) else stringResource(
-                                        R.string.login_hide_password
-                                    )
-                                Icon(imageVector = visibilityIcon, contentDescription = description)
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
-                        .padding(
-                            start = 32.dp,
-                            end = 32.dp,
-                            bottom = 64.dp
-                        ),
-                    verticalArrangement = Arrangement.Bottom,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-                    Button(
-                        onClick = { /*TODO*/ },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Registrarme".toUpperCase(Locale.current),
-                            color = Color.White
-                        )
-                    }
-
-                    val termsAndConditions =
-                        LocalContext.current.resources.getText(R.string.signup_terms_and_conditions) as SpannedString
-                    val annotations = termsAndConditions.getSpans(
-                        0,
-                        termsAndConditions.length,
-                        Annotation::class.java
-                    )
-                    val annotatedString by remember {
-                        mutableStateOf(with(AnnotatedString.Builder()) {
-                            Log.d("AnnotatedString", "building")
-                            append(termsAndConditions.toString())
-                            for (annotation in annotations) {
-                                if (annotation.key == "target") {
-                                    val annotationStart =
-                                        termsAndConditions.getSpanStart(annotation)
-                                    val annotationEnd = termsAndConditions.getSpanEnd(annotation)
-                                    addStyle(
-                                        style = SpanStyle(
-                                            color = Wild_Watermelon,
-                                            textDecoration = TextDecoration.Underline
-                                        ),
-                                        start = annotationStart,
-                                        end = annotationEnd
-                                    )
-                                    val target = annotation.value
-                                    Log.d("AnnotatedString", "target = $target")
-                                    addStringAnnotation(
-                                        tag = "URL",
-                                        annotation = "https://soyvictorherrera.com/?target=$target",
-                                        start = annotationStart,
-                                        end = annotationEnd
-                                    )
-                                }
-                            }
-                            toAnnotatedString()
-                        })
-                    }
-                    val uriHandler = LocalUriHandler.current
-
-                    Spacer(modifier = Modifier.height(16.dp))
-                    ClickableText(
-                        text = annotatedString,
-                        modifier = Modifier.fillMaxWidth(),
-                        style = MaterialTheme.typography.body2.copy(
-                            color = Dove_Gray,
-                            fontSize = 12.sp
-                        ),
-                        onClick = { offset ->
-                            annotatedString.getStringAnnotations("URL", offset, offset)
-                                .firstOrNull()?.let { annotation ->
-                                    Log.d("OnClick", annotation.item)
-                                    uriHandler.openUri(annotation.item)
-                                }
-                        }
-                    )
-
-                    // Have an account button
-                    Spacer(modifier = Modifier.height(32.dp))
-                    TextButton(
-                        onClick = { /*TODO*/ }
-                    ) {
-                        Spacer(modifier = Modifier.height(32.dp))
-                        Text(
-                            text = stringResource(R.string.signup_login).toUpperCase(
-                                Locale.current
-                            ),
-                            color = Alto,
-                            style = MaterialTheme.typography.button.copy(fontSize = 12.sp)
-                        )
-                    }
-                }
             }
+        }
+    )
+}
+
+@Composable
+fun SignUpForm(
+    nameState: NameState,
+    emailState: EmailState,
+    passwordState: PasswordState
+) {
+    Column {
+        val emailFocusRequester = remember { FocusRequester() }
+        NameTextField(
+            nameState = nameState,
+            imeAction = ImeAction.Next,
+            onImeAction = { emailFocusRequester.requestFocus() }
+        )
+
+
+        // User email
+        Spacer(modifier = Modifier.height(16.dp))
+        val passwordFocusRequester = remember { FocusRequester() }
+        EmailTextField(
+            emailState = emailState,
+            modifier = Modifier.focusRequester(emailFocusRequester),
+            onImeAction = {
+                passwordFocusRequester.requestFocus()
+            }
+        )
+
+        // User password
+        val focusManager = LocalFocusManager.current
+        Spacer(modifier = Modifier.height(16.dp))
+        PasswordTextField(
+            label = stringResource(id = R.string.login_password),
+            passwordState = passwordState,
+            modifier = Modifier.focusRequester(passwordFocusRequester),
+            onImeAction = { focusManager.clearFocus() }
+        )
+    }
+}
+
+@Composable
+fun SignUpActions(
+    nameState: NameState,
+    emailState: EmailState,
+    passwordState: PasswordState,
+    onSignUpSubmitted: (name: String, email: String, password: String) -> Unit,
+    onCancelSignUp: () -> Unit
+) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        // Register button
+        Button(
+            onClick = {
+                onSignUpSubmitted(nameState.text, emailState.text, passwordState.text)
+            },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = nameState.isValid && emailState.isValid && passwordState.isValid
+        ) {
+            Text(
+                text = "Registrarme".toUpperCase(Locale.current),
+                color = Color.White
+            )
+        }
+
+        // Policy and terms
+        Spacer(modifier = Modifier.height(16.dp))
+        UserAgreement()
+
+        // Have an account button
+        Spacer(modifier = Modifier.height(32.dp))
+        TextButton(
+            onClick = { onCancelSignUp() }
+        ) {
+            Spacer(modifier = Modifier.height(32.dp))
+            Text(
+                text = stringResource(R.string.signup_login).toUpperCase(
+                    Locale.current
+                ),
+                color = Alto,
+                style = MaterialTheme.typography.button.copy(fontSize = 12.sp)
+            )
         }
     }
 }
 
-@Preview
+@Composable
+fun UserAgreement() {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        val context = LocalContext.current
+        val termsAndConditions =
+            context.resources.getText(R.string.signup_terms_and_conditions) as SpannedString
+        val annotatedString = remember { spannedToAnnotatedString(termsAndConditions) }
+
+        ClickableText(
+            text = annotatedString,
+            modifier = Modifier.fillMaxWidth(),
+            style = MaterialTheme.typography.body2.copy(
+                color = Dove_Gray,
+                fontSize = 12.sp
+            ),
+            onClick = { offset ->
+                annotatedString.getStringAnnotations(TAG_URL, offset, offset)
+                    .firstOrNull()?.let { annotation ->
+                        openUrl(context = context, url = annotation.item)
+                    }
+            }
+        )
+    }
+}
+
+private fun spannedToAnnotatedString(spanned: SpannedString): AnnotatedString {
+    val annotations = spanned.getSpans(
+        0,
+        spanned.length,
+        Annotation::class.java
+    )
+    return with(AnnotatedString.Builder()) {
+        Log.d("spannedToAnnotated", "building")
+        append(spanned.toString())
+        for (annotation in annotations) {
+            if (annotation.key == "target") {
+                val annotationStart =
+                    spanned.getSpanStart(annotation)
+                val annotationEnd = spanned.getSpanEnd(annotation)
+                addStyle(
+                    style = SpanStyle(
+                        color = Wild_Watermelon,
+                        textDecoration = TextDecoration.Underline
+                    ),
+                    start = annotationStart,
+                    end = annotationEnd
+                )
+                val target = annotation.value
+                Log.d("spannedToAnnotated", "target = $target")
+                addStringAnnotation(
+                    tag = TAG_URL,
+                    annotation = BASE_URL + target,
+                    start = annotationStart,
+                    end = annotationEnd
+                )
+            }
+        }
+        toAnnotatedString()
+    }
+}
+
+private fun openUrl(context: Context, url: String) =
+    context.startActivity(Intent(Intent.ACTION_VIEW).apply {
+        data = Uri.parse(url)
+    })
+
+@Preview(
+    showBackground = true,
+    name = "Sign up dark theme"
+)
 @Composable
 fun SignUpContentPreview() {
-    SignUpContent()
+    NosediveTheme {
+        SignUpContent {}
+    }
 }
