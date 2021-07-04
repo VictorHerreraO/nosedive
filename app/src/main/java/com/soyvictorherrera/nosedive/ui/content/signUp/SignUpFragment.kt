@@ -9,7 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.ui.Screen
-import com.soyvictorherrera.nosedive.ui.navigate
+import com.soyvictorherrera.nosedive.ui.navigateInTo
+import com.soyvictorherrera.nosedive.ui.navigateOutTo
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
 
 class SignUpFragment : Fragment() {
@@ -22,7 +23,8 @@ class SignUpFragment : Fragment() {
     ): View {
         viewModel.navigateTo.observe(viewLifecycleOwner) { navigateToEvent ->
             navigateToEvent.getContentIfNotHandled()?.let { navigateTo ->
-                navigate(navigateTo, Screen.SignUp)
+                if (navigateTo == Screen.SignIn) navigateOutTo(navigateTo, Screen.SignUp)
+                else navigateInTo(navigateTo, Screen.SignUp)
             }
         }
 
