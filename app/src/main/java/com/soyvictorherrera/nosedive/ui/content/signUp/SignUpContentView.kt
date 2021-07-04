@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -31,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.soyvictorherrera.nosedive.R
+import com.soyvictorherrera.nosedive.ui.composable.button.MainButton
 import com.soyvictorherrera.nosedive.ui.composable.common.DefaultProminentTopAppBar
 import com.soyvictorherrera.nosedive.ui.composable.form.EmailTextField
 import com.soyvictorherrera.nosedive.ui.composable.form.NameTextField
@@ -173,18 +173,13 @@ fun SignUpActions(
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         // Register button
-        Button(
+        MainButton(
+            text = stringResource(R.string.login_sign_up),
             onClick = {
                 onSignUpSubmitted(nameState.text, emailState.text, passwordState.text)
             },
-            modifier = Modifier.fillMaxWidth(),
             enabled = nameState.isValid && emailState.isValid && passwordState.isValid
-        ) {
-            Text(
-                text = "Registrarme".toUpperCase(Locale.current),
-                color = Color.White
-            )
-        }
+        )
 
         // Policy and terms
         Spacer(modifier = Modifier.height(16.dp))
