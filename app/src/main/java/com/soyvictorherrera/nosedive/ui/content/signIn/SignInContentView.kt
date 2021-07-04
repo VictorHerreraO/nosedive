@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.soyvictorherrera.nosedive.R
+import com.soyvictorherrera.nosedive.ui.composable.button.ActionButton
 import com.soyvictorherrera.nosedive.ui.composable.button.MainButton
 import com.soyvictorherrera.nosedive.ui.composable.form.EmailTextField
 import com.soyvictorherrera.nosedive.ui.composable.form.PasswordTextField
@@ -80,33 +81,18 @@ fun SignInContent(
 
                     // Forgot password button
                     Spacer(modifier = Modifier.height(8.dp))
-                    TextButton(onClick = {
-                        onNavigationEvent(SignInEvent.ResetPassword)
-                    }) {
-                        Text(
-                            text = stringResource(R.string.login_forgot_your_password).toUpperCase(
-                                Locale.current
-                            ),
-                            color = Alto,
-                            style = MaterialTheme.typography.button.copy(fontSize = 12.sp)
-                        )
-                    }
+                    ActionButton(
+                        text = stringResource(id = R.string.login_forgot_your_password),
+                        onClick = {
+                            onNavigationEvent(SignInEvent.ResetPassword)
+                        })
 
                     // Create account button
                     Spacer(modifier = Modifier.weight(0.75f))
-                    TextButton(
-                        onClick = {
-                            onNavigationEvent(SignInEvent.SignUp)
-                        }
-                    ) {
-                        Text(
-                            text = stringResource(R.string.login_create_account).toUpperCase(
-                                Locale.current
-                            ),
-                            color = Alto,
-                            style = MaterialTheme.typography.button.copy(fontSize = 12.sp)
-                        )
-                    }
+                    ActionButton(
+                        text = stringResource(R.string.login_create_account),
+                        onClick = { onNavigationEvent(SignInEvent.SignUp) }
+                    )
                 }
             }
         }

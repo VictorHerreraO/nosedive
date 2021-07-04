@@ -8,7 +8,10 @@ import android.text.SpannedString
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.ArrowBack
 import androidx.compose.runtime.Composable
@@ -23,20 +26,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.soyvictorherrera.nosedive.R
+import com.soyvictorherrera.nosedive.ui.composable.button.ActionButton
 import com.soyvictorherrera.nosedive.ui.composable.button.MainButton
 import com.soyvictorherrera.nosedive.ui.composable.common.DefaultProminentTopAppBar
 import com.soyvictorherrera.nosedive.ui.composable.form.EmailTextField
 import com.soyvictorherrera.nosedive.ui.composable.form.NameTextField
 import com.soyvictorherrera.nosedive.ui.composable.form.PasswordTextField
 import com.soyvictorherrera.nosedive.ui.composable.state.*
-import com.soyvictorherrera.nosedive.ui.theme.Alto
 import com.soyvictorherrera.nosedive.ui.theme.Dove_Gray
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
 import com.soyvictorherrera.nosedive.ui.theme.Wild_Watermelon
@@ -187,18 +188,10 @@ fun SignUpActions(
 
         // Have an account button
         Spacer(modifier = Modifier.height(32.dp))
-        TextButton(
+        ActionButton(
+            text = stringResource(R.string.signup_login),
             onClick = { onCancelSignUp() }
-        ) {
-            Spacer(modifier = Modifier.height(32.dp))
-            Text(
-                text = stringResource(R.string.signup_login).toUpperCase(
-                    Locale.current
-                ),
-                color = Alto,
-                style = MaterialTheme.typography.button.copy(fontSize = 12.sp)
-            )
-        }
+        )
     }
 }
 
