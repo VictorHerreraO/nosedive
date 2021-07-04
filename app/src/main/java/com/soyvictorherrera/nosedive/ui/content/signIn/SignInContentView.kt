@@ -1,12 +1,10 @@
 package com.soyvictorherrera.nosedive.ui.content.signIn
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,9 +14,8 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.intl.Locale
-import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,6 +25,7 @@ import com.soyvictorherrera.nosedive.ui.composable.button.MainButton
 import com.soyvictorherrera.nosedive.ui.composable.form.EmailTextField
 import com.soyvictorherrera.nosedive.ui.composable.form.PasswordTextField
 import com.soyvictorherrera.nosedive.ui.composable.state.EmailState
+import com.soyvictorherrera.nosedive.ui.composable.state.MIN_PASSWORD_LENGTH
 import com.soyvictorherrera.nosedive.ui.composable.state.PasswordState
 import com.soyvictorherrera.nosedive.ui.theme.Alto
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
@@ -42,58 +40,56 @@ sealed class SignInEvent {
 fun SignInContent(
     onNavigationEvent: (SignInEvent) -> Unit
 ) {
-    NosediveTheme {
-        Surface(color = MaterialTheme.colors.background) {
-            Box(modifier = Modifier.fillMaxWidth()) {
-                var emailTop: Float? by remember { mutableStateOf(null) }
-                // Background
-                emailTop?.let { top ->
-                    SignInBackground(top)
-                }
-                // Content
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            start = 32.dp,
-                            top = 32.dp,
-                            end = 32.dp,
-                            bottom = 64.dp
-                        ),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    // Greeting
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = stringResource(R.string.login_greeting),
-                        color = Alto,
-                        style = MaterialTheme.typography.h1.copy(fontSize = 64.sp)
-                    )
+    Surface(color = MaterialTheme.colors.background) {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            var emailTop: Float? by remember { mutableStateOf(null) }
+            // Background
+            emailTop?.let { top ->
+                SignInBackground(top)
+            }
+            // Content
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        start = 32.dp,
+                        top = 32.dp,
+                        end = 32.dp,
+                        bottom = 64.dp
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Greeting
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = stringResource(R.string.login_greeting),
+                    color = Alto,
+                    style = MaterialTheme.typography.h1.copy(fontSize = 64.sp)
+                )
 
-                    // Form
-                    Spacer(modifier = Modifier.weight(1f))
-                    SignInForm(
-                        onSignInSubmitted = { email, password ->
-                            onNavigationEvent(SignInEvent.SignIn(email, password))
-                        },
-                        onFormPositioned = { bounds -> emailTop = bounds.top }
-                    )
+                // Form
+                Spacer(modifier = Modifier.weight(1f))
+                SignInForm(
+                    onSignInSubmitted = { email, password ->
+                        onNavigationEvent(SignInEvent.SignIn(email, password))
+                    },
+                    onFormPositioned = { bounds -> emailTop = bounds.top }
+                )
 
-                    // Forgot password button
-                    Spacer(modifier = Modifier.height(8.dp))
-                    ActionButton(
-                        text = stringResource(id = R.string.login_forgot_your_password),
-                        onClick = {
-                            onNavigationEvent(SignInEvent.ResetPassword)
-                        })
+                // Forgot password button
+                Spacer(modifier = Modifier.height(8.dp))
+                ActionButton(
+                    text = stringResource(id = R.string.login_forgot_your_password),
+                    onClick = {
+                        onNavigationEvent(SignInEvent.ResetPassword)
+                    })
 
-                    // Create account button
-                    Spacer(modifier = Modifier.weight(0.75f))
-                    ActionButton(
-                        text = stringResource(R.string.login_create_account),
-                        onClick = { onNavigationEvent(SignInEvent.SignUp) }
-                    )
-                }
+                // Create account button
+                Spacer(modifier = Modifier.weight(0.75f))
+                ActionButton(
+                    text = stringResource(R.string.login_create_account),
+                    onClick = { onNavigationEvent(SignInEvent.SignUp) }
+                )
             }
         }
     }
@@ -120,11 +116,14 @@ fun SignInForm(
 ) {
     Column {
         // User email
-        val errorTemplate = stringResource(id = R.string.login_invalid_email)
+        val context = LocalContext.current
         val focusRequester = remember { FocusRequester() }
         val emailState = remember {
             EmailState(errorFor = { email ->
-                String.format(errorTemplate, email)
+                when {
+                    email.isEmpty() -> context.getString(R.string.login_required_field)
+                    else -> context.getString(R.string.login_invalid_email, email)
+                }
             })
         }
         EmailTextField(
@@ -132,17 +131,14 @@ fun SignInForm(
             modifier = Modifier.onGloballyPositioned {
                 onFormPositioned(it.boundsInRoot())
             },
-            onImeAction = {
-                Log.d("onImeAction", "request focus")
-                focusRequester.requestFocus()
-            }
+            onImeAction = { focusRequester.requestFocus() }
         )
 
         // User password
         Spacer(modifier = Modifier.height(16.dp))
         val passwordState = remember {
             PasswordState(errorFor = { password ->
-                "${password.length}/4"
+                "${password.length}/$MIN_PASSWORD_LENGTH"
             })
         }
         PasswordTextField(

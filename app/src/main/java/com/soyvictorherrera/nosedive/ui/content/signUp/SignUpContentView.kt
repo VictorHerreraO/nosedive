@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.text.Annotation
 import android.text.SpannedString
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Icon
@@ -55,7 +54,6 @@ sealed class SignUpEvent {
 fun SignUpContent(
     onNavigationEvent: (SignUpEvent) -> Unit
 ) {
-    // TODO: 02/07/2021 Extraer strings
     Scaffold(
         topBar = {
             DefaultProminentTopAppBar(
@@ -76,19 +74,22 @@ fun SignUpContent(
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
 
+                val context = LocalContext.current
                 val nameState = remember {
                     NameState(errorFor = { name ->
                         when {
-                            name.isEmpty() -> "Campo requerido"
-                            name.length > MAX_NAME_LENGTH -> "Usa un nombre más corto"
+                            name.isEmpty() -> context.getString(R.string.login_required_field)
+                            name.length > MAX_NAME_LENGTH -> context.getString(R.string.login_name_too_long)
                             else -> ""
                         }
                     })
                 }
-                val errorTemplate = stringResource(id = R.string.login_invalid_email)
                 val emailState = remember {
                     EmailState(errorFor = { email ->
-                        String.format(errorTemplate, email)
+                        when {
+                            email.isEmpty() -> context.getString(R.string.login_required_field)
+                            else -> context.getString(R.string.login_invalid_email, email)
+                        }
                     })
                 }
                 val passwordState = remember {
@@ -229,7 +230,6 @@ private fun spannedToAnnotatedString(spanned: SpannedString): AnnotatedString {
         Annotation::class.java
     )
     return with(AnnotatedString.Builder()) {
-        Log.d("spannedToAnnotated", "building")
         append(spanned.toString())
         for (annotation in annotations) {
             if (annotation.key == "target") {
@@ -245,7 +245,6 @@ private fun spannedToAnnotatedString(spanned: SpannedString): AnnotatedString {
                     end = annotationEnd
                 )
                 val target = annotation.value
-                Log.d("spannedToAnnotated", "target = $target")
                 addStringAnnotation(
                     tag = TAG_URL,
                     annotation = BASE_URL + target,

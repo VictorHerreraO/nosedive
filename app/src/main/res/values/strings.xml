@@ -15,4 +15,6 @@
     <string name="signup_terms_and_conditions">Al crear tu cuenta aceptas la <annotation target="privacy_policy">política de privacidad</annotation> y los <annotation target="terms_conditions">términos y condiciones</annotation> del servicio</string>
     <string name="login_invalid_email">%s no es un correo válido</string>
     <string name="login_sign_up">Registrarme</string>
+    <string name="login_required_field">Campo requerido</string>
+    <string name="login_name_too_long">Usa un nombre más corto</string>
 </resources>
