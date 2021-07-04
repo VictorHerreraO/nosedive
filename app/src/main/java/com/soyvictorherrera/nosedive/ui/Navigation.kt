@@ -27,7 +27,11 @@ fun Fragment.navigateInTo(to: Screen, from: Screen) {
             )
         }
         Screen.Home -> {
-            TODO("Not implemented")
+            findNavController().navigate(
+                resId = R.id.homeFragment,
+                args = null,
+                navOptions = defaultNavInOptions()
+            )
         }
     }
 }
@@ -51,7 +55,11 @@ fun Fragment.navigateOutTo(to: Screen, from: Screen) {
             )
         }
         Screen.Home -> {
-            TODO("Not implemented")
+            findNavController().navigate(
+                resId = 0,
+                args = null,
+                navOptions = defaultNavOutOptions(target = R.id.homeFragment)
+            )
         }
     }
 }

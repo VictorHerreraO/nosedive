@@ -33,6 +33,7 @@ class SignUpViewModel(
         when (result) {
             is Result.Success -> {
                 Log.d("signUp:", "success: ${result.data}")
+                _navigateTo.value = Event(Screen.Home)
             }
             is Result.Error -> {
                 Log.e("signUp:", "error by: ", result.exception)

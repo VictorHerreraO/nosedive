@@ -30,6 +30,7 @@ class SignInViewModel(
         when (result) {
             is Result.Success -> {
                 Log.d("signIn", "success: ${result.data}")
+                _navigateTo.value = Event(Screen.Home)
             }
             is Result.Error -> {
                 Log.e("signIn", "error by: ", result.exception)
