@@ -4,10 +4,15 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.soyvictorherrera.nosedive.data.Result
+import com.soyvictorherrera.nosedive.data.source.user.UserEntity
+import com.soyvictorherrera.nosedive.domain.usecase.SignUpUseCase
 import com.soyvictorherrera.nosedive.ui.Screen
 import com.soyvictorherrera.nosedive.ui.util.Event
 
-class SignUpViewModel : ViewModel() {
+class SignUpViewModel(
+    private val signUpUseCase: SignUpUseCase
+) : ViewModel() {
 
     private val _navigateTo = MutableLiveData<Event<Screen>>()
     val navigateTo: LiveData<Event<Screen>>
@@ -18,7 +23,24 @@ class SignUpViewModel : ViewModel() {
         email: String,
         password: String
     ) {
-        Log.d("signUp", "ToDo")
+        val result: Result<UserEntity> = signUpUseCase(
+            UserEntity(
+                name = name,
+                email = email,
+                password = password
+            )
+        )
+        when (result) {
+            is Result.Success -> {
+                Log.d("signUp:", "success: ${result.data}")
+            }
+            is Result.Error -> {
+                Log.e("signUp:", "error by: ", result.exception)
+            }
+            else -> {
+                Log.d("signUp:", "else")
+            }
+        }
     }
 
     fun signIn() {
