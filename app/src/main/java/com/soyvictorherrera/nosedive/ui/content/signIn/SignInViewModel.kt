@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.soyvictorherrera.nosedive.ui.Screen
 import com.soyvictorherrera.nosedive.ui.util.Event
 
@@ -27,14 +26,4 @@ class SignInViewModel : ViewModel() {
         // TODO: 30/06/2021 navigate reset password
     }
 
-}
-
-@Suppress("UNCHECKED_CAST")
-class SignInViewModelFactory : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(SignInViewModel::class.java)) {
-            return SignInViewModel() as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
 }

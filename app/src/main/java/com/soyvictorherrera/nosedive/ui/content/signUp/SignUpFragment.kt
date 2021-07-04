@@ -9,13 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.ui.Screen
+import com.soyvictorherrera.nosedive.ui.content.ViewModelFactory
 import com.soyvictorherrera.nosedive.ui.navigateInTo
 import com.soyvictorherrera.nosedive.ui.navigateOutTo
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
 
 class SignUpFragment : Fragment() {
 
-    private val viewModel: SignUpViewModel by viewModels { SignUpViewModelFactory() }
+    private val viewModel: SignUpViewModel by viewModels { ViewModelFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

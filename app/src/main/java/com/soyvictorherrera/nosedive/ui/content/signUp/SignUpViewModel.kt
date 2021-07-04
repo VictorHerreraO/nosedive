@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.soyvictorherrera.nosedive.ui.Screen
 import com.soyvictorherrera.nosedive.ui.util.Event
 
@@ -27,14 +26,3 @@ class SignUpViewModel : ViewModel() {
     }
 
 }
-
-@Suppress("UNCHECKED_CAST")
-class SignUpViewModelFactory : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(SignUpViewModel::class.java)) {
-            return SignUpViewModel() as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}
-
