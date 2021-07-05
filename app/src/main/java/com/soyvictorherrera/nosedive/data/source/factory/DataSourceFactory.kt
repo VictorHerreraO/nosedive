@@ -6,8 +6,7 @@ import com.soyvictorherrera.nosedive.data.source.user.firebase.FirebaseUserDataS
 object DataSourceFactory {
 
     fun getUserDataSource(): UserDataSource {
-        return FirebaseUserDataSource()
+        return FirebaseUserDataSource(FirebaseReferenceFactory.getUserReference())
     }
-
 
 }
