@@ -7,11 +7,17 @@ import com.soyvictorherrera.nosedive.domain.usecase.SignUpUseCase
 object UseCaseFactory {
 
     fun getSignInUseCase(): SignInUseCase {
-        return SignInUseCase(RepositoryFactory.getUserRepository())
+        return SignInUseCase(
+            authRepository = RepositoryFactory.getAuthenticationRepository(),
+            userRepository = RepositoryFactory.getUserRepository()
+        )
     }
 
     fun getSignUpUseCase(): SignUpUseCase {
-        return SignUpUseCase(RepositoryFactory.getUserRepository())
+        return SignUpUseCase(
+            authRepository = RepositoryFactory.getAuthenticationRepository(),
+            userRepository = RepositoryFactory.getUserRepository()
+        )
     }
 
 }
