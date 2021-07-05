@@ -4,8 +4,8 @@ import com.soyvictorherrera.nosedive.data.Result
 
 interface UserDataSource {
 
-    fun signInUser(request: UserEntity): Result<UserEntity>
+    suspend fun saveUser(user: UserEntity): Result<UserEntity>
 
-    fun signUpUser(request: UserEntity): Result<UserEntity>
+    suspend fun getUser(userId: String): Result<UserEntity>
 
 }

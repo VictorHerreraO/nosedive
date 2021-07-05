@@ -5,8 +5,8 @@ import com.soyvictorherrera.nosedive.data.source.user.UserEntity
 
 interface UserRepository {
 
-    fun signInUser(user: UserEntity): Result<UserEntity>
+    suspend fun saveUser(user: UserEntity): Result<UserEntity>
 
-    fun signUpUser(user: UserEntity): Result<UserEntity>
+    suspend fun getUser(userId: String): Result<UserEntity>
 
 }

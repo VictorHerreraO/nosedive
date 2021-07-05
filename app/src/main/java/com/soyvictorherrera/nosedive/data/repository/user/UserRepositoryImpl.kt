@@ -8,12 +8,12 @@ class UserRepositoryImpl(
     private val userDataSource: UserDataSource
 ) : UserRepository {
 
-
-    override fun signInUser(user: UserEntity): Result<UserEntity> {
-        return userDataSource.signInUser(user)
+    override suspend fun saveUser(user: UserEntity): Result<UserEntity> {
+        return userDataSource.saveUser(user)
     }
 
-    override fun signUpUser(user: UserEntity): Result<UserEntity> {
-        return userDataSource.signUpUser(user)
+    override suspend fun getUser(userId: String): Result<UserEntity> {
+        return userDataSource.getUser(userId)
     }
+
 }
