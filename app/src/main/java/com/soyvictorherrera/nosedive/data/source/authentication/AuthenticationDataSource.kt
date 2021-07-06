@@ -8,4 +8,6 @@ interface AuthenticationDataSource {
 
     suspend fun signUp(request: AuthenticationEntity): Result<AuthenticationEntity>
 
+    suspend fun getCurrentAuthentication(): Result<AuthenticationEntity>
+
 }

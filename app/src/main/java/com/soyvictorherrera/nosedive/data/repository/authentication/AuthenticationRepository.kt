@@ -9,4 +9,6 @@ interface AuthenticationRepository {
 
     suspend fun signUp(email: String, password: String): Result<AuthenticationEntity>
 
+    suspend fun getCurrentAuthentication(): Result<AuthenticationEntity>
+
 }

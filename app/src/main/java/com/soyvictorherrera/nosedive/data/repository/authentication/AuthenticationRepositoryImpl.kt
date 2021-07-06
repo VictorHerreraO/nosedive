@@ -26,4 +26,7 @@ class AuthenticationRepositoryImpl(
         )
     }
 
+    override suspend fun getCurrentAuthentication(): Result<AuthenticationEntity> {
+        return authSource.getCurrentAuthentication()
+    }
 }

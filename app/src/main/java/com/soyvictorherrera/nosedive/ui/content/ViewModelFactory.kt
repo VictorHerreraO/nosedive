@@ -3,6 +3,7 @@ package com.soyvictorherrera.nosedive.ui.content
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.soyvictorherrera.nosedive.domain.usecase.factory.UseCaseFactory
+import com.soyvictorherrera.nosedive.ui.content.home.HomeViewModel
 import com.soyvictorherrera.nosedive.ui.content.signIn.SignInViewModel
 import com.soyvictorherrera.nosedive.ui.content.signUp.SignUpViewModel
 
@@ -16,6 +17,9 @@ class ViewModelFactory : ViewModelProvider.Factory {
                 }
                 isAssignableFrom(SignUpViewModel::class.java) -> {
                     SignUpViewModel(UseCaseFactory.getSignUpUseCase())
+                }
+                isAssignableFrom(HomeViewModel::class.java) -> {
+                    HomeViewModel(UseCaseFactory.getGetCurrentUserUseCase())
                 }
                 else -> throw IllegalArgumentException("Unknown ViewModel class")
             }
