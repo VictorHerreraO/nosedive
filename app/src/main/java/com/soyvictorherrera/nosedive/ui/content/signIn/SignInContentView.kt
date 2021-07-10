@@ -80,8 +80,7 @@ fun SignInContent(
 
                             // Login button
                             MainButton(
-                                text = if (isLoading) stringResource(R.string.login_signing_in)
-                                else stringResource(R.string.login_do_login),
+                                text = stringResource(R.string.login_do_login),
                                 onClick = {
                                     onNavigationEvent(
                                         SignInEvent.SignIn(
@@ -90,14 +89,9 @@ fun SignInContent(
                                         )
                                     )
                                 },
-                                enabled = !isLoading && (emailState.isValid && passwordState.isValid)
+                                enabled = emailState.isValid && passwordState.isValid,
+                                showLoader = isLoading
                             )
-
-                            if (isLoading) {
-                                Spacer(modifier = Modifier.height(8.dp))
-                                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-                                Spacer(modifier = Modifier.height(8.dp))
-                            }
 
                             // Forgot password button
                             Spacer(modifier = Modifier.height(8.dp))
