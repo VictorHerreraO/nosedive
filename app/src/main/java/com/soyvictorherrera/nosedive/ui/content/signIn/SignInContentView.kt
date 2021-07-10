@@ -2,9 +2,7 @@ package com.soyvictorherrera.nosedive.ui.content.signIn
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,61 +37,65 @@ sealed class SignInEvent {
 
 @Composable
 fun SignInContent(
+    signInState: SignInState = SignInState.Idle,
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
     onNavigationEvent: (SignInEvent) -> Unit
 ) {
-    Surface(color = MaterialTheme.colors.background) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            var emailTop: Float? by remember { mutableStateOf(null) }
-            // Background
-            emailTop?.let { top ->
-                SignInBackground(top)
+    Scaffold(
+        scaffoldState = scaffoldState,
+        content = {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                var emailTop: Float? by remember { mutableStateOf(null) }
+                // Background
+                emailTop?.let { top ->
+                    SignInBackground(top)
+                }
+                // Content
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            start = 32.dp,
+                            top = 32.dp,
+                            end = 32.dp,
+                            bottom = 64.dp
+                        ),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Greeting
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = stringResource(R.string.login_greeting),
+                        color = Alto,
+                        style = MaterialTheme.typography.h1.copy(fontSize = 64.sp)
+                    )
+
+                    // Form
+                    Spacer(modifier = Modifier.weight(1f))
+                    SignInForm(
+                        onSignInSubmitted = { email, password ->
+                            onNavigationEvent(SignInEvent.SignIn(email, password))
+                        },
+                        onFormPositioned = { bounds -> emailTop = bounds.top }
+                    )
+
+                    // Forgot password button
+                    Spacer(modifier = Modifier.height(8.dp))
+                    ActionButton(
+                        text = stringResource(id = R.string.login_forgot_your_password),
+                        onClick = {
+                            onNavigationEvent(SignInEvent.ResetPassword)
+                        })
+
+                    // Create account button
+                    Spacer(modifier = Modifier.weight(0.75f))
+                    ActionButton(
+                        text = stringResource(R.string.login_create_account),
+                        onClick = { onNavigationEvent(SignInEvent.SignUp) }
+                    )
+                }
             }
-            // Content
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        start = 32.dp,
-                        top = 32.dp,
-                        end = 32.dp,
-                        bottom = 64.dp
-                    ),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Greeting
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = stringResource(R.string.login_greeting),
-                    color = Alto,
-                    style = MaterialTheme.typography.h1.copy(fontSize = 64.sp)
-                )
-
-                // Form
-                Spacer(modifier = Modifier.weight(1f))
-                SignInForm(
-                    onSignInSubmitted = { email, password ->
-                        onNavigationEvent(SignInEvent.SignIn(email, password))
-                    },
-                    onFormPositioned = { bounds -> emailTop = bounds.top }
-                )
-
-                // Forgot password button
-                Spacer(modifier = Modifier.height(8.dp))
-                ActionButton(
-                    text = stringResource(id = R.string.login_forgot_your_password),
-                    onClick = {
-                        onNavigationEvent(SignInEvent.ResetPassword)
-                    })
-
-                // Create account button
-                Spacer(modifier = Modifier.weight(0.75f))
-                ActionButton(
-                    text = stringResource(R.string.login_create_account),
-                    onClick = { onNavigationEvent(SignInEvent.SignUp) }
-                )
-            }
-        }
-    }
+        })
 }
 
 @Composable
@@ -141,12 +144,14 @@ fun SignInForm(
                 "${password.length}/$MIN_PASSWORD_LENGTH"
             })
         }
+        val focusManager = LocalFocusManager.current
         PasswordTextField(
             label = stringResource(id = R.string.login_password),
             passwordState = passwordState,
             modifier = Modifier.focusRequester(focusRequester),
             onImeAction = {
                 if (emailState.isValid && passwordState.isValid) {
+                    focusManager.clearFocus()
                     onSignInSubmitted(emailState.text, passwordState.text)
                 }
             }
@@ -169,6 +174,9 @@ fun SignInForm(
 @Composable
 fun SignInContentPreviewDark() {
     NosediveTheme {
-        SignInContent {}
+        SignInContent(
+            signInState = SignInState.Idle,
+            onNavigationEvent = {}
+        )
     }
 }

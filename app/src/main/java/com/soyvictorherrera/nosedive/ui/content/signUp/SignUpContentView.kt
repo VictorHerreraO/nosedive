@@ -65,7 +65,7 @@ fun SignUpContent(
                 }
             )
         },
-        content = {
+        content = { innerPadding ->
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

@@ -20,7 +20,17 @@ class SignInViewModel(
     val navigateTo: LiveData<Event<Screen>>
         get() = _navigateTo
 
+    private val _signInState = MutableLiveData<SignInState>()
+    val signInState: LiveData<SignInState>
+        get() = _signInState
+
+    private val _signInError = MutableLiveData<SignInError>()
+    val signInError: LiveData<SignInError>
+        get() = _signInError
+
     fun signIn(email: String, password: String) {
+        _signInState.value = SignInState.Loading
+
         viewModelScope.launch {
             signInUseCase(
                 UserEntity(
@@ -28,13 +38,14 @@ class SignInViewModel(
                     password = password
                 )
             ).let { result ->
+                _signInState.value = SignInState.Idle
                 when (result) {
                     is Result.Success -> {
                         Log.d("signIn", "success: ${result.data}")
                         _navigateTo.value = Event(Screen.Home)
                     }
                     is Result.Error -> {
-                        Log.e("signIn", "error by: ", result.exception)
+                        _signInError.value = SignInError.WrongCredentials
                     }
                     else -> {
                         Log.d("signIn", "else")
