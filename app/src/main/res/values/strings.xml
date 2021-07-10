@@ -17,4 +17,8 @@
     <string name="login_sign_up">Registrarme</string>
     <string name="login_required_field">Campo requerido</string>
     <string name="login_name_too_long">Usa un nombre más corto</string>
+    <string name="login_signing_in">Iniciando sesión</string>
+    <string name="login_error_unknown">Error desconocido</string>
+    <string name="login_error_wrong_credentials">Correo o contraseña incorrectos</string>
+    <string name="login_error_not_implemented">Esto aún no funciona</string>
 </resources>

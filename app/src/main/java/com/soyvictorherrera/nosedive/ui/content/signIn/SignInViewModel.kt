@@ -24,8 +24,8 @@ class SignInViewModel(
     val signInState: LiveData<SignInState>
         get() = _signInState
 
-    private val _signInError = MutableLiveData<SignInError>()
-    val signInError: LiveData<SignInError>
+    private val _signInError = MutableLiveData<Event<SignInError>>()
+    val signInError: LiveData<Event<SignInError>>
         get() = _signInError
 
     fun signIn(email: String, password: String) {
@@ -45,7 +45,8 @@ class SignInViewModel(
                         _navigateTo.value = Event(Screen.Home)
                     }
                     is Result.Error -> {
-                        _signInError.value = SignInError.WrongCredentials
+                        Log.d("signIn", "error: ", result.exception)
+                        _signInError.value = Event(SignInError.WrongCredentials)
                     }
                     else -> {
                         Log.d("signIn", "else")
@@ -60,7 +61,7 @@ class SignInViewModel(
     }
 
     fun resetPassword() {
-        // TODO: 30/06/2021 navigate reset password
+        _signInError.value = Event(SignInError.NotImplemented)
     }
 
 }

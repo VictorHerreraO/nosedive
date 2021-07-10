@@ -1,6 +1,7 @@
 package com.soyvictorherrera.nosedive.ui.content.signIn
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,14 +44,16 @@ class SignInFragment : Fragment() {
 
             setContent {
                 NosediveTheme {
+                    Log.d("onCreateView: ", "recomposing...")
+
                     val scaffoldState = rememberScaffoldState()
                     val scope = rememberCoroutineScope()
                     val uiState = viewModel.signInState.observeAsState(SignInState.Idle)
 
-                    viewModel.signInError.observe(viewLifecycleOwner) { error ->
-                        error?.let {
+                    viewModel.signInError.observe(viewLifecycleOwner) { errorEvent ->
+                        errorEvent.getContentIfNotHandled()?.let { error ->
                             showError(
-                                error = it,
+                                error = error,
                                 scaffoldState = scaffoldState,
                                 scope = scope
                             )
@@ -92,10 +95,13 @@ class SignInFragment : Fragment() {
             scaffoldState.snackbarHostState.showSnackbar(
                 when (error) {
                     SignInError.ErrorUnknown -> {
-                        "Error desconocido"
+                        getString(R.string.login_error_unknown)
                     }
                     SignInError.WrongCredentials -> {
-                        "Correo o contraseña incorrectos"
+                        getString(R.string.login_error_wrong_credentials)
+                    }
+                    SignInError.NotImplemented -> {
+                        getString(R.string.login_error_not_implemented)
                     }
                 }
             )

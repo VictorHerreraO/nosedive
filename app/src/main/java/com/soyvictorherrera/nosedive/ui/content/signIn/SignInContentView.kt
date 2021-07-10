@@ -73,19 +73,42 @@ fun SignInContent(
                     // Form
                     Spacer(modifier = Modifier.weight(1f))
                     SignInForm(
-                        onSignInSubmitted = { email, password ->
-                            onNavigationEvent(SignInEvent.SignIn(email, password))
-                        },
                         onFormPositioned = { bounds -> emailTop = bounds.top }
-                    )
+                    ) { emailState, passwordState ->
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            val isLoading = signInState == SignInState.Loading
 
-                    // Forgot password button
-                    Spacer(modifier = Modifier.height(8.dp))
-                    ActionButton(
-                        text = stringResource(id = R.string.login_forgot_your_password),
-                        onClick = {
-                            onNavigationEvent(SignInEvent.ResetPassword)
-                        })
+                            // Login button
+                            MainButton(
+                                text = if (isLoading) stringResource(R.string.login_signing_in)
+                                else stringResource(R.string.login_do_login),
+                                onClick = {
+                                    onNavigationEvent(
+                                        SignInEvent.SignIn(
+                                            emailState.text,
+                                            passwordState.text
+                                        )
+                                    )
+                                },
+                                enabled = !isLoading && (emailState.isValid && passwordState.isValid)
+                            )
+
+                            if (isLoading) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                                Spacer(modifier = Modifier.height(8.dp))
+                            }
+
+                            // Forgot password button
+                            Spacer(modifier = Modifier.height(8.dp))
+                            ActionButton(
+                                text = stringResource(id = R.string.login_forgot_your_password),
+                                onClick = {
+                                    onNavigationEvent(SignInEvent.ResetPassword)
+                                }
+                            )
+                        }
+                    }
 
                     // Create account button
                     Spacer(modifier = Modifier.weight(0.75f))
@@ -114,8 +137,8 @@ fun SignInBackground(yCenter: Float = 0f) {
 
 @Composable
 fun SignInForm(
-    onSignInSubmitted: (email: String, password: String) -> Unit,
-    onFormPositioned: (bounds: Rect) -> Unit = {}
+    onFormPositioned: (bounds: Rect) -> Unit = {},
+    formActions: @Composable (emailState: EmailState, passwordState: PasswordState) -> Unit
 ) {
     Column {
         // User email
@@ -150,20 +173,13 @@ fun SignInForm(
             passwordState = passwordState,
             modifier = Modifier.focusRequester(focusRequester),
             onImeAction = {
-                if (emailState.isValid && passwordState.isValid) {
-                    focusManager.clearFocus()
-                    onSignInSubmitted(emailState.text, passwordState.text)
-                }
+                focusManager.clearFocus()
             }
         )
 
-        // Login Button
+        // Form Actions
         Spacer(modifier = Modifier.height(32.dp))
-        MainButton(
-            text = stringResource(R.string.login_do_login),
-            onClick = { onSignInSubmitted(emailState.text, passwordState.text) },
-            enabled = emailState.isValid && passwordState.isValid
-        )
+        formActions(emailState, passwordState)
     }
 }
 

@@ -9,4 +9,5 @@ sealed class SignInState {
 sealed class SignInError {
     object ErrorUnknown : SignInError()
     object WrongCredentials : SignInError()
+    object NotImplemented: SignInError()
 }
