@@ -65,63 +65,38 @@ fun SignUpContent(
                 }
             )
         },
-        content = { innerPadding ->
+        content = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp)
                     .padding(bottom = 64.dp)
             ) {
-                Spacer(modifier = Modifier.height(16.dp))
+                Column {
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                val context = LocalContext.current
-                val nameState = remember {
-                    NameState(errorFor = { name ->
-                        when {
-                            name.isEmpty() -> context.getString(R.string.login_required_field)
-                            name.length > MAX_NAME_LENGTH -> context.getString(R.string.login_name_too_long)
-                            else -> ""
-                        }
-                    })
-                }
-                val emailState = remember {
-                    EmailState(errorFor = { email ->
-                        when {
-                            email.isEmpty() -> context.getString(R.string.login_required_field)
-                            else -> context.getString(R.string.login_invalid_email, email)
-                        }
-                    })
-                }
-                val passwordState = remember {
-                    PasswordState(errorFor = { password ->
-                        "${password.length}/$MIN_PASSWORD_LENGTH"
-                    })
-                }
-                // Form
-                SignUpForm(
-                    nameState = nameState,
-                    emailState = emailState,
-                    passwordState = passwordState
-                )
+                    // Form
+                    SignUpForm { nameState, emailState, passwordState ->
+                        Spacer(modifier = Modifier.weight(1f))
 
-                Spacer(modifier = Modifier.weight(1f))
-
-                // Actions
-                SignUpActions(
-                    nameState = nameState,
-                    emailState = emailState,
-                    passwordState = passwordState,
-                    onSignUpSubmitted = { name, email, password ->
-                        onNavigationEvent(
-                            SignUpEvent.SignUp(
-                                name = name, email = email, password = password
-                            )
+                        // Actions
+                        SignUpActions(
+                            nameState = nameState,
+                            emailState = emailState,
+                            passwordState = passwordState,
+                            onSignUpSubmitted = { name, email, password ->
+                                onNavigationEvent(
+                                    SignUpEvent.SignUp(
+                                        name = name, email = email, password = password
+                                    )
+                                )
+                            },
+                            onCancelSignUp = {
+                                onNavigationEvent(SignUpEvent.SignIn)
+                            }
                         )
-                    },
-                    onCancelSignUp = {
-                        onNavigationEvent(SignUpEvent.SignIn)
                     }
-                )
+                }
             }
         }
     )
@@ -129,11 +104,24 @@ fun SignUpContent(
 
 @Composable
 fun SignUpForm(
-    nameState: NameState,
-    emailState: EmailState,
-    passwordState: PasswordState
+    formActions: @Composable (
+        nameState: NameState,
+        emailState: EmailState,
+        passwordState: PasswordState
+    ) -> Unit
 ) {
     Column {
+        val context = LocalContext.current
+
+        val nameState = remember {
+            NameState(errorFor = { name ->
+                when {
+                    name.isEmpty() -> context.getString(R.string.login_required_field)
+                    name.length > MAX_NAME_LENGTH -> context.getString(R.string.login_name_too_long)
+                    else -> ""
+                }
+            })
+        }
         val emailFocusRequester = remember { FocusRequester() }
         NameTextField(
             nameState = nameState,
@@ -144,6 +132,14 @@ fun SignUpForm(
 
         // User email
         Spacer(modifier = Modifier.height(16.dp))
+        val emailState = remember {
+            EmailState(errorFor = { email ->
+                when {
+                    email.isEmpty() -> context.getString(R.string.login_required_field)
+                    else -> context.getString(R.string.login_invalid_email, email)
+                }
+            })
+        }
         val passwordFocusRequester = remember { FocusRequester() }
         EmailTextField(
             emailState = emailState,
@@ -154,14 +150,22 @@ fun SignUpForm(
         )
 
         // User password
-        val focusManager = LocalFocusManager.current
         Spacer(modifier = Modifier.height(16.dp))
+        val passwordState = remember {
+            PasswordState(errorFor = { password ->
+                "${password.length}/$MIN_PASSWORD_LENGTH"
+            })
+        }
+        val focusManager = LocalFocusManager.current
         PasswordTextField(
             label = stringResource(id = R.string.login_password),
             passwordState = passwordState,
             modifier = Modifier.focusRequester(passwordFocusRequester),
             onImeAction = { focusManager.clearFocus() }
         )
+
+        // Form actions
+        formActions(nameState, emailState, passwordState)
     }
 }
 
