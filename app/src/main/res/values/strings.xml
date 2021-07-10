@@ -21,4 +21,5 @@
     <string name="login_error_unknown">Error desconocido</string>
     <string name="login_error_wrong_credentials">Correo o contraseña incorrectos</string>
     <string name="login_error_not_implemented">Esto aún no funciona</string>
+    <string name="login_unable_to_create_account">No es posible crear tu cuenta en este momento</string>
 </resources>

@@ -20,11 +20,20 @@ class SignUpViewModel(
     val navigateTo: LiveData<Event<Screen>>
         get() = _navigateTo
 
+    private val _signUpState = MutableLiveData<SignUpState>()
+    val signUpState: LiveData<SignUpState>
+        get() = _signUpState
+
+    private val _signUpError = MutableLiveData<Event<SignUpError>>()
+    val signUpError: LiveData<Event<SignUpError>>
+        get() = _signUpError
+
     fun signUp(
         name: String,
         email: String,
         password: String
     ) {
+        _signUpState.value = SignUpState.Loading
         viewModelScope.launch {
             signUpUseCase(
                 UserEntity(
@@ -33,6 +42,7 @@ class SignUpViewModel(
                     password = password
                 )
             ).let { result ->
+                _signUpState.value = SignUpState.Idle
                 when (result) {
                     is Result.Success -> {
                         Log.d("signUp:", "success: ${result.data}")
@@ -40,9 +50,11 @@ class SignUpViewModel(
                     }
                     is Result.Error -> {
                         Log.e("signUp:", "error by: ", result.exception)
+                        _signUpError.value = Event(SignUpError.UnableToCreateAccount)
                     }
                     else -> {
                         Log.d("signUp:", "else")
+                        _signUpError.value = Event(SignUpError.ErrorUnknown)
                     }
                 }
             }

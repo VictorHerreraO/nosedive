@@ -7,10 +7,7 @@ import android.text.Annotation
 import android.text.SpannedString
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.ArrowBack
 import androidx.compose.runtime.Composable
@@ -52,9 +49,12 @@ sealed class SignUpEvent {
 
 @Composable
 fun SignUpContent(
+    signUpState: SignUpState = SignUpState.Idle,
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
     onNavigationEvent: (SignUpEvent) -> Unit
 ) {
     Scaffold(
+        scaffoldState = scaffoldState,
         topBar = {
             DefaultProminentTopAppBar(
                 title = stringResource(R.string.signup_title),
@@ -72,30 +72,29 @@ fun SignUpContent(
                     .padding(horizontal = 32.dp)
                     .padding(bottom = 64.dp)
             ) {
-                Column {
-                    Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                    // Form
-                    SignUpForm { nameState, emailState, passwordState ->
-                        Spacer(modifier = Modifier.weight(1f))
+                // Form
+                SignUpForm { nameState, emailState, passwordState ->
+                    Spacer(modifier = Modifier.weight(1f))
 
-                        // Actions
-                        SignUpActions(
-                            nameState = nameState,
-                            emailState = emailState,
-                            passwordState = passwordState,
-                            onSignUpSubmitted = { name, email, password ->
-                                onNavigationEvent(
-                                    SignUpEvent.SignUp(
-                                        name = name, email = email, password = password
-                                    )
+                    // Actions
+                    SignUpActions(
+                        nameState = nameState,
+                        emailState = emailState,
+                        passwordState = passwordState,
+                        isLoading = (signUpState == SignUpState.Loading),
+                        onSignUpSubmitted = { name, email, password ->
+                            onNavigationEvent(
+                                SignUpEvent.SignUp(
+                                    name = name, email = email, password = password
                                 )
-                            },
-                            onCancelSignUp = {
-                                onNavigationEvent(SignUpEvent.SignIn)
-                            }
-                        )
-                    }
+                            )
+                        },
+                        onCancelSignUp = {
+                            onNavigationEvent(SignUpEvent.SignIn)
+                        }
+                    )
                 }
             }
         }
@@ -174,6 +173,7 @@ fun SignUpActions(
     nameState: NameState,
     emailState: EmailState,
     passwordState: PasswordState,
+    isLoading: Boolean = false,
     onSignUpSubmitted: (name: String, email: String, password: String) -> Unit,
     onCancelSignUp: () -> Unit
 ) {
@@ -184,7 +184,8 @@ fun SignUpActions(
             onClick = {
                 onSignUpSubmitted(nameState.text, emailState.text, passwordState.text)
             },
-            enabled = nameState.isValid && emailState.isValid && passwordState.isValid
+            enabled = nameState.isValid && emailState.isValid && passwordState.isValid,
+            showLoader = isLoading
         )
 
         // Policy and terms
