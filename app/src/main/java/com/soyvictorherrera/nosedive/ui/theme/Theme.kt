@@ -1,6 +1,5 @@
 package com.soyvictorherrera.nosedive.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
@@ -10,7 +9,8 @@ private val DarkColorPalette = darkColors(
     primary = Wild_Watermelon,
     primaryVariant = Shiraz,
     secondary = Dove_Gray,
-    onPrimary = Dove_Gray
+    onPrimary = Dove_Gray,
+    onSurface = Alto
 )
 
 private val LightColorPalette = lightColors(

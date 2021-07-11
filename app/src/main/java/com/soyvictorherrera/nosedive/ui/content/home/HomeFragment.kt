@@ -5,15 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -42,17 +35,15 @@ class HomeFragment : Fragment() {
 
             setContent {
                 NosediveTheme {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        viewModel.user.observeAsState().value?.let { user ->
-                            Text(
-                                text = "¡Hola ${user.name}!",
-                                style = MaterialTheme.typography.h3.copy(color = Color.White)
-                            )
-                        }
+                    val userState = viewModel.user.observeAsState()
+                    val scaffoldState = rememberScaffoldState()
+
+                    userState.value?.let { user ->
+                        HomeContentView(
+                            userName = user.name ?: "no-name",
+                            scaffoldState = scaffoldState
+                        )
+
                     }
                 }
             }
