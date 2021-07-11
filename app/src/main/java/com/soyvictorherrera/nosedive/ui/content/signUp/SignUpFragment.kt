@@ -15,7 +15,7 @@ import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.ui.Screen
 import com.soyvictorherrera.nosedive.ui.content.ViewModelFactory
 import com.soyvictorherrera.nosedive.ui.navigateInTo
-import com.soyvictorherrera.nosedive.ui.navigateOutTo
+import com.soyvictorherrera.nosedive.ui.popUpTo
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -30,8 +30,12 @@ class SignUpFragment : Fragment() {
     ): View {
         viewModel.navigateTo.observe(viewLifecycleOwner) { navigateToEvent ->
             navigateToEvent.getContentIfNotHandled()?.let { navigateTo ->
-                if (navigateTo == Screen.SignIn) navigateOutTo(navigateTo, Screen.SignUp)
-                else navigateInTo(navigateTo, Screen.SignUp)
+                if (navigateTo == Screen.SignIn) popUpTo(navigateTo)
+                else navigateInTo(
+                    to = navigateTo,
+                    from = Screen.SignUp,
+                    clearStack = true
+                )
             }
         }
 

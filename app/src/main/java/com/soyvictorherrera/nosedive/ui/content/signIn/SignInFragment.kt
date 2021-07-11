@@ -30,7 +30,11 @@ class SignInFragment : Fragment() {
     ): View {
         viewModel.navigateTo.observe(viewLifecycleOwner) { navigateToEvent ->
             navigateToEvent.getContentIfNotHandled()?.let { navigateTo ->
-                navigateInTo(navigateTo, Screen.SignIn)
+                navigateInTo(
+                    to = navigateTo,
+                    from = Screen.SignIn,
+                    clearStack = true
+                )
             }
         }
 

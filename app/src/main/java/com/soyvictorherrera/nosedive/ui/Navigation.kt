@@ -6,78 +6,65 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.soyvictorherrera.nosedive.R
 
-enum class Screen { SignIn, SignUp, Home }
+sealed class Screen(@IdRes val resId: Int) {
+    object SignIn : Screen(resId = R.id.signInFragment)
+    object SignUp : Screen(resId = R.id.signUpFragment)
+    object Home : Screen(resId = R.id.homeFragment)
+}
 
-fun Fragment.navigateInTo(to: Screen, from: Screen) {
+fun Fragment.navigateInTo(to: Screen, from: Screen, clearStack: Boolean = false) {
     if (to == from) throw IllegalArgumentException("Can't navigate in to $to")
 
-    when (to) {
-        Screen.SignIn -> {
-            findNavController().navigate(
-                resId = R.id.signInFragment,
-                args = null,
-                navOptions = defaultNavInOptions()
-            )
+    findNavController().navigate(
+        resId = to.resId,
+        args = null,
+        navOptions = navOptions {
+            anim {
+                enter = android.R.anim.fade_in
+                exit = android.R.anim.fade_out
+            }
+            if (clearStack) {
+                popUpTo(
+                    id = from.resId,
+                    popUpToBuilder = { inclusive = true }
+                )
+            }
         }
-        Screen.SignUp -> {
-            findNavController().navigate(
-                resId = R.id.signUpFragment,
-                args = null,
-                navOptions = defaultNavInOptions()
-            )
-        }
-        Screen.Home -> {
-            findNavController().navigate(
-                resId = R.id.homeFragment,
-                args = null,
-                navOptions = defaultNavInOptions()
-            )
-        }
-    }
+    )
 }
 
 fun Fragment.navigateOutTo(to: Screen, from: Screen) {
     if (to == from) throw IllegalArgumentException("Can't navigate out to $to")
 
-    when (to) {
-        Screen.SignIn -> {
-            findNavController().navigate(
-                resId = 0,
-                args = null,
-                navOptions = defaultNavOutOptions(target = R.id.signInFragment)
+    findNavController().navigate(
+        resId = to.resId,
+        args = null,
+        navOptions = navOptions {
+            anim {
+                popEnter = android.R.anim.slide_out_right
+                popExit = android.R.anim.slide_in_left
+            }
+            popUpTo(
+                id = from.resId,
+                popUpToBuilder = { inclusive = true }
             )
         }
-        Screen.SignUp -> {
-            findNavController().navigate(
-                resId = 0,
-                args = null,
-                navOptions = defaultNavOutOptions(target = R.id.signUpFragment)
-            )
-        }
-        Screen.Home -> {
-            findNavController().navigate(
-                resId = 0,
-                args = null,
-                navOptions = defaultNavOutOptions(target = R.id.homeFragment)
-            )
-        }
-    }
+    )
 }
 
-private fun defaultNavInOptions() = navOptions {
-    anim {
-        enter = android.R.anim.fade_in
-        exit = android.R.anim.fade_out
-    }
-}
-
-private fun defaultNavOutOptions(@IdRes target: Int) = navOptions {
-    anim {
-        popEnter = android.R.anim.slide_out_right
-        popExit = android.R.anim.slide_in_left
-    }
-    popUpTo(
-        id = target,
-        popUpToBuilder = { inclusive = false }
+fun Fragment.popUpTo(to: Screen) {
+    findNavController().navigate(
+        resId = 0,
+        null,
+        navOptions = navOptions {
+            anim {
+                popEnter = android.R.anim.slide_out_right
+                popExit = android.R.anim.slide_in_left
+            }
+            popUpTo(
+                id = to.resId,
+                popUpToBuilder = { inclusive = false }
+            )
+        }
     )
 }

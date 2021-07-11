@@ -46,9 +46,13 @@ class FirebaseAuthenticationDataSource(
     }
 
     override suspend fun getCurrentAuthentication(): Result<AuthenticationEntity> {
-        return auth.currentUser?.let { currentUser ->
-            Result.Success(currentUser.toAuthenticationEntity())
-        } ?: Result.Error(RuntimeException("no signed user"))
+        return try {
+            auth.currentUser?.let { currentUser ->
+                Result.Success(currentUser.toAuthenticationEntity())
+            } ?: throw RuntimeException("no signed user")
+        } catch (ex: Exception) {
+            Result.Error(ex)
+        }
     }
 }
 

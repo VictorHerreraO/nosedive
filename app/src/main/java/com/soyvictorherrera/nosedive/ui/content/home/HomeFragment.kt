@@ -1,6 +1,7 @@
 package com.soyvictorherrera.nosedive.ui.content.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +18,9 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.soyvictorherrera.nosedive.R
+import com.soyvictorherrera.nosedive.ui.Screen
 import com.soyvictorherrera.nosedive.ui.content.ViewModelFactory
+import com.soyvictorherrera.nosedive.ui.navigateOutTo
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
 
 class HomeFragment : Fragment() {
@@ -52,6 +55,17 @@ class HomeFragment : Fragment() {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.d("onViewCreated:", "called!")
+        viewModel.sessionState.observe(viewLifecycleOwner) { sessionState ->
+            Log.d("onViewCreated:", "sessionState change")
+            if (sessionState == SessionState.SignedOut) {
+                navigateOutTo(Screen.SignIn, Screen.Home)
             }
         }
     }
