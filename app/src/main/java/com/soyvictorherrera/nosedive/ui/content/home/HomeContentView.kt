@@ -16,10 +16,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.soyvictorherrera.nosedive.R
+import com.soyvictorherrera.nosedive.ui.composable.profile.UserPhoto
 import com.soyvictorherrera.nosedive.ui.theme.Forest_Green
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
 
@@ -87,20 +90,10 @@ fun HomeContent(userName: String) {
         Spacer(modifier = Modifier.height(16.dp))
         Row {
             Spacer(modifier = Modifier.weight(1f))
-            Box(
-                modifier = Modifier
-                    .weight(2f)
-                    .aspectRatio(1f)
-            ) {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    shape = CircleShape,
-                    color = MaterialTheme.colors.surface,
-                    elevation = 2.dp
-                ) {
-
-                }
-            }
+            UserPhoto(
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                modifier = Modifier.weight(2f)
+            )
             Column(
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.End
@@ -177,8 +170,11 @@ fun HomeContent(userName: String) {
                 )
         ) {
             Card {
-                Row(modifier = Modifier.fillMaxWidth()
-                    .padding(16.dp)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
                     Image(
                         imageVector = Icons.Sharp.TrendingUp,
                         contentDescription = null,
