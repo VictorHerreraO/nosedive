@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.ui.composable.profile.UserPhoto
 import com.soyvictorherrera.nosedive.ui.composable.profile.UserScoreCompact
+import com.soyvictorherrera.nosedive.ui.composable.profile.UserStats
 import com.soyvictorherrera.nosedive.ui.theme.Forest_Green
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
 
@@ -108,52 +109,12 @@ fun HomeContent(userName: String) {
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        Row(Modifier.fillMaxWidth()) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "0",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
-                )
-                Text(
-                    text = "Seguidores",
-                    fontWeight = FontWeight.Light,
-                    fontSize = 10.sp
-                )
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "2",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
-                )
-                Text(
-                    text = "Calificaciones",
-                    fontWeight = FontWeight.Light,
-                    fontSize = 10.sp
-                )
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "1",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
-                )
-                Text(
-                    text = "Seguidos",
-                    fontWeight = FontWeight.Light,
-                    fontSize = 10.sp
-                )
-            }
-        }
+        UserStats(
+            followers = 0,
+            ratings = 2,
+            following = 1,
+            modifier = Modifier.fillMaxWidth()
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
 

@@ -22,4 +22,7 @@
     <string name="login_error_wrong_credentials">Correo o contraseña incorrectos</string>
     <string name="login_error_not_implemented">Esto aún no funciona</string>
     <string name="login_unable_to_create_account">No es posible crear tu cuenta en este momento</string>
+    <string name="user_followers">Seguidores</string>
+    <string name="user_ratings">Calificaciones</string>
+    <string name="user_following">Seguidos</string>
 </resources>
