@@ -14,16 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.ui.composable.common.DefaultBottomAppBar
-import com.soyvictorherrera.nosedive.ui.composable.profile.UserPhoto
-import com.soyvictorherrera.nosedive.ui.composable.profile.UserScoreCompact
+import com.soyvictorherrera.nosedive.ui.composable.profile.UserDetails
 import com.soyvictorherrera.nosedive.ui.composable.profile.UserStats
 import com.soyvictorherrera.nosedive.ui.theme.Forest_Green
+import com.soyvictorherrera.nosedive.ui.theme.Forest_Green_07
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
 
 @Composable
@@ -88,22 +86,10 @@ fun HomeContent(userName: String) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        Row {
-            Spacer(modifier = Modifier.weight(1f))
-            UserPhoto(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                modifier = Modifier.weight(2f)
-            )
-            UserScoreCompact(
-                score = 4.3079f,
-                modifier = Modifier.weight(1f)
-            )
-        }
-        Spacer(Modifier.height(16.dp))
 
-        Text(
-            text = userName,
-            style = MaterialTheme.typography.h6
+        UserDetails(
+            userName = userName,
+            userPhotoBackgroundColor = Forest_Green_07
         )
 
         Spacer(modifier = Modifier.height(48.dp))

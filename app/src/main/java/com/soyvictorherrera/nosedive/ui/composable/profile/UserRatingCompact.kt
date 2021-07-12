@@ -15,7 +15,7 @@ const val SCORE_FORMAT = "%.5f"
 
 @Composable
 fun UserScoreCompact(
-    score: Float,
+    score: Double,
     modifier: Modifier = Modifier,
     horizontalAlignment: Alignment.Horizontal = Alignment.End
 ) {
@@ -42,6 +42,6 @@ fun UserScoreCompact(
 @Composable
 fun UserScoreCompactPreview() {
     NosediveTheme {
-        UserScoreCompact(score = 4.307992f)
+        UserScoreCompact(score = 4.307992)
     }
 }

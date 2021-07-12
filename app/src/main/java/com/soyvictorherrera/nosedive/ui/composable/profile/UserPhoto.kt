@@ -24,13 +24,14 @@ import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
 @Composable
 fun UserPhoto(
     painter: Painter,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = MaterialTheme.colors.surface
 ) {
     Surface(
         modifier = modifier
             .aspectRatio(1f),
         shape = CircleShape,
-        color = MaterialTheme.colors.surface,
+        color = backgroundColor,
         elevation = 2.dp
     ) {
         Surface(
