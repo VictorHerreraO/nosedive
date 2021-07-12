@@ -6,7 +6,6 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -23,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.ui.composable.profile.UserPhoto
+import com.soyvictorherrera.nosedive.ui.composable.profile.UserScoreCompact
 import com.soyvictorherrera.nosedive.ui.theme.Forest_Green
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
 
@@ -94,13 +94,10 @@ fun HomeContent(userName: String) {
                 painter = painterResource(id = R.drawable.ic_launcher_foreground),
                 modifier = Modifier.weight(2f)
             )
-            Column(
-                modifier = Modifier.weight(1f),
-                horizontalAlignment = Alignment.End
-            ) {
-                Text(text = "4.30", style = MaterialTheme.typography.h4)
-                Text(text = "79", style = MaterialTheme.typography.subtitle1)
-            }
+            UserScoreCompact(
+                score = 4.3079f,
+                modifier = Modifier.weight(1f)
+            )
         }
         Spacer(Modifier.height(16.dp))
 
