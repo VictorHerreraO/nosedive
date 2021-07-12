@@ -25,4 +25,7 @@
     <string name="user_followers">Seguidores</string>
     <string name="user_ratings">Calificaciones</string>
     <string name="user_following">Seguidos</string>
+    <string name="action_friends">Amigos</string>
+    <string name="action_rate">Calificar</string>
+    <string name="action_add_friend">Agregar</string>
 </resources>

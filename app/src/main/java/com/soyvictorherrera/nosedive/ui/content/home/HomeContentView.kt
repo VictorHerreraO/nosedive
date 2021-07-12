@@ -1,26 +1,25 @@
 package com.soyvictorherrera.nosedive.ui.content.home
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.*
+import androidx.compose.material.icons.sharp.AccountCircle
+import androidx.compose.material.icons.sharp.Notifications
+import androidx.compose.material.icons.sharp.TrendingUp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.soyvictorherrera.nosedive.R
+import com.soyvictorherrera.nosedive.ui.composable.common.DefaultBottomAppBar
 import com.soyvictorherrera.nosedive.ui.composable.profile.UserPhoto
 import com.soyvictorherrera.nosedive.ui.composable.profile.UserScoreCompact
 import com.soyvictorherrera.nosedive.ui.composable.profile.UserStats
@@ -159,87 +158,11 @@ fun HomeContent(userName: String) {
 
 @Composable
 fun HomeBottomBar() {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .padding(bottom = 64.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(MaterialTheme.colors.surface),
-        elevation = 2.dp
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(64.dp)
-                .padding(horizontal = 24.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TextButton(
-                onClick = {},
-                modifier = Modifier.size(64.dp),
-                contentPadding = PaddingValues(0.dp),
-                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.onSurface)
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Sharp.People,
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Text(text = "Amigos", fontSize = 10.sp)
-                }
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            TextButton(
-                onClick = {},
-                modifier = Modifier.size(64.dp),
-                contentPadding = PaddingValues(0.dp),
-                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.onSurface)
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Sharp.Star,
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Text(text = "Calificar", fontSize = 10.sp)
-                }
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            TextButton(
-                onClick = {},
-                modifier = Modifier.size(64.dp),
-                contentPadding = PaddingValues(0.dp),
-                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.onSurface)
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Sharp.PersonAdd,
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Text(text = "Agregar", fontSize = 10.sp)
-                }
-            }
-        }
-    }
+    DefaultBottomAppBar(
+        onFriendsClick = { /*TODO*/ },
+        onRateClick = { /*TODO*/ },
+        onAddFriendClick = { /*TODO*/ }
+    )
 }
 
 @Preview
