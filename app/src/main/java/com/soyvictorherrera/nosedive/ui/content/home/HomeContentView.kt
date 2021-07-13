@@ -24,6 +24,13 @@ import com.soyvictorherrera.nosedive.ui.theme.Forest_Green
 import com.soyvictorherrera.nosedive.ui.theme.Forest_Green_07
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
 
+sealed class HomeEvent {
+    object ViewProfile : HomeEvent()
+    object ViewNotifications : HomeEvent()
+    object ViewFriends : HomeEvent()
+    object NewRate : HomeEvent()
+    object AddFriend : HomeEvent()
+}
 @Composable
 fun HomeContentView(
     userName: String,
@@ -137,6 +144,7 @@ fun HomeContent(userName: String) {
                     }
                 }
             }
+            NewAccountAlertCard()
         }
 
     }
