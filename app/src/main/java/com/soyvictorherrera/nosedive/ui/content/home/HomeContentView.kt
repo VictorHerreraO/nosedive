@@ -1,6 +1,5 @@
 package com.soyvictorherrera.nosedive.ui.content.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
@@ -9,18 +8,15 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.AccountCircle
 import androidx.compose.material.icons.sharp.Notifications
-import androidx.compose.material.icons.sharp.TrendingUp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.soyvictorherrera.nosedive.ui.composable.card.NewAccountAlertCard
 import com.soyvictorherrera.nosedive.ui.composable.common.DefaultBottomAppBar
 import com.soyvictorherrera.nosedive.ui.composable.profile.UserDetails
 import com.soyvictorherrera.nosedive.ui.composable.profile.UserStats
-import com.soyvictorherrera.nosedive.ui.theme.Forest_Green
 import com.soyvictorherrera.nosedive.ui.theme.Forest_Green_07
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
 
@@ -31,24 +27,30 @@ sealed class HomeEvent {
     object NewRate : HomeEvent()
     object AddFriend : HomeEvent()
 }
+
 @Composable
 fun HomeContentView(
     userName: String,
-    scaffoldState: ScaffoldState = rememberScaffoldState()
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    onNavigationEvent: (HomeEvent) -> Unit
 ) {
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
             HomeTopBar(
-                onUserClick = { /* TODO: 10/07/2021 */ },
-                onNotificationsClick = { /* TODO: 10/07/2021 */ }
+                onUserClick = { onNavigationEvent(HomeEvent.ViewProfile) },
+                onNotificationsClick = { onNavigationEvent(HomeEvent.ViewNotifications) }
             )
         },
         content = {
             HomeContent(userName = userName)
         },
         bottomBar = {
-            HomeBottomBar()
+            HomeBottomBar(
+                onFriendsClick = { onNavigationEvent(HomeEvent.ViewFriends) },
+                onRateClick = { onNavigationEvent(HomeEvent.NewRate) },
+                onAddFriendClick = { onNavigationEvent(HomeEvent.AddFriend) }
+            )
         }
     )
 }
@@ -119,43 +121,21 @@ fun HomeContent(userName: String) {
                     orientation = Orientation.Vertical
                 )
         ) {
-            Card {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Image(
-                        imageVector = Icons.Sharp.TrendingUp,
-                        contentDescription = null,
-                        modifier = Modifier.size(40.dp),
-                        colorFilter = ColorFilter.tint(color = Forest_Green)
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            "Tu calificación está oculta",
-                            fontSize = 18.sp
-                        )
-                        Text(
-                            "Necesitas al menos 10 calificaciones antes de poder ver tu calificación promedio",
-                            style = MaterialTheme.typography.caption
-                        )
-                    }
-                }
-            }
             NewAccountAlertCard()
         }
-
     }
 }
 
 @Composable
-fun HomeBottomBar() {
+fun HomeBottomBar(
+    onFriendsClick: () -> Unit,
+    onRateClick: () -> Unit,
+    onAddFriendClick: () -> Unit
+) {
     DefaultBottomAppBar(
-        onFriendsClick = { /*TODO*/ },
-        onRateClick = { /*TODO*/ },
-        onAddFriendClick = { /*TODO*/ }
+        onFriendsClick = onFriendsClick,
+        onRateClick = onRateClick,
+        onAddFriendClick = onAddFriendClick
     )
 }
 
@@ -163,6 +143,6 @@ fun HomeBottomBar() {
 @Composable
 fun HomeContentPreviewDark() {
     NosediveTheme(darkTheme = true) {
-        HomeContentView(userName = "Víctor Herrera")
+        HomeContentView(userName = "Víctor Herrera") {}
     }
 }

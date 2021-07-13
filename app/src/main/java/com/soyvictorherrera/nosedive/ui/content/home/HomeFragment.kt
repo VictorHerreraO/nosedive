@@ -42,8 +42,9 @@ class HomeFragment : Fragment() {
                         HomeContentView(
                             userName = user.name ?: "no-name",
                             scaffoldState = scaffoldState
-                        )
+                        ) { event ->
 
+                        }
                     }
                 }
             }

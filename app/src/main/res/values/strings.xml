@@ -28,4 +28,6 @@
     <string name="action_friends">Amigos</string>
     <string name="action_rate">Calificar</string>
     <string name="action_add_friend">Agregar</string>
+    <string name="alert_new_account_title">Tu calificación está oculta</string>
+    <string name="alert_new_account_desc">Necesitas al menos %d calificaciones antes de poder ver tu calificación promedio</string>
 </resources>
