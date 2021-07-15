@@ -5,6 +5,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.soyvictorherrera.nosedive.data.Result
 import com.soyvictorherrera.nosedive.data.source.authentication.AuthenticationDataSource
 import com.soyvictorherrera.nosedive.data.source.authentication.AuthenticationEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 
 class FirebaseAuthenticationDataSource(
@@ -45,14 +47,10 @@ class FirebaseAuthenticationDataSource(
         }
     }
 
-    override suspend fun getCurrentAuthentication(): Result<AuthenticationEntity> {
-        return try {
-            auth.currentUser?.let { currentUser ->
-                Result.Success(currentUser.toAuthenticationEntity())
-            } ?: throw RuntimeException("no signed user")
-        } catch (ex: Exception) {
-            Result.Error(ex)
-        }
+    override suspend fun getCurrentAuthentication(): Flow<Result<AuthenticationEntity>> = flow {
+        auth.currentUser?.let { currentUser ->
+            emit(Result.Success(currentUser.toAuthenticationEntity()))
+        } ?: throw RuntimeException("no signed user")
     }
 }
 

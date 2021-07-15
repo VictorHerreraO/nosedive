@@ -3,6 +3,7 @@ package com.soyvictorherrera.nosedive.data.repository.user
 import com.soyvictorherrera.nosedive.data.Result
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
+import kotlinx.coroutines.flow.Flow
 
 class UserRepositoryImpl(
     private val userDataSource: UserDataSource
@@ -12,7 +13,7 @@ class UserRepositoryImpl(
         return userDataSource.saveUser(user)
     }
 
-    override suspend fun getUser(userId: String): Result<UserEntity> {
+    override suspend fun getUser(userId: String): Flow<Result<UserEntity>> {
         return userDataSource.getUser(userId)
     }
 

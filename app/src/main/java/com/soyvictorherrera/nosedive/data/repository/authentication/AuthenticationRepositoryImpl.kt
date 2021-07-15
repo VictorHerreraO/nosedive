@@ -3,6 +3,7 @@ package com.soyvictorherrera.nosedive.data.repository.authentication
 import com.soyvictorherrera.nosedive.data.Result
 import com.soyvictorherrera.nosedive.data.source.authentication.AuthenticationDataSource
 import com.soyvictorherrera.nosedive.data.source.authentication.AuthenticationEntity
+import kotlinx.coroutines.flow.Flow
 
 class AuthenticationRepositoryImpl(
     private val authSource: AuthenticationDataSource
@@ -26,7 +27,7 @@ class AuthenticationRepositoryImpl(
         )
     }
 
-    override suspend fun getCurrentAuthentication(): Result<AuthenticationEntity> {
+    override suspend fun getCurrentAuthentication(): Flow<Result<AuthenticationEntity>> {
         return authSource.getCurrentAuthentication()
     }
 }

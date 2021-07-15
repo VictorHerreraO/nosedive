@@ -19,7 +19,10 @@ class ViewModelFactory : ViewModelProvider.Factory {
                     SignUpViewModel(UseCaseFactory.getSignUpUseCase())
                 }
                 isAssignableFrom(HomeViewModel::class.java) -> {
-                    HomeViewModel(UseCaseFactory.getGetCurrentUserUseCase())
+                    HomeViewModel(
+                        UseCaseFactory.getGetCurrentUserUseCase(),
+                        UseCaseFactory.getGetCurrentUserUseCase2()
+                    )
                 }
                 else -> throw IllegalArgumentException("Unknown ViewModel class")
             }

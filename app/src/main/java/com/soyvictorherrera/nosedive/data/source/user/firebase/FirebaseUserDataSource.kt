@@ -5,6 +5,8 @@ import com.soyvictorherrera.nosedive.data.Result
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 
 
@@ -27,18 +29,13 @@ class FirebaseUserDataSource(
         }
     }
 
-    override suspend fun getUser(userId: String): Result<UserEntity> {
-        return try {
-            val user = users.child(userId)
-                .get()
-                .await()
-                ?.getValue(UserEntity::class.java)
-                ?: throw RuntimeException("unable to read user {$userId}")
+    override suspend fun getUser(userId: String): Flow<Result<UserEntity>> = flow {
+        val user = users.child(userId)
+            .get()
+            .await()
+            ?.getValue(UserEntity::class.java)
+            ?: throw RuntimeException("unable to read user {$userId}")
 
-            Result.Success(user.copy(id = userId))
-        } catch (ex: Exception) {
-            Result.Error(ex)
-        }
+        emit(Result.Success(user.copy(id = userId)))
     }
-
 }
