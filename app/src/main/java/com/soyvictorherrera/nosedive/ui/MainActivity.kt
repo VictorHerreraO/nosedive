@@ -6,6 +6,8 @@ import androidx.navigation.findNavController
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.databinding.ActivityMainBinding
 
+const val TAG = "AppDebug"
+
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

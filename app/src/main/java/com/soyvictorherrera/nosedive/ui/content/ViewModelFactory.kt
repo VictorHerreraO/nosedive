@@ -20,8 +20,7 @@ class ViewModelFactory : ViewModelProvider.Factory {
                 }
                 isAssignableFrom(HomeViewModel::class.java) -> {
                     HomeViewModel(
-                        UseCaseFactory.getGetCurrentUserUseCase(),
-                        UseCaseFactory.getGetCurrentUserUseCase2()
+                        UseCaseFactory.getGetCurrentUserUseCase()
                     )
                 }
                 else -> throw IllegalArgumentException("Unknown ViewModel class")

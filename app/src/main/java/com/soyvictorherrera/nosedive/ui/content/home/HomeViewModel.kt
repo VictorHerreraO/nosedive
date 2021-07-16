@@ -8,13 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.soyvictorherrera.nosedive.data.Result
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
 import com.soyvictorherrera.nosedive.domain.usecase.GetCurrentUserUseCase
-import com.soyvictorherrera.nosedive.domain.usecase.GetCurrentUserUseCase2
 import com.soyvictorherrera.nosedive.ui.util.Event
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val getCurrentUserUseCase: GetCurrentUserUseCase,
-    private val getCurrentUserUseCase2: GetCurrentUserUseCase2
+    private val getCurrentUserUseCase: GetCurrentUserUseCase
 ) : ViewModel() {
 
     private val _homeState = MutableLiveData<HomeState>(HomeState.Loading)
@@ -35,23 +33,7 @@ class HomeViewModel(
 
     init {
         viewModelScope.launch {
-            /*getCurrentUserUseCase().let { result ->
-                when (result) {
-                    is Result.Success -> {
-                        _user.value = result.data
-                        _sessionState.value = SessionState.SignedIn
-                        _homeState.value = HomeState.Idle
-                    }
-                    is Result.Error -> {
-                        Log.d("getCurrentUser", "error by:", result.exception)
-                        _sessionState.value = SessionState.SignedOut
-                    }
-                    else -> {
-                        Log.d("getCurrentUser", "else")
-                    }
-                }
-            }*/
-            getCurrentUserUseCase2.execute {result ->
+            getCurrentUserUseCase.execute { result ->
                 when (result) {
                     is Result.Success -> {
                         _user.value = result.data

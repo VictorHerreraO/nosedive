@@ -1,29 +1,43 @@
 package com.soyvictorherrera.nosedive.domain.usecase
 
+import android.util.Log
 import com.soyvictorherrera.nosedive.data.Result
 import com.soyvictorherrera.nosedive.data.repository.authentication.AuthenticationRepository
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
+import com.soyvictorherrera.nosedive.ui.TAG
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.map
 
 class GetCurrentUserUseCase(
     private val authRepository: AuthenticationRepository,
     private val userRepository: UserRepository
-) {
+) : BaseUseCase<Result<UserEntity>>() {
 
-    suspend operator fun invoke(): Result<UserEntity> {
-        authRepository.getCurrentAuthentication().let { result ->
-            return when (result) {
-                is Result.Error -> {
-                    result
+    override suspend fun buildFlow(): Flow<Result<UserEntity>> {
+        return authRepository.getCurrentAuthentication()
+            .map { authResult ->
+                when (authResult) {
+                    is Result.Success -> {
+                        authResult.data.userId!!
+                    }
+                    is Result.Error -> {
+                        throw authResult.exception
+                    }
+                    else -> {
+                        throw IllegalStateException("authResult must be success or error")
+                    }
                 }
-                is Result.Success -> {
-                    result.data.userId?.let { uid ->
-                        userRepository.getUser(uid)
-                    } ?: Result.Error(RuntimeException("no user id on current auth"))
-                }
-                else -> throw IllegalStateException()
             }
-        }
+            .flatMapMerge { userId ->
+                userRepository.getUser(userId)
+            }
+            .catch { throwable ->
+                Log.e(TAG, "flow catch -> ", throwable)
+                emit(Result.Error(RuntimeException(throwable.cause)))
+            }
     }
 
 }
