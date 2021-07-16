@@ -34,7 +34,7 @@ class FirebaseUserDataSource(
         }
     }
 
-    override suspend fun getUser(userId: String): Flow<Result<UserEntity>> = callbackFlow {
+    override suspend fun observeUser(userId: String): Flow<Result<UserEntity>> = callbackFlow {
         val userListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val user = snapshot.getValue(UserEntity::class.java)
@@ -60,13 +60,5 @@ class FirebaseUserDataSource(
         awaitClose {
             userRef.removeEventListener(userListener)
         }
-
-//        val user = users.child(userId)
-//            .get()
-//            .await()
-//            ?.getValue(UserEntity::class.java)
-//            ?: throw RuntimeException("unable to read user {$userId}")
-//
-//        emit(Result.Success(user.copy(id = userId)))
     }
 }

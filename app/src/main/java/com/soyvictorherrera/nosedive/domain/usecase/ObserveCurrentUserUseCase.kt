@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.map
 
-class GetCurrentUserUseCase(
+class ObserveCurrentUserUseCase(
     private val authRepository: AuthenticationRepository,
     private val userRepository: UserRepository
 ) : BaseUseCase<Result<UserEntity>>() {
@@ -32,7 +32,7 @@ class GetCurrentUserUseCase(
                 }
             }
             .flatMapMerge { userId ->
-                userRepository.getUser(userId)
+                userRepository.observeUser(userId)
             }
             .catch { throwable ->
                 Log.e(TAG, "flow catch -> ", throwable)

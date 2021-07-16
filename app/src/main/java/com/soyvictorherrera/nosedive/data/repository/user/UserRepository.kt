@@ -8,6 +8,6 @@ interface UserRepository {
 
     suspend fun saveUser(user: UserEntity): Result<UserEntity>
 
-    suspend fun getUser(userId: String): Flow<Result<UserEntity>>
+    suspend fun observeUser(userId: String): Flow<Result<UserEntity>>
 
 }

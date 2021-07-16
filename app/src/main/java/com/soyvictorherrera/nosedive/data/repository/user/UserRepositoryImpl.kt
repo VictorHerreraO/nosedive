@@ -13,8 +13,8 @@ class UserRepositoryImpl(
         return userDataSource.saveUser(user)
     }
 
-    override suspend fun getUser(userId: String): Flow<Result<UserEntity>> {
-        return userDataSource.getUser(userId)
+    override suspend fun observeUser(userId: String): Flow<Result<UserEntity>> {
+        return userDataSource.observeUser(userId)
     }
 
 }
