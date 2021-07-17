@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.soyvictorherrera.nosedive.presentation.componen.state
+package com.soyvictorherrera.nosedive.presentation.component.state
 
 const val MIN_PASSWORD_LENGTH = 6
 

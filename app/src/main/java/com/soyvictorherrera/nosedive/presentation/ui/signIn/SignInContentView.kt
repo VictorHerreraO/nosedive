@@ -19,13 +19,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.soyvictorherrera.nosedive.R
-import com.soyvictorherrera.nosedive.presentation.componen.button.ActionButton
-import com.soyvictorherrera.nosedive.presentation.componen.button.MainButton
-import com.soyvictorherrera.nosedive.presentation.componen.form.EmailTextField
-import com.soyvictorherrera.nosedive.presentation.componen.form.PasswordTextField
-import com.soyvictorherrera.nosedive.presentation.componen.state.EmailState
-import com.soyvictorherrera.nosedive.presentation.componen.state.MIN_PASSWORD_LENGTH
-import com.soyvictorherrera.nosedive.presentation.componen.state.PasswordState
+import com.soyvictorherrera.nosedive.presentation.component.button.ActionButton
+import com.soyvictorherrera.nosedive.presentation.component.button.MainButton
+import com.soyvictorherrera.nosedive.presentation.component.form.EmailTextField
+import com.soyvictorherrera.nosedive.presentation.component.form.PasswordTextField
+import com.soyvictorherrera.nosedive.presentation.component.state.EmailState
+import com.soyvictorherrera.nosedive.presentation.component.state.MIN_PASSWORD_LENGTH
+import com.soyvictorherrera.nosedive.presentation.component.state.PasswordState
 import com.soyvictorherrera.nosedive.presentation.theme.Alto
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 

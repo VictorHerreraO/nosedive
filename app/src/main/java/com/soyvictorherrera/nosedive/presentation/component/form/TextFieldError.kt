@@ -1,4 +1,4 @@
-package com.soyvictorherrera.nosedive.presentation.componen.form
+package com.soyvictorherrera.nosedive.presentation.component.form
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

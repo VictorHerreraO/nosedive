@@ -1,4 +1,4 @@
-package com.soyvictorherrera.nosedive.presentation.componen.form
+package com.soyvictorherrera.nosedive.presentation.component.form
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
@@ -10,39 +10,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import com.soyvictorherrera.nosedive.R
-import com.soyvictorherrera.nosedive.presentation.componen.state.TextFieldState
+import com.soyvictorherrera.nosedive.presentation.component.state.TextFieldState
 
 @Composable
-fun NameTextField(
-    nameState: TextFieldState,
+fun EmailTextField(
+    emailState: TextFieldState,
     modifier: Modifier = Modifier,
     imeAction: ImeAction = ImeAction.Next,
-    onImeAction: () -> Unit = {}
+    onImeAction: () -> Unit
 ) {
-
     TextField(
-        value = nameState.text,
-        onValueChange = { nameState.text = it },
-        label = { Text(stringResource(R.string.signup_name)) },
+        value = emailState.text,
+        onValueChange = { emailState.text = it },
+        label = { Text(stringResource(id = R.string.login_user_email)) },
         singleLine = true,
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                nameState.onFocusChange(focusState.isFocused)
+                emailState.onFocusChange(focusState.isFocused)
                 if (!focusState.isFocused) {
-                    nameState.enableShowErrors()
+                    emailState.enableShowErrors()
                 }
             },
-        isError = nameState.showErrors(),
+        isError = emailState.showErrors(),
         keyboardOptions = KeyboardOptions.Default.copy(
-            capitalization = KeyboardCapitalization.Words,
+            keyboardType = KeyboardType.Email,
             imeAction = imeAction
         ),
         keyboardActions = KeyboardActions(onAny = {
             onImeAction()
         })
     )
-    nameState.getError()?.let { error -> TextFieldError(textError = error) }
+    emailState.getError()?.let { error -> TextFieldError(textError = error) }
 }

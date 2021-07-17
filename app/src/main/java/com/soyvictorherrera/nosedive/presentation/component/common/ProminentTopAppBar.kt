@@ -1,4 +1,4 @@
-package com.soyvictorherrera.nosedive.presentation.componen.common
+package com.soyvictorherrera.nosedive.presentation.component.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

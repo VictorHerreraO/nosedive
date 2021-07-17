@@ -1,4 +1,4 @@
-package com.soyvictorherrera.nosedive.presentation.componen.card
+package com.soyvictorherrera.nosedive.presentation.component.card
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*

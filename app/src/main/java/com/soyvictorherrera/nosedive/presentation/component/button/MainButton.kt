@@ -1,4 +1,4 @@
-package com.soyvictorherrera.nosedive.presentation.componen.button
+package com.soyvictorherrera.nosedive.presentation.component.button
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth

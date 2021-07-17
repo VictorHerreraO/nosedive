@@ -1,4 +1,4 @@
-package com.soyvictorherrera.nosedive.presentation.componen.profile
+package com.soyvictorherrera.nosedive.presentation.component.profile
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

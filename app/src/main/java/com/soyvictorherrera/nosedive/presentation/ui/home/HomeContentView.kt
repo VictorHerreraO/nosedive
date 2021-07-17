@@ -13,10 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.soyvictorherrera.nosedive.presentation.componen.card.NewAccountAlertCard
-import com.soyvictorherrera.nosedive.presentation.componen.common.DefaultBottomAppBar
-import com.soyvictorherrera.nosedive.presentation.componen.profile.UserDetails
-import com.soyvictorherrera.nosedive.presentation.componen.profile.UserStats
+import com.soyvictorherrera.nosedive.presentation.component.card.NewAccountAlertCard
+import com.soyvictorherrera.nosedive.presentation.component.common.DefaultBottomAppBar
+import com.soyvictorherrera.nosedive.presentation.component.profile.UserDetails
+import com.soyvictorherrera.nosedive.presentation.component.profile.UserStats
 import com.soyvictorherrera.nosedive.presentation.theme.Forest_Green_07
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 

@@ -1,4 +1,4 @@
-package com.soyvictorherrera.nosedive.presentation.componen.form
+package com.soyvictorherrera.nosedive.presentation.component.form
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
@@ -23,7 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.soyvictorherrera.nosedive.R
-import com.soyvictorherrera.nosedive.presentation.componen.state.TextFieldState
+import com.soyvictorherrera.nosedive.presentation.component.state.TextFieldState
 
 @Composable
 fun PasswordTextField(

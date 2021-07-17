@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.soyvictorherrera.nosedive.presentation.componen.state
+package com.soyvictorherrera.nosedive.presentation.component.state
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

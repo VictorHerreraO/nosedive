@@ -1,4 +1,4 @@
-package com.soyvictorherrera.nosedive.presentation.componen.state
+package com.soyvictorherrera.nosedive.presentation.component.state
 
 const val MIN_NAME_LENGTH = 1
 const val MAX_NAME_LENGTH = 40
