@@ -14,15 +14,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.ui.Screen
-import com.soyvictorherrera.nosedive.ui.content.ViewModelFactory
 import com.soyvictorherrera.nosedive.ui.navigateInTo
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SignInFragment : Fragment() {
 
-    private val viewModel: SignInViewModel by viewModels { ViewModelFactory() }
+    private val viewModel: SignInViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

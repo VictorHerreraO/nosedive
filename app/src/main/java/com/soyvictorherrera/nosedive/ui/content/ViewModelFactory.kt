@@ -8,6 +8,7 @@ import com.soyvictorherrera.nosedive.ui.content.signIn.SignInViewModel
 import com.soyvictorherrera.nosedive.ui.content.signUp.SignUpViewModel
 
 @Suppress("UNCHECKED_CAST")
+@Deprecated("Use @HiltViewModel")
 class ViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
         with(modelClass) {

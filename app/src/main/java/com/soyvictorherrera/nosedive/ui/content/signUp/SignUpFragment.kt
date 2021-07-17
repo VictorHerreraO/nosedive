@@ -17,12 +17,14 @@ import com.soyvictorherrera.nosedive.ui.content.ViewModelFactory
 import com.soyvictorherrera.nosedive.ui.navigateInTo
 import com.soyvictorherrera.nosedive.ui.popUpTo
 import com.soyvictorherrera.nosedive.ui.theme.NosediveTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SignUpFragment : Fragment() {
 
-    private val viewModel: SignUpViewModel by viewModels { ViewModelFactory() }
+    private val viewModel: SignUpViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

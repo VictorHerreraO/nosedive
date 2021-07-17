@@ -9,9 +9,12 @@ import com.soyvictorherrera.nosedive.data.Result
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
 import com.soyvictorherrera.nosedive.domain.usecase.ObserveCurrentUserUseCase
 import com.soyvictorherrera.nosedive.ui.util.Event
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val observeCurrentUserUseCase: ObserveCurrentUserUseCase
 ) : ViewModel() {
 
