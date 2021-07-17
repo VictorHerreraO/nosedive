@@ -1,7 +1,8 @@
 package com.soyvictorherrera.nosedive.domain.usecase
 
 import android.util.Log
-import com.soyvictorherrera.nosedive.data.Result
+import com.soyvictorherrera.nosedive.util.Result
+import com.soyvictorherrera.nosedive.util.map
 import com.soyvictorherrera.nosedive.data.repository.authentication.AuthenticationRepository
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
@@ -32,7 +33,13 @@ class ObserveCurrentUserUseCase(
                 }
             }
             .flatMapMerge { userId ->
-                userRepository.observeUser(userId)
+                userRepository.observeUser(userId).map { userResult ->
+                    userResult.map { data ->
+                        with(data) {
+                            UserEntity(id, name, email, password, photoUrl)
+                        }
+                    }
+                }
             }
             .catch { throwable ->
                 Log.e(TAG, "flow catch -> ", throwable)

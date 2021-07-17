@@ -1,6 +1,6 @@
 package com.soyvictorherrera.nosedive.data.source.user
 
-import com.soyvictorherrera.nosedive.data.Result
+import com.soyvictorherrera.nosedive.util.Result
 import kotlinx.coroutines.flow.Flow
 
 interface UserDataSource {

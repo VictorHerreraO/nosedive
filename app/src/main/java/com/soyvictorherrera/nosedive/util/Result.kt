@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.soyvictorherrera.nosedive.data
+package com.soyvictorherrera.nosedive.util
 
 
 /**
@@ -41,3 +41,12 @@ sealed class Result<out R> {
  */
 val Result<*>.succeeded
     get() = this is Result.Success && data != null
+
+fun <R, T> Result<T>.map(transform: (data: T) -> R): Result<R> {
+    return when (this) {
+        is Result.Success -> Result.Success(transform(data))
+        is Result.Error -> this
+        Result.Loading -> Result.Loading
+    }
+}
+
