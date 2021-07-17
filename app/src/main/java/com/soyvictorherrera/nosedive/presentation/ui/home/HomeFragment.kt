@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.soyvictorherrera.nosedive.R
+import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import com.soyvictorherrera.nosedive.presentation.ui.navigateOutTo
@@ -41,7 +42,8 @@ class HomeFragment : Fragment() {
 
                     userState.value?.let { user ->
                         HomeContentView(
-                            userName = user.name ?: "no-name",
+                            user = user,
+                            userStats = UserStatsModel(),
                             scaffoldState = scaffoldState
                         ) { event ->
 

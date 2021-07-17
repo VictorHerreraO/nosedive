@@ -1,12 +1,14 @@
 package com.soyvictorherrera.nosedive.domain.usecase
 
 import android.util.Log
-import com.soyvictorherrera.nosedive.util.Result
-import com.soyvictorherrera.nosedive.util.map
 import com.soyvictorherrera.nosedive.data.repository.authentication.AuthenticationRepository
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
+import com.soyvictorherrera.nosedive.domain.mapper.DomainMapper
+import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.presentation.ui.TAG
+import com.soyvictorherrera.nosedive.util.Result
+import com.soyvictorherrera.nosedive.util.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapMerge
@@ -14,10 +16,11 @@ import kotlinx.coroutines.flow.map
 
 class ObserveCurrentUserUseCase(
     private val authRepository: AuthenticationRepository,
-    private val userRepository: UserRepository
-) : BaseUseCase<Result<UserEntity>>() {
+    private val userRepository: UserRepository,
+    private val userEntityMapper: DomainMapper<UserEntity, UserModel>
+) : BaseUseCase<Result<UserModel>>() {
 
-    override suspend fun buildFlow(): Flow<Result<UserEntity>> {
+    override suspend fun buildFlow(): Flow<Result<UserModel>> {
         return authRepository.getCurrentAuthentication()
             .map { authResult ->
                 when (authResult) {
@@ -33,12 +36,8 @@ class ObserveCurrentUserUseCase(
                 }
             }
             .flatMapMerge { userId ->
-                userRepository.observeUser(userId).map { userResult ->
-                    userResult.map { data ->
-                        with(data) {
-                            UserEntity(id, name, email, password, photoUrl)
-                        }
-                    }
+                userRepository.observeUser(userId).map { result ->
+                    result.map { userEntityMapper.toDomainModel(it) }
                 }
             }
             .catch { throwable ->

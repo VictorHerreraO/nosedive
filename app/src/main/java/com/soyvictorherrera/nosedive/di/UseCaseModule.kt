@@ -2,6 +2,9 @@ package com.soyvictorherrera.nosedive.di
 
 import com.soyvictorherrera.nosedive.data.repository.authentication.AuthenticationRepository
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
+import com.soyvictorherrera.nosedive.data.source.user.UserEntity
+import com.soyvictorherrera.nosedive.domain.mapper.DomainMapper
+import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.usecase.ObserveCurrentUserUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.SignInUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.SignUpUseCase
@@ -43,11 +46,13 @@ class UseCaseModule {
     @ViewModelScoped
     fun provideObserveCurrentUserUseCase(
         authRepository: AuthenticationRepository,
-        userRepository: UserRepository
+        userRepository: UserRepository,
+        userEntityMapper: DomainMapper<UserEntity, UserModel>
     ): ObserveCurrentUserUseCase {
         return ObserveCurrentUserUseCase(
             authRepository = authRepository,
-            userRepository = userRepository
+            userRepository = userRepository,
+            userEntityMapper = userEntityMapper
         )
     }
 

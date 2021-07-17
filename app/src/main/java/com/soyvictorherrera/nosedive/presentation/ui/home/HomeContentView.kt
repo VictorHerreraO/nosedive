@@ -13,6 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.soyvictorherrera.nosedive.domain.model.UserModel
+import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
 import com.soyvictorherrera.nosedive.presentation.component.card.NewAccountAlertCard
 import com.soyvictorherrera.nosedive.presentation.component.common.DefaultBottomAppBar
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserDetails
@@ -30,7 +32,8 @@ sealed class HomeEvent {
 
 @Composable
 fun HomeContentView(
-    userName: String,
+    user: UserModel,
+    userStats: UserStatsModel,
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     onNavigationEvent: (HomeEvent) -> Unit
 ) {
@@ -43,7 +46,10 @@ fun HomeContentView(
             )
         },
         content = {
-            HomeContent(userName = userName)
+            HomeContent(
+                user = user,
+                userStats = userStats
+            )
         },
         bottomBar = {
             HomeBottomBar(
@@ -89,7 +95,10 @@ fun HomeTopBar(
 }
 
 @Composable
-fun HomeContent(userName: String) {
+fun HomeContent(
+    user: UserModel,
+    userStats: UserStatsModel
+) {
     Column(
         modifier = Modifier.padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -97,21 +106,20 @@ fun HomeContent(userName: String) {
         Spacer(modifier = Modifier.height(16.dp))
 
         UserDetails(
-            userName = userName,
+            userName = user.name,
             userPhotoBackgroundColor = Forest_Green_07
         )
 
         Spacer(modifier = Modifier.height(48.dp))
 
         UserStats(
-            followers = 0,
-            ratings = 2,
-            following = 1,
+            followers = userStats.followers,
+            ratings = userStats.ratings,
+            following = userStats.following,
             modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(32.dp))
-
 
         Column(
             modifier = Modifier
@@ -143,6 +151,12 @@ fun HomeBottomBar(
 @Composable
 fun HomeContentPreviewDark() {
     NosediveTheme(darkTheme = true) {
-        HomeContentView(userName = "Víctor Herrera") {}
+        HomeContentView(
+            user = UserModel(
+                name = "Víctor Herrera",
+                email = ""
+            ),
+            userStats = UserStatsModel()
+        ) {}
     }
 }
