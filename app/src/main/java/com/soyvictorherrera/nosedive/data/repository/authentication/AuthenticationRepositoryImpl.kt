@@ -6,11 +6,11 @@ import com.soyvictorherrera.nosedive.data.source.authentication.AuthenticationEn
 import kotlinx.coroutines.flow.Flow
 
 class AuthenticationRepositoryImpl(
-    private val authSource: AuthenticationDataSource
+    private val authDataSource: AuthenticationDataSource
 ) : AuthenticationRepository {
 
     override suspend fun signIn(email: String, password: String): Result<AuthenticationEntity> {
-        return authSource.signIn(
+        return authDataSource.signIn(
             AuthenticationEntity(
                 email = email.lowercase().trim(),
                 password = password.trim()
@@ -19,7 +19,7 @@ class AuthenticationRepositoryImpl(
     }
 
     override suspend fun signUp(email: String, password: String): Result<AuthenticationEntity> {
-        return authSource.signUp(
+        return authDataSource.signUp(
             AuthenticationEntity(
                 email = email.lowercase().trim(),
                 password = password.trim()
@@ -28,6 +28,6 @@ class AuthenticationRepositoryImpl(
     }
 
     override suspend fun getCurrentAuthentication(): Flow<Result<AuthenticationEntity>> {
-        return authSource.getCurrentAuthentication()
+        return authDataSource.getCurrentAuthentication()
     }
 }

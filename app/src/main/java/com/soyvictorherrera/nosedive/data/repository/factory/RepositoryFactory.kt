@@ -6,6 +6,7 @@ import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepositoryImpl
 import com.soyvictorherrera.nosedive.data.source.factory.DataSourceFactory
 
+@Deprecated("use Hilt injection to provide repositories")
 object RepositoryFactory {
 
     fun getAuthenticationRepository(): AuthenticationRepository {

@@ -6,6 +6,7 @@ import com.soyvictorherrera.nosedive.data.source.authentication.firebase.Firebas
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
 import com.soyvictorherrera.nosedive.data.source.user.firebase.FirebaseUserDataSource
 
+@Deprecated("use Hilt injection to provide data sources")
 object DataSourceFactory {
 
     fun getAuthenticationDataSource(): AuthenticationDataSource {

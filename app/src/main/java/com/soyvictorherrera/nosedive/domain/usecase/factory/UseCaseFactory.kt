@@ -5,6 +5,7 @@ import com.soyvictorherrera.nosedive.domain.usecase.ObserveCurrentUserUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.SignInUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.SignUpUseCase
 
+@Deprecated("use Hilt injection to provide use cases")
 object UseCaseFactory {
 
     fun getSignInUseCase(): SignInUseCase {
