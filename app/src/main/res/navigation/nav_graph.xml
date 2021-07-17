@@ -6,14 +6,14 @@
 
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.soyvictorherrera.nosedive.ui.content.signIn.SignInFragment"
+        android:name="com.soyvictorherrera.nosedive.presentation.ui.signIn.SignInFragment"
         android:label="fragment_sign_in" />
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.soyvictorherrera.nosedive.ui.content.signUp.SignUpFragment"
+        android:name="com.soyvictorherrera.nosedive.presentation.ui.signUp.SignUpFragment"
         android:label="fragment_sign_up" />
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.soyvictorherrera.nosedive.ui.content.home.HomeFragment"
+        android:name="com.soyvictorherrera.nosedive.presentation.ui.home.HomeFragment"
         android:label="fragment_home" />
 </navigation>

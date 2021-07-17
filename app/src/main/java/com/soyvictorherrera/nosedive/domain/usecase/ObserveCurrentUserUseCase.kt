@@ -5,7 +5,7 @@ import com.soyvictorherrera.nosedive.data.Result
 import com.soyvictorherrera.nosedive.data.repository.authentication.AuthenticationRepository
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
-import com.soyvictorherrera.nosedive.ui.TAG
+import com.soyvictorherrera.nosedive.presentation.ui.TAG
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapMerge
