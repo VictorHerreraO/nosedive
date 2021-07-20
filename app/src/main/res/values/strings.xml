@@ -30,4 +30,8 @@
     <string name="action_add_friend">Agregar</string>
     <string name="alert_new_account_title">Tu calificación está oculta</string>
     <string name="alert_new_account_desc">Necesitas al menos %d calificaciones antes de poder ver tu calificación promedio</string>
+    <string name="profile_current_password">Contraseña actual</string>
+    <string name="profile_error_password_dont_match">Las contraseñas no coinciden</string>
+    <string name="profile_new_password">Nueva contaseña</string>
+    <string name="profile_save_changes">Guardar cambios</string>
 </resources>

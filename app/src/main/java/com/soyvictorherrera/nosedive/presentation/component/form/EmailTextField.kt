@@ -19,6 +19,7 @@ fun EmailTextField(
     emailState: TextFieldState,
     modifier: Modifier = Modifier,
     imeAction: ImeAction = ImeAction.Next,
+    enabled: Boolean = true,
     onImeAction: () -> Unit
 ) {
     TextField(
@@ -26,6 +27,7 @@ fun EmailTextField(
         onValueChange = { emailState.text = it },
         label = { Text(stringResource(id = R.string.login_user_email)) },
         singleLine = true,
+        enabled = enabled,
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->

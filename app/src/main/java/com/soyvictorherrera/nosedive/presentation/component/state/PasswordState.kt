@@ -22,17 +22,12 @@ class PasswordState(
     errorFor: (String) -> String
 ) : TextFieldState(validator = ::isPasswordValid, errorFor = errorFor)
 
-class ConfirmPasswordState(private val passwordState: PasswordState) : TextFieldState() {
+class ConfirmPasswordState(
+    private val passwordState: PasswordState,
+    errorFor: (String) -> String
+) : TextFieldState(errorFor = errorFor) {
     override val isValid
         get() = passwordAndConfirmationValid(passwordState.text, text)
-
-    override fun getError(): String? {
-        return if (showErrors()) {
-            passwordConfirmationError()
-        } else {
-            null
-        }
-    }
 }
 
 private fun passwordAndConfirmationValid(password: String, confirmedPassword: String): Boolean {

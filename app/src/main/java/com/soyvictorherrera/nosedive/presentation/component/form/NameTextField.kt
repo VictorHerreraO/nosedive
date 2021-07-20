@@ -18,6 +18,7 @@ import com.soyvictorherrera.nosedive.presentation.component.state.TextFieldState
 fun NameTextField(
     nameState: TextFieldState,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     imeAction: ImeAction = ImeAction.Next,
     onImeAction: () -> Unit = {}
 ) {
@@ -36,6 +37,7 @@ fun NameTextField(
                 }
             },
         isError = nameState.showErrors(),
+        enabled = enabled,
         keyboardOptions = KeyboardOptions.Default.copy(
             capitalization = KeyboardCapitalization.Words,
             imeAction = imeAction

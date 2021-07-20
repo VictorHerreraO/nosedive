@@ -14,6 +14,7 @@ import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
+import com.soyvictorherrera.nosedive.presentation.ui.navigateInTo
 import com.soyvictorherrera.nosedive.presentation.ui.navigateOutTo
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -44,9 +45,11 @@ class HomeFragment : Fragment() {
                         HomeContentView(
                             user = user,
                             userStats = UserStatsModel(),
-                            scaffoldState = scaffoldState
+                            scaffoldState = scaffoldState,
                         ) { event ->
-
+                            // FIXME: 19/07/2021 navigate through view model
+                            if (event == HomeEvent.ViewProfile)
+                                navigateInTo(Screen.Profile, Screen.Home)
                         }
                     }
                 }

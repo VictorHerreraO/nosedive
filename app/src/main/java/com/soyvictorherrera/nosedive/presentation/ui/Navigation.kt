@@ -10,6 +10,7 @@ sealed class Screen(@IdRes val resId: Int) {
     object SignIn : Screen(resId = R.id.signInFragment)
     object SignUp : Screen(resId = R.id.signUpFragment)
     object Home : Screen(resId = R.id.homeFragment)
+    object Profile : Screen(resId = R.id.profileFragment)
 }
 
 fun Fragment.navigateInTo(to: Screen, from: Screen, clearStack: Boolean = false) {

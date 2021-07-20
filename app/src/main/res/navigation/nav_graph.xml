@@ -16,4 +16,9 @@
         android:id="@+id/homeFragment"
         android:name="com.soyvictorherrera.nosedive.presentation.ui.home.HomeFragment"
         android:label="fragment_home" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.soyvictorherrera.nosedive.presentation.ui.profile.ProfileFragment"
+        android:label="fragment_profile" />
 </navigation>
