@@ -1,6 +1,5 @@
 package com.soyvictorherrera.nosedive.presentation.ui.profile
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -8,6 +7,8 @@ import androidx.compose.material.icons.sharp.ArrowBack
 import androidx.compose.material.icons.sharp.Done
 import androidx.compose.material.icons.sharp.PhotoCamera
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,7 +59,7 @@ fun ProfileContentView(
                         start = 32.dp,
                         end = 32.dp,
                         top = 16.dp,
-                        bottom = 65.dp
+                        bottom = 64.dp
                     ),
                 onUpdatePhoto = {
                     onNavigationEvent(ProfileEvent.UpdateUserProfilePhoto)
@@ -168,8 +169,9 @@ fun UserForm(
 
         // User email - read only
         val emailState = remember {
-            EmailState(errorFor = { "" }).apply { text = user.email }
+            EmailState(errorFor = { "" })
         }
+        emailState.apply { text = user.email }
         EmailTextField(
             emailState = emailState,
             enabled = false,
@@ -182,6 +184,7 @@ fun UserForm(
         val nameState = remember {
             NameState(errorFor = { "" }).apply { text = user.name }
         }
+        nameState.apply { text = user.name }
         NameTextField(
             nameState = nameState,
             enabled = false,
@@ -234,11 +237,16 @@ fun UserForm(
 @Composable
 fun ProfileContentViewPreview() {
     NosediveTheme {
-        ProfileContentView(
-            user = UserModel(
-                name = "Víctor Herrera",
-                email = "vicho@example.com"
+        val userState by remember {
+            mutableStateOf(
+                UserModel(
+                    name = "Víctor Herrera",
+                    email = "vicho@example.com"
+                )
             )
+        }
+        ProfileContentView(
+            user = userState
         ) {}
     }
 }
