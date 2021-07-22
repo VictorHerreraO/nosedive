@@ -76,7 +76,7 @@ dependencies {
     implementation "androidx.activity:activity-compose:$activity_compose_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling:1.0.0-beta09"
     implementation "androidx.compose.ui:ui:$compose_version"
 
     // Jetpack Navigation - Kotlin
