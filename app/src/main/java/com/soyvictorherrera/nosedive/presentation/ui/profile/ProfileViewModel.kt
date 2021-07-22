@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.usecase.ObserveCurrentUserUseCase
+import com.soyvictorherrera.nosedive.presentation.ui.Event
+import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import com.soyvictorherrera.nosedive.presentation.ui.TAG
 import com.soyvictorherrera.nosedive.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +20,10 @@ class ProfileViewModel @Inject constructor(
     private val observeCurrentUserUseCase: ObserveCurrentUserUseCase
 ) : ViewModel() {
 
+    private val _navigateTo = MutableLiveData<Event<Screen>>()
+    val navigateTo: LiveData<Event<Screen>>
+        get() = _navigateTo
+
     private val _user = MutableLiveData<UserModel>()
     val user: LiveData<UserModel>
         get() = _user
@@ -27,9 +33,7 @@ class ProfileViewModel @Inject constructor(
             observeCurrentUserUseCase.execute { result ->
                 when (result) {
                     is Result.Success -> {
-                        val user = result.data!!
-                        Log.d(TAG, "user loaded: " + user)
-                        _user.value = user
+                        _user.value = result.data!!
                     }
                     is Result.Error -> {
                         Log.e(TAG, "", result.exception)
@@ -40,6 +44,18 @@ class ProfileViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun onNavigateBack() {
+        _navigateTo.value = Event(Screen.Home)
+    }
+
+    fun onUpdateUserProfilePhoto() {
+
+    }
+
+    fun onUpdateUserPassword(newPassword: String) {
+
     }
 
 }

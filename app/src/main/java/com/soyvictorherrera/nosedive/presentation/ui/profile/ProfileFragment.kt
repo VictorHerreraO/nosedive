@@ -12,6 +12,9 @@ import androidx.fragment.app.viewModels
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
+import com.soyvictorherrera.nosedive.presentation.ui.Screen
+import com.soyvictorherrera.nosedive.presentation.ui.navigateInTo
+import com.soyvictorherrera.nosedive.presentation.ui.popUpTo
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,6 +28,19 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewModel.navigateTo.observe(viewLifecycleOwner) { navigationEvent ->
+            navigationEvent.getContentIfNotHandled()?.let { navigateTo ->
+                when (navigateTo) {
+                    Screen.Home -> {
+                        popUpTo(Screen.Home)
+                    }
+                    else -> {
+                        navigateInTo(navigateTo, Screen.Profile)
+                    }
+                }
+            }
+        }
+
         return ComposeView(requireContext()).apply {
             id = R.id.profileFragment
 
@@ -40,7 +56,17 @@ class ProfileFragment : Fragment() {
                     ProfileContentView(
                         user = userState
                     ) { event ->
-
+                        when (event) {
+                            is ProfileEvent.UpdateUserPassword -> {
+                                viewModel.onUpdateUserPassword(event.newPassword)
+                            }
+                            ProfileEvent.NavigateBack -> {
+                                viewModel.onNavigateBack()
+                            }
+                            ProfileEvent.UpdateUserProfilePhoto -> {
+                                viewModel.onUpdateUserProfilePhoto()
+                            }
+                        }
                     }
                 }
             }
