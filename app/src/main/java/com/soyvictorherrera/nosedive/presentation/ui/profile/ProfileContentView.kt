@@ -40,36 +40,53 @@ sealed class ProfileEvent {
 }
 
 @Composable
+@ExperimentalMaterialApi
 fun ProfileContentView(
     user: UserModel,
+    sheetState: ModalBottomSheetState,
     onNavigationEvent: (event: ProfileEvent) -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            ProfileTopAppBar {
-                onNavigationEvent(ProfileEvent.NavigateBack)
-            }
-        },
-        content = {
-            ProfileContent(
-                user = user,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        start = 32.dp,
-                        end = 32.dp,
-                        top = 16.dp,
-                        bottom = 64.dp
-                    ),
-                onUpdatePhoto = {
-                    onNavigationEvent(ProfileEvent.UpdateUserProfilePhoto)
-                },
-                onUpdatePassword = { newPassword ->
-                    onNavigationEvent(ProfileEvent.UpdateUserPassword(newPassword))
-                }
-            )
-        })
+    ModalBottomSheetLayout(
+        sheetState = sheetState,
+        sheetContent = {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(text = "Actualiza tu foto de perfil")
 
+                Button(onClick = { /*TODO*/ }) {
+                    Text(text = "Tomar una foto")
+                }
+
+                Button(onClick = { /*TODO*/ }) {
+                    Text(text = "Tú galería")
+                }
+            }
+        }) {
+        Scaffold(
+            topBar = {
+                ProfileTopAppBar {
+                    onNavigationEvent(ProfileEvent.NavigateBack)
+                }
+            },
+            content = {
+                ProfileContent(
+                    user = user,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = 32.dp,
+                            end = 32.dp,
+                            top = 16.dp,
+                            bottom = 64.dp
+                        ),
+                    onUpdatePhoto = {
+                        onNavigationEvent(ProfileEvent.UpdateUserProfilePhoto)
+                    },
+                    onUpdatePassword = { newPassword ->
+                        onNavigationEvent(ProfileEvent.UpdateUserPassword(newPassword))
+                    }
+                )
+            })
+    }
 }
 
 @Composable
@@ -235,6 +252,7 @@ fun UserForm(
 
 @Preview
 @Composable
+@ExperimentalMaterialApi
 fun ProfileContentViewPreview() {
     NosediveTheme {
         val userState by remember {
@@ -246,7 +264,8 @@ fun ProfileContentViewPreview() {
             )
         }
         ProfileContentView(
-            user = userState
+            user = userState,
+            sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
         ) {}
     }
 }

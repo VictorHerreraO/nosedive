@@ -28,6 +28,10 @@ class ProfileViewModel @Inject constructor(
     val user: LiveData<UserModel>
         get() = _user
 
+    private val _profilePhotoEvent = MutableLiveData<Event<ProfilePhotoEvent>>()
+    val profilePhotoEvent: LiveData<Event<ProfilePhotoEvent>>
+        get() = _profilePhotoEvent
+
     init {
         viewModelScope.launch {
             observeCurrentUserUseCase.execute { result ->
@@ -51,7 +55,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun onUpdateUserProfilePhoto() {
-
+        _profilePhotoEvent.value = Event(ProfilePhotoEvent.RequestProfilePhotoChange)
     }
 
     fun onUpdateUserPassword(newPassword: String) {
