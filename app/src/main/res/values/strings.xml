@@ -34,4 +34,7 @@
     <string name="profile_error_password_dont_match">Las contraseñas no coinciden</string>
     <string name="profile_new_password">Nueva contaseña</string>
     <string name="profile_save_changes">Guardar cambios</string>
+    <string name="profile_sheet_photo_title">Actualiza tu foto de perfil</string>
+    <string name="profile_sheet_photo_source_camera">Tomar una foto</string>
+    <string name="profile_sheet_photo_source_gallery">Tu galería</string>
 </resources>
