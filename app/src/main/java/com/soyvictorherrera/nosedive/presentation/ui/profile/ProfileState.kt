@@ -4,5 +4,11 @@ import android.net.Uri
 
 sealed class ProfilePhotoEvent {
     object RequestProfilePhotoChange : ProfilePhotoEvent()
-    data class UpdateProfilePhoto(val uri: Uri): ProfilePhotoEvent()
+    data class TakePhoto(val destinationUri: Uri) : ProfilePhotoEvent()
+    object SelectPhoto : ProfilePhotoEvent()
+}
+
+sealed class ProfilePhotoState {
+    data class Idle(val photoUri: Uri?) : ProfilePhotoState()
+    data class Loading(val previewUri: Uri) : ProfilePhotoState()
 }

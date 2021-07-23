@@ -51,6 +51,7 @@ sealed class ProfileEvent {
 fun ProfileContentView(
     user: UserModel,
     sheetState: ModalBottomSheetState,
+    profilePhotoState: ProfilePhotoState = ProfilePhotoState.Idle(photoUri = null),
     onNavigationEvent: (event: ProfileEvent) -> Unit
 ) {
     ModalBottomSheetLayout(
@@ -78,6 +79,7 @@ fun ProfileContentView(
             content = {
                 ProfileContent(
                     user = user,
+                    profilePhotoState = profilePhotoState,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
@@ -115,12 +117,13 @@ fun ProfileTopAppBar(
 fun ProfileContent(
     user: UserModel,
     modifier: Modifier = Modifier,
+    profilePhotoState: ProfilePhotoState = ProfilePhotoState.Idle(photoUri = null),
     onUpdatePhoto: () -> Unit,
     onUpdatePassword: (newPassword: String) -> Unit,
 ) {
     Column(modifier = modifier) {
         ProfilePhoto(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            profilePhotoState = profilePhotoState,
             onUpdatePhoto = onUpdatePhoto
         )
 
@@ -143,38 +146,82 @@ fun ProfileContent(
 
 @Composable
 fun ProfilePhoto(
-    painter: Painter,
+    profilePhotoState: ProfilePhotoState,
     modifier: Modifier = Modifier,
     onUpdatePhoto: () -> Unit
 ) {
     Row(modifier = modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.weight(1f))
 
-        Box(modifier = Modifier.weight(2f)) {
-            UserPhoto(
-                painter = painter
-            )
-            FloatingActionButton(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .offset(
-                        x = (-20).dp,
-                        y = (-20).dp
-                    )
-                    .size(40.dp),
-                backgroundColor = MaterialTheme.colors.primary,
-                contentColor = MaterialTheme.colors.onPrimary,
-                onClick = onUpdatePhoto
-            ) {
-                Icon(
-                    imageVector = Icons.Sharp.PhotoCamera,
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp)
+        when (profilePhotoState) {
+            is ProfilePhotoState.Idle -> {
+                IdleUserPhoto(
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    modifier = Modifier.weight(2f),
+                    onUpdatePhoto = onUpdatePhoto
+                )
+            }
+            is ProfilePhotoState.Loading -> {
+                LoadingUserPhoto(
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    modifier = Modifier.weight(2f)
                 )
             }
         }
 
         Spacer(modifier = Modifier.weight(1f))
+    }
+}
+
+@Composable
+fun IdleUserPhoto(
+    painter: Painter,
+    modifier: Modifier = Modifier,
+    onUpdatePhoto: () -> Unit
+) {
+    Box(modifier = modifier) {
+        UserPhoto(
+            painter = painter
+        )
+        FloatingActionButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .offset(
+                    x = (-20).dp,
+                    y = (-20).dp
+                )
+                .size(40.dp),
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary,
+            onClick = onUpdatePhoto
+        ) {
+            Icon(
+                imageVector = Icons.Sharp.PhotoCamera,
+                contentDescription = null,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun LoadingUserPhoto(
+    painter: Painter,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier) {
+        UserPhoto(
+            painter = painter
+        )
+        CircularProgressIndicator(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .size(24.dp)
+                .offset(
+                    x = (-20).dp,
+                    y = (-20).dp
+                )
+        )
     }
 }
 

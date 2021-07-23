@@ -1,5 +1,6 @@
 package com.soyvictorherrera.nosedive.presentation.ui.profile
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -32,12 +33,20 @@ class ProfileViewModel @Inject constructor(
     val profilePhotoEvent: LiveData<Event<ProfilePhotoEvent>>
         get() = _profilePhotoEvent
 
+    private val _profilePhotoState = MutableLiveData<ProfilePhotoState>()
+    val profilePhotoState: LiveData<ProfilePhotoState>
+        get() = _profilePhotoState
+
+    private var workingUri: Uri? = null
+
     init {
         viewModelScope.launch {
             observeCurrentUserUseCase.execute { result ->
                 when (result) {
                     is Result.Success -> {
-                        _user.value = result.data!!
+                        val user = result.data!!
+                        _user.value = user
+                        _profilePhotoState.value = ProfilePhotoState.Idle(photoUri = user.photoUrl)
                     }
                     is Result.Error -> {
                         Log.e(TAG, "", result.exception)
@@ -54,12 +63,39 @@ class ProfileViewModel @Inject constructor(
         _navigateTo.value = Event(Screen.Home)
     }
 
+    fun onUpdateUserPassword(newPassword: String) {
+
+    }
+
     fun onUpdateUserProfilePhoto() {
         _profilePhotoEvent.value = Event(ProfilePhotoEvent.RequestProfilePhotoChange)
     }
 
-    fun onUpdateUserPassword(newPassword: String) {
+    fun onSelectPhotoFromCamera(destinationUri: Uri) {
+        _profilePhotoEvent.value = Event(
+            ProfilePhotoEvent.TakePhoto(
+                destinationUri = destinationUri
+            )
+        )
+        workingUri = destinationUri
+    }
 
+    fun onSelectPhotoFromGallery() {
+        _profilePhotoEvent.value = Event(
+            ProfilePhotoEvent.SelectPhoto
+        )
+    }
+
+    fun onUserPhotoTakenSuccessfully() {
+        workingUri?.let { uri ->
+            _profilePhotoState.value = ProfilePhotoState.Loading(previewUri = uri)
+        }
+        Log.d(TAG, "photo located at {$workingUri}")
+    }
+
+    fun onUserPhotoSelectedSuccessfully(fileUri: Uri) {
+        _profilePhotoState.value = ProfilePhotoState.Loading(previewUri = fileUri)
+        Log.d(TAG, "file located at {$fileUri}")
     }
 
 }
