@@ -101,6 +101,11 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
+    // Coil
+    def coil_version = '1.3.0'
+    implementation "io.coil-kt:coil:$coil_version"
+    implementation "io.coil-kt:coil-compose:$coil_version"
+
     // Testing
     def junit_version = '4.13.2'
     testImplementation "junit:junit:$junit_version"

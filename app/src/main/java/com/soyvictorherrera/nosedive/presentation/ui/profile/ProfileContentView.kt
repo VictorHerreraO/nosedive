@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -25,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.presentation.component.button.MainButton
@@ -155,15 +157,18 @@ fun ProfilePhoto(
 
         when (profilePhotoState) {
             is ProfilePhotoState.Idle -> {
+                val photoUri = profilePhotoState.photoUri
                 IdleUserPhoto(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    painter = if (photoUri == null) {
+                        painterResource(id = R.drawable.ic_launcher_foreground)
+                    } else rememberImagePainter(photoUri),
                     modifier = Modifier.weight(2f),
                     onUpdatePhoto = onUpdatePhoto
                 )
             }
             is ProfilePhotoState.Loading -> {
                 LoadingUserPhoto(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    painter = rememberImagePainter(profilePhotoState.previewUri),
                     modifier = Modifier.weight(2f)
                 )
             }
@@ -211,7 +216,8 @@ fun LoadingUserPhoto(
 ) {
     Box(modifier = modifier) {
         UserPhoto(
-            painter = painter
+            painter = painter,
+            modifier = Modifier.alpha(0.25f)
         )
         CircularProgressIndicator(
             modifier = Modifier
