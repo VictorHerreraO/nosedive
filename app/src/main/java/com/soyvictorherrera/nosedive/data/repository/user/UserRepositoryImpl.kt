@@ -4,6 +4,8 @@ import com.soyvictorherrera.nosedive.util.Result
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
 import kotlinx.coroutines.flow.Flow
+import java.io.File
+import java.net.URI
 
 class UserRepositoryImpl(
     private val userDataSource: UserDataSource
@@ -17,4 +19,7 @@ class UserRepositoryImpl(
         return userDataSource.observeUser(userId)
     }
 
+    override suspend fun updateUserPhoto(userId: String, photo: File): Flow<Result<URI>> {
+        return userDataSource.updateUserPhoto(userId, photo)
+    }
 }

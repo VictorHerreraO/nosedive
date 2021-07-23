@@ -8,6 +8,8 @@ import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.usecase.ObserveCurrentUserUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.SignInUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.SignUpUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.UpdateProfilePhotoUseCase
+import com.soyvictorherrera.nosedive.util.FileUtil
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -53,6 +55,20 @@ class UseCaseModule {
             authRepository = authRepository,
             userRepository = userRepository,
             userEntityMapper = userEntityMapper
+        )
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideUpdateProfilePhotoUseCase(
+        authRepository: AuthenticationRepository,
+        userRepository: UserRepository,
+        fileUtil: FileUtil
+    ): UpdateProfilePhotoUseCase {
+        return UpdateProfilePhotoUseCase(
+            authRepository = authRepository,
+            userRepository = userRepository,
+            fileUtil = fileUtil
         )
     }
 

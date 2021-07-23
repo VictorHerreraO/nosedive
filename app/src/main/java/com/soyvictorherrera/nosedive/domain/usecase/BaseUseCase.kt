@@ -8,14 +8,12 @@ import kotlinx.coroutines.flow.flowOn
 
 abstract class BaseUseCase<T> {
 
+    protected open val dispatcher: CoroutineDispatcher = Dispatchers.IO
+
     protected abstract suspend fun buildFlow(): Flow<T>
 
-    protected fun getDispatcher(): CoroutineDispatcher {
-        return Dispatchers.IO
-    }
-
     suspend fun execute(action: (value: T) -> Unit) {
-        buildFlow().flowOn(getDispatcher())
+        buildFlow().flowOn(dispatcher)
             .collect { value ->
                 action(value)
             }
