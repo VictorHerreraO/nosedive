@@ -3,6 +3,8 @@ package com.soyvictorherrera.nosedive.di
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.soyvictorherrera.nosedive.data.source.authentication.AuthenticationDataSource
 import com.soyvictorherrera.nosedive.data.source.authentication.firebase.FirebaseAuthenticationDataSource
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
@@ -30,6 +32,12 @@ class DataSourceModule {
     fun provideFirebaseDatabase(): FirebaseDatabase {
         return FirebaseDatabase.getInstance()
     }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseStorage(): FirebaseStorage {
+        return FirebaseStorage.getInstance()
+    }
     //endregion
 
     //region Firebase database references
@@ -41,6 +49,13 @@ class DataSourceModule {
     }
     //endregion
 
+    @Provides
+    @Singleton
+    @Named("userPhotoRef")
+    fun provideUserPhotoStorageReference(storage: FirebaseStorage): StorageReference {
+        return storage.getReference("userPhoto")
+    }
+
     //region Data sources
     @Provides
     @Singleton
@@ -50,8 +65,14 @@ class DataSourceModule {
 
     @Provides
     @Singleton
-    fun provideUserDataSource(@Named("userRef") users: DatabaseReference): UserDataSource {
-        return FirebaseUserDataSource(users = users)
+    fun provideUserDataSource(
+        @Named("userRef") users: DatabaseReference,
+        @Named("userPhotoRef") userPhotos: StorageReference
+    ): UserDataSource {
+        return FirebaseUserDataSource(
+            users = users,
+            userPhotos = userPhotos
+        )
     }
     //endregion
 

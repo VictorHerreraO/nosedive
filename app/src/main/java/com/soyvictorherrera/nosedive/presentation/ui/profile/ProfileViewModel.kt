@@ -106,23 +106,25 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun updateProfilePhoto(fileUri: Uri) {
-        _profilePhotoState.value = ProfilePhotoState.Loading(previewUri = fileUri)
-
         viewModelScope.launch {
             updateProfilePhotoUseCase.apply {
                 this.fileUri = URI(fileUri.toString())
             }.execute { result ->
+                Log.d(TAG, "execution finished")
                 when (result) {
                     is Result.Success -> {
+                        val result = result.data!!.toString()
+                        Log.d(TAG, "upload result {$result}")
                         _profilePhotoState.value = ProfilePhotoState.Idle(
-                            photoUri = Uri.parse(result.data.toString())
+                            photoUri = Uri.parse(result)
                         )
                     }
                     is Result.Error -> {
+                        Log.e(TAG, "error by: ", result.exception)
                         _profilePhotoState.value = ProfilePhotoState.Idle(null)
                     }
                     Result.Loading -> {
-                        /* Do nothing */
+                        _profilePhotoState.value = ProfilePhotoState.Loading(previewUri = fileUri)
                     }
                 }
             }

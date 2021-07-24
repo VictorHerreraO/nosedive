@@ -4,6 +4,7 @@ import com.soyvictorherrera.nosedive.data.repository.authentication.Authenticati
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
 import com.soyvictorherrera.nosedive.util.FileUtil
 import com.soyvictorherrera.nosedive.util.Result
+import com.soyvictorherrera.nosedive.util.succeeded
 import kotlinx.coroutines.flow.*
 import java.io.File
 import java.io.FileNotFoundException
@@ -58,7 +59,7 @@ class UpdateProfilePhotoUseCase(
                     }
             }
             .catch { t ->
-                flowOf(
+                emit(
                     Result.Error(
                         Exception("unable to update profile photo", t)
                     )
