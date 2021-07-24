@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.soyvictorherrera.nosedive.R
+import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
@@ -22,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by viewModels()
+    private val stubUser = UserModel(name = "", email = "")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,19 +41,17 @@ class HomeFragment : Fragment() {
 
             setContent {
                 NosediveTheme {
-                    val userState = viewModel.user.observeAsState()
+                    val userState by viewModel.user.observeAsState(stubUser)
                     val scaffoldState = rememberScaffoldState()
 
-                    userState.value?.let { user ->
-                        HomeContentView(
-                            user = user,
-                            userStats = UserStatsModel(),
-                            scaffoldState = scaffoldState,
-                        ) { event ->
-                            // FIXME: 19/07/2021 navigate through view model
-                            if (event == HomeEvent.ViewProfile)
-                                navigateInTo(Screen.Profile, Screen.Home)
-                        }
+                    HomeContentView(
+                        user = userState,
+                        userStats = UserStatsModel(),
+                        scaffoldState = scaffoldState,
+                    ) { event ->
+                        // FIXME: 19/07/2021 navigate through view model
+                        if (event == HomeEvent.ViewProfile)
+                            navigateInTo(Screen.Profile, Screen.Home)
                     }
                 }
             }

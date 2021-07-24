@@ -1,5 +1,6 @@
 package com.soyvictorherrera.nosedive.presentation.ui.home
 
+import android.net.Uri
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
 import com.soyvictorherrera.nosedive.presentation.component.card.NewAccountAlertCard
@@ -107,7 +109,10 @@ fun HomeContent(
 
         UserDetails(
             userName = user.name,
-            userPhotoBackgroundColor = Forest_Green_07
+            userPhotoBackgroundColor = Forest_Green_07,
+            userPhotoPainter = user.photoUrl?.let { uri ->
+                rememberImagePainter(Uri.parse(uri.toString()))
+            }
         )
 
         Spacer(modifier = Modifier.height(48.dp))

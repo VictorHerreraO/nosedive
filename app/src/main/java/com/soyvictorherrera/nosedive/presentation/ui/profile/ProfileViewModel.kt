@@ -49,9 +49,9 @@ class ProfileViewModel @Inject constructor(
             observeCurrentUserUseCase.execute { result ->
                 when (result) {
                     is Result.Success -> {
-                        val user = result.data!!
+                        val user = result.data
                         _user.value = user
-                        _profilePhotoState.value = ProfilePhotoState.Idle(photoUri = user.photoUrl)
+                        _profilePhotoState.value = ProfilePhotoState.Idle(photoUri = user.photoUrl?.let { Uri.parse(it.toString()) })
                     }
                     is Result.Error -> {
                         Log.e(TAG, "", result.exception)
@@ -113,10 +113,10 @@ class ProfileViewModel @Inject constructor(
                 Log.d(TAG, "execution finished")
                 when (result) {
                     is Result.Success -> {
-                        val result = result.data!!.toString()
-                        Log.d(TAG, "upload result {$result}")
+                        val uriString = result.data.toString()
+                        Log.d(TAG, "upload result {$uriString}")
                         _profilePhotoState.value = ProfilePhotoState.Idle(
-                            photoUri = Uri.parse(result)
+                            photoUri = Uri.parse(uriString)
                         )
                     }
                     is Result.Error -> {

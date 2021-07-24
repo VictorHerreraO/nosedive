@@ -75,7 +75,7 @@ class ProfileFragment : Fragment() {
                     val userState by viewModel.user.observeAsState(initial = stubUser)
                     val photoState by viewModel.profilePhotoState.observeAsState(
                         initial = ProfilePhotoState.Idle(
-                            photoUri = userState.photoUrl
+                            photoUri = userState.photoUrl?.let { Uri.parse(it.toString()) }
                         )
                     )
                     val sheetState = rememberModalBottomSheetState(initialValue = Hidden)
