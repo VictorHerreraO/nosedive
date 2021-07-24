@@ -3,8 +3,9 @@ package com.soyvictorherrera.nosedive.domain.usecase
 import com.soyvictorherrera.nosedive.data.repository.authentication.AuthenticationRepository
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
 import com.soyvictorherrera.nosedive.util.FileUtil
+import com.soyvictorherrera.nosedive.util.ImageCompressor
 import com.soyvictorherrera.nosedive.util.Result
-import com.soyvictorherrera.nosedive.util.succeeded
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import java.io.File
 import java.io.FileNotFoundException
@@ -19,6 +20,7 @@ class UpdateProfilePhotoUseCase(
 
     var fileUri: URI? = null
 
+    @FlowPreview
     override suspend fun buildFlow(): Flow<Result<URI>> {
         val safeUri = fileUri ?: return flowOf(
             Result.Error(IllegalArgumentException("{fileUri} must not be null"))
@@ -29,9 +31,9 @@ class UpdateProfilePhotoUseCase(
                 // Read file
                 getFileFromUri(uri) ?: throw FileNotFoundException("unable to read file")
             }
-            .map {
-                // Compress image here
-                it
+            .map { file ->
+                compressFile(file)
+                return@map file
             }
             .flatMapMerge { file ->
                 // Assign to user
@@ -70,6 +72,10 @@ class UpdateProfilePhotoUseCase(
     @Throws(IOException::class)
     private fun getFileFromUri(sourceUri: URI): File? {
         return fileUtil.importFileFromUri(sourceUri)
+    }
+
+    private fun compressFile(file: File) {
+        return ImageCompressor.compressCurrentBitmapFile(file)
     }
 
 }

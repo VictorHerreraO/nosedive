@@ -77,7 +77,7 @@ class FirebaseUserDataSource(
 
             val photoStream = FileInputStream(photo)
             val userRef = users.child(userId)
-            val photoRef = userPhotos.child(userId).child("${photo.name}.png")
+            val photoRef = userPhotos.child(userId).child("${photo.name}.jpg")
             val task = photoRef.putStream(photoStream)
             task.continueWithTask { uploadTask ->
                 if (!uploadTask.isSuccessful) {
