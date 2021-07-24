@@ -11,6 +11,7 @@ import com.soyvictorherrera.nosedive.data.source.user.UserEntity
 import com.soyvictorherrera.nosedive.presentation.ui.TAG
 import com.soyvictorherrera.nosedive.util.Result
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +22,7 @@ import java.io.FileInputStream
 import java.net.URI
 
 
+@ExperimentalCoroutinesApi
 class FirebaseUserDataSource(
     private val users: DatabaseReference,
     private val userPhotos: StorageReference
@@ -99,7 +101,9 @@ class FirebaseUserDataSource(
                     )
                 }
                 val uriString = urlTask.result.toString()
+                // Update user photo value in DB
                 userRef.child("photoUrl").setValue(uriString)
+                // Return URI
                 this@callbackFlow.trySendBlocking(
                     Result.Success(URI(uriString)).also {
                         Log.d(TAG, "trySendBlocking uri ${it.data}")

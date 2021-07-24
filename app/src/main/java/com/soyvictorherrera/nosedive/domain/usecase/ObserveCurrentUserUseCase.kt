@@ -9,6 +9,7 @@ import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.presentation.ui.TAG
 import com.soyvictorherrera.nosedive.util.Result
 import com.soyvictorherrera.nosedive.util.map
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapMerge
@@ -20,6 +21,7 @@ class ObserveCurrentUserUseCase(
     private val userEntityMapper: DomainMapper<UserEntity, UserModel>
 ) : BaseUseCase<Result<UserModel>>() {
 
+    @FlowPreview
     override suspend fun buildFlow(): Flow<Result<UserModel>> {
         return authRepository.getCurrentAuthentication()
             .map { authResult ->
