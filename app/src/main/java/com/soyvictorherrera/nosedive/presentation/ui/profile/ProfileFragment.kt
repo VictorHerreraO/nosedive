@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue.Hidden
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -22,13 +24,14 @@ import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import com.soyvictorherrera.nosedive.presentation.ui.navigateInTo
 import com.soyvictorherrera.nosedive.presentation.ui.popUpTo
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
     private val viewModel: ProfileViewModel by viewModels()
-    private val stubUser = UserModel(name = "", email = "")
+    private val stubUser = UserModel(name = "Bienvenido", email = "")
 
     private val takeImageResult =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
@@ -79,8 +82,11 @@ class ProfileFragment : Fragment() {
                         )
                     )
                     val sheetState = rememberModalBottomSheetState(initialValue = Hidden)
+                    val scaffoldState = rememberScaffoldState()
                     val scope = rememberCoroutineScope()
 
+                    // Observe profile photo events.
+                    // Ej: request take photo from camera or choose from gallery
                     viewModel.profilePhotoEvent.observe(viewLifecycleOwner) { profilePhotoEvent ->
                         profilePhotoEvent.getContentIfNotHandled()?.let { event ->
                             when (event) {
@@ -99,14 +105,29 @@ class ProfileFragment : Fragment() {
                         }
                     }
 
+                    // Observe and display errors
+                    viewModel.profileError.observe(viewLifecycleOwner) { errorEvent ->
+                        errorEvent.getContentIfNotHandled()?.let { error ->
+                            showError(
+                                error = error,
+                                scaffoldState = scaffoldState,
+                                scope = scope
+                            )
+                        }
+                    }
+
                     ProfileContentView(
                         user = userState,
                         profilePhotoState = photoState,
-                        sheetState = sheetState
+                        sheetState = sheetState,
+                        scaffoldState = scaffoldState
                     ) { event ->
                         when (event) {
                             is ProfileEvent.UpdateUserPassword -> {
-                                viewModel.onUpdateUserPassword(event.newPassword)
+                                viewModel.onUpdateUserPassword(
+                                    password = event.password,
+                                    newPassword = event.newPassword
+                                )
                             }
                             ProfileEvent.NavigateBack -> {
                                 viewModel.onNavigateBack()
@@ -135,6 +156,28 @@ class ProfileFragment : Fragment() {
 
     private fun selectPhoto() {
         selectImageFromGalleryResult.launch("image/*")
+    }
+
+    private fun showError(
+        error: ProfileError,
+        scaffoldState: ScaffoldState,
+        scope: CoroutineScope
+    ) {
+        scope.launch {
+            scaffoldState.snackbarHostState.showSnackbar(
+                when (error) {
+                    ProfileError.UserNotFound -> {
+                        getString(R.string.profile_error_user_not_found)
+                    }
+                    ProfileError.UnableToUploadPhoto -> {
+                        getString(R.string.profile_error_unable_to_upload_photo)
+                    }
+                    ProfileError.UnableToChangePassword -> {
+                        getString(R.string.profile_error_unable_to_change_password)
+                    }
+                }
+            )
+        }
     }
 
 }

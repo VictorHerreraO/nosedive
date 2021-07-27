@@ -42,6 +42,10 @@ class ProfileViewModel @Inject constructor(
     val profilePhotoState: LiveData<ProfilePhotoState>
         get() = _profilePhotoState
 
+    private val _profileError = MutableLiveData<Event<ProfileError>>()
+    val profileError: LiveData<Event<ProfileError>>
+        get() = _profileError
+
     private var workingUri: Uri? = null
 
     init {
@@ -51,9 +55,11 @@ class ProfileViewModel @Inject constructor(
                     is Result.Success -> {
                         val user = result.data
                         _user.value = user
-                        _profilePhotoState.value = ProfilePhotoState.Idle(photoUri = user.photoUrl?.let { Uri.parse(it.toString()) })
+                        _profilePhotoState.value =
+                            ProfilePhotoState.Idle(photoUri = user.photoUrl?.let { Uri.parse(it.toString()) })
                     }
                     is Result.Error -> {
+                        _profileError.value = Event(ProfileError.UserNotFound)
                         Log.e(TAG, "", result.exception)
                     }
                     Result.Loading -> {
@@ -68,8 +74,8 @@ class ProfileViewModel @Inject constructor(
         _navigateTo.value = Event(Screen.Home)
     }
 
-    fun onUpdateUserPassword(newPassword: String) {
-
+    fun onUpdateUserPassword(password: String, newPassword: String) {
+        _profileError.value = Event(ProfileError.UnableToChangePassword)
     }
 
     fun onUpdateUserProfilePhoto() {
@@ -110,7 +116,6 @@ class ProfileViewModel @Inject constructor(
             updateProfilePhotoUseCase.apply {
                 this.fileUri = URI(fileUri.toString())
             }.execute { result ->
-                Log.d(TAG, "execution finished")
                 when (result) {
                     is Result.Success -> {
                         val uriString = result.data.toString()
@@ -122,6 +127,7 @@ class ProfileViewModel @Inject constructor(
                     is Result.Error -> {
                         Log.e(TAG, "error by: ", result.exception)
                         _profilePhotoState.value = ProfilePhotoState.Idle(null)
+                        _profileError.value = Event(ProfileError.UnableToUploadPhoto)
                     }
                     Result.Loading -> {
                         _profilePhotoState.value = ProfilePhotoState.Loading(previewUri = fileUri)

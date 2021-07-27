@@ -19,7 +19,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -36,14 +35,17 @@ import com.soyvictorherrera.nosedive.presentation.component.form.EmailTextField
 import com.soyvictorherrera.nosedive.presentation.component.form.NameTextField
 import com.soyvictorherrera.nosedive.presentation.component.form.PasswordTextField
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserPhoto
-import com.soyvictorherrera.nosedive.presentation.component.state.*
+import com.soyvictorherrera.nosedive.presentation.component.state.EmailState
+import com.soyvictorherrera.nosedive.presentation.component.state.MIN_PASSWORD_LENGTH
+import com.soyvictorherrera.nosedive.presentation.component.state.NameState
+import com.soyvictorherrera.nosedive.presentation.component.state.PasswordState
 import com.soyvictorherrera.nosedive.presentation.theme.Black_32
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 
 sealed class ProfileEvent {
     object NavigateBack : ProfileEvent()
     object UpdateUserProfilePhoto : ProfileEvent()
-    data class UpdateUserPassword(val newPassword: String) : ProfileEvent()
+    data class UpdateUserPassword(val password: String, val newPassword: String) : ProfileEvent()
     object SelectPhotoFromCamera : ProfileEvent()
     object SelectPhotoFromGallery : ProfileEvent()
 }
@@ -54,6 +56,7 @@ fun ProfileContentView(
     user: UserModel,
     sheetState: ModalBottomSheetState,
     profilePhotoState: ProfilePhotoState = ProfilePhotoState.Idle(photoUri = null),
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
     onNavigationEvent: (event: ProfileEvent) -> Unit
 ) {
     ModalBottomSheetLayout(
@@ -73,6 +76,7 @@ fun ProfileContentView(
         scrimColor = Black_32
     ) {
         Scaffold(
+            scaffoldState = scaffoldState,
             topBar = {
                 ProfileTopAppBar {
                     onNavigationEvent(ProfileEvent.NavigateBack)
@@ -93,8 +97,13 @@ fun ProfileContentView(
                     onUpdatePhoto = {
                         onNavigationEvent(ProfileEvent.UpdateUserProfilePhoto)
                     },
-                    onUpdatePassword = { newPassword ->
-                        onNavigationEvent(ProfileEvent.UpdateUserPassword(newPassword))
+                    onUpdatePassword = { password, newPassword ->
+                        onNavigationEvent(
+                            ProfileEvent.UpdateUserPassword(
+                                password = password,
+                                newPassword = newPassword
+                            )
+                        )
                     }
                 )
             })
@@ -121,7 +130,7 @@ fun ProfileContent(
     modifier: Modifier = Modifier,
     profilePhotoState: ProfilePhotoState = ProfilePhotoState.Idle(photoUri = null),
     onUpdatePhoto: () -> Unit,
-    onUpdatePassword: (newPassword: String) -> Unit,
+    onUpdatePassword: (password: String, newPassword: String) -> Unit,
 ) {
     Column(modifier = modifier) {
         ProfilePhoto(
@@ -131,15 +140,15 @@ fun ProfileContent(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        UserForm(user = user) { _, passwordState, confirmPasswordState ->
+        UserForm(user = user) { passwordState, newPasswordState ->
             Spacer(modifier = Modifier.weight(1f))
 
             MainButton(
                 text = stringResource(R.string.profile_save_changes),
                 icon = Icons.Sharp.Done,
-                enabled = passwordState.isValid && confirmPasswordState.isValid,
+                enabled = passwordState.isValid && newPasswordState.isValid,
                 onClick = {
-                    onUpdatePassword(passwordState.text)
+                    onUpdatePassword(passwordState.text, newPasswordState.text)
                 }
             )
         }
@@ -236,13 +245,11 @@ fun UserForm(
     user: UserModel,
     modifier: Modifier = Modifier,
     formActions: @Composable (
-        nameState: NameState,
         passwordState: PasswordState,
-        confirmPasswordState: ConfirmPasswordState
+        newPasswordState: PasswordState
     ) -> Unit
 ) {
     Column(modifier = modifier) {
-        val context = LocalContext.current
         val focusManager = LocalFocusManager.current
 
         // User email - read only
@@ -278,35 +285,34 @@ fun UserForm(
                 "${password.length}/$MIN_PASSWORD_LENGTH"
             })
         }
-        val confirmPasswordFocusRequester = remember { FocusRequester() }
+        val newPasswordFocusRequester = remember { FocusRequester() }
         PasswordTextField(
             label = stringResource(R.string.profile_current_password),
             passwordState = passwordState,
             imeAction = ImeAction.Next,
-            onImeAction = { confirmPasswordFocusRequester.requestFocus() }
+            onImeAction = { newPasswordFocusRequester.requestFocus() }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Confirm user password
-        val confirmPasswordState = remember {
-            ConfirmPasswordState(passwordState = passwordState, errorFor = {
-                context.getString(R.string.profile_error_password_dont_match)
+        // New user password
+        val newPasswordState = remember {
+            PasswordState(errorFor = { password ->
+                "${password.length}/$MIN_PASSWORD_LENGTH"
             })
         }
         PasswordTextField(
             label = stringResource(R.string.profile_new_password),
-            passwordState = confirmPasswordState,
-            modifier = Modifier.focusRequester(confirmPasswordFocusRequester),
+            passwordState = newPasswordState,
+            modifier = Modifier.focusRequester(newPasswordFocusRequester),
             imeAction = ImeAction.Done,
             onImeAction = { focusManager.clearFocus() }
         )
 
         // Form actions
         formActions(
-            nameState,
             passwordState,
-            confirmPasswordState
+            newPasswordState
         )
     }
 }

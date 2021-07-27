@@ -37,4 +37,7 @@
     <string name="profile_sheet_photo_title">Actualiza tu foto de perfil</string>
     <string name="profile_sheet_photo_source_camera">Tomar una foto</string>
     <string name="profile_sheet_photo_source_gallery">Tu galería</string>
+    <string name="profile_error_unable_to_upload_photo">No fue posible actualizar tu foto de perfil</string>
+    <string name="profile_error_unable_to_change_password">No fue posible actualizar tu contraseña</string>
+    <string name="profile_error_user_not_found">No se pudieron cargar los datos</string>
 </resources>
