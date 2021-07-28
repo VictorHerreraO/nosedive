@@ -5,7 +5,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.ArrowBack
-import androidx.compose.material.icons.sharp.Collections
 import androidx.compose.material.icons.sharp.Done
 import androidx.compose.material.icons.sharp.PhotoCamera
 import androidx.compose.runtime.Composable
@@ -17,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -28,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.domain.model.UserModel
+import com.soyvictorherrera.nosedive.presentation.component.bottomSheet.SelectProfilePhotoSourceSheetContent
 import com.soyvictorherrera.nosedive.presentation.component.button.MainButton
-import com.soyvictorherrera.nosedive.presentation.component.button.SecondaryButton
 import com.soyvictorherrera.nosedive.presentation.component.common.DefaultProminentTopAppBar
 import com.soyvictorherrera.nosedive.presentation.component.form.EmailTextField
 import com.soyvictorherrera.nosedive.presentation.component.form.NameTextField
@@ -321,39 +319,6 @@ fun UserForm(
     }
 }
 
-@Composable
-fun SelectProfilePhotoSourceSheetContent(
-    onCameraSourceSelected: () -> Unit,
-    onGallerySourceSelected: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 64.dp)
-    ) {
-        Text(
-            text = stringResource(R.string.profile_sheet_photo_title),
-            style = MaterialTheme.typography.subtitle2,
-            color = Color.White
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        SecondaryButton(
-            text = stringResource(R.string.profile_sheet_photo_source_camera),
-            onClick = onCameraSourceSelected,
-            icon = Icons.Sharp.PhotoCamera
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        SecondaryButton(
-            text = stringResource(R.string.profile_sheet_photo_source_gallery),
-            onClick = onGallerySourceSelected,
-            icon = Icons.Sharp.Collections
-        )
-    }
-}
 
 @Preview
 @Composable
@@ -373,16 +338,5 @@ fun ProfileContentViewPreview() {
             user = userState,
             sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
         ) {}
-    }
-}
-
-@Preview
-@Composable
-fun SelectProfilePhotoSourceSheetContentPreview() {
-    NosediveTheme {
-        SelectProfilePhotoSourceSheetContent(
-            onCameraSourceSelected = {},
-            onGallerySourceSelected = {}
-        )
     }
 }
