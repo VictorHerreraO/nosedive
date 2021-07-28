@@ -41,4 +41,7 @@
     <string name="profile_error_unable_to_change_password">No fue posible actualizar tu contraseña</string>
     <string name="profile_error_user_not_found">No se pudieron cargar los datos</string>
     <string name="profile_alert_password_updated">Contraseña actualizada con éxito</string>
+    <string name="sheet_add_contact_option_scan_code">Escanear código</string>
+    <string name="sheet_add_contact_option_show_code">Mostrar código</string>
+    <string name="sheet_add_contact_title">Agregar un nuevo contacto</string>
 </resources>
