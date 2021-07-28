@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.usecase.ObserveCurrentUserUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.UpdateProfilePhotoUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.user.UpdateUserPasswordUseCase
 import com.soyvictorherrera.nosedive.presentation.ui.Event
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import com.soyvictorherrera.nosedive.presentation.ui.TAG
@@ -23,6 +24,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val observeCurrentUserUseCase: ObserveCurrentUserUseCase,
     private val updateProfilePhotoUseCase: UpdateProfilePhotoUseCase,
+    private val updateUserPasswordUseCase: UpdateUserPasswordUseCase,
     private val fileUtil: FileUtil
 ) : ViewModel() {
 
@@ -33,6 +35,10 @@ class ProfileViewModel @Inject constructor(
     private val _user = MutableLiveData<UserModel>()
     val user: LiveData<UserModel>
         get() = _user
+
+    private val _profileState = MutableLiveData<ProfileState>(ProfileState.Idle)
+    val profileState: LiveData<ProfileState>
+        get() = _profileState
 
     private val _profilePhotoEvent = MutableLiveData<Event<ProfilePhotoEvent>>()
     val profilePhotoEvent: LiveData<Event<ProfilePhotoEvent>>
@@ -75,7 +81,27 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun onUpdateUserPassword(password: String, newPassword: String) {
-        _profileError.value = Event(ProfileError.UnableToChangePassword)
+        viewModelScope.launch {
+            updateUserPasswordUseCase.apply {
+                this.password = password
+                this.newPassword = newPassword
+            }.execute { result ->
+                when (result) {
+                    is Result.Success -> {
+                        _profileError.value = Event(ProfileError.PasswordUpdatedSuccessfully)
+                        _profileState.value = ProfileState.Idle
+                    }
+                    is Result.Error -> {
+                        Log.e(TAG, "error by:", result.exception)
+                        _profileError.value = Event(ProfileError.UnableToChangePassword)
+                        _profileState.value = ProfileState.Idle
+                    }
+                    Result.Loading -> {
+                        _profileState.value = ProfileState.UpdatingPassword
+                    }
+                }
+            }
+        }
     }
 
     fun onUpdateUserProfilePhoto() {

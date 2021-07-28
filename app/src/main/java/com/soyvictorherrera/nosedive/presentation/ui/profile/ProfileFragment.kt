@@ -75,6 +75,7 @@ class ProfileFragment : Fragment() {
 
             setContent {
                 NosediveTheme {
+                    val profileState by viewModel.profileState.observeAsState(initial = ProfileState.Idle)
                     val userState by viewModel.user.observeAsState(initial = stubUser)
                     val photoState by viewModel.profilePhotoState.observeAsState(
                         initial = ProfilePhotoState.Idle(
@@ -117,6 +118,7 @@ class ProfileFragment : Fragment() {
                     }
 
                     ProfileContentView(
+                        profileState = profileState,
                         user = userState,
                         profilePhotoState = photoState,
                         sheetState = sheetState,
@@ -174,6 +176,9 @@ class ProfileFragment : Fragment() {
                     }
                     ProfileError.UnableToChangePassword -> {
                         getString(R.string.profile_error_unable_to_change_password)
+                    }
+                    ProfileError.PasswordUpdatedSuccessfully -> {
+                        getString(R.string.profile_alert_password_updated)
                     }
                 }
             )

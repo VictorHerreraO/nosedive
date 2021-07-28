@@ -53,6 +53,7 @@ sealed class ProfileEvent {
 @Composable
 @ExperimentalMaterialApi
 fun ProfileContentView(
+    profileState: ProfileState,
     user: UserModel,
     sheetState: ModalBottomSheetState,
     profilePhotoState: ProfilePhotoState = ProfilePhotoState.Idle(photoUri = null),
@@ -84,6 +85,7 @@ fun ProfileContentView(
             },
             content = {
                 ProfileContent(
+                    profileState = profileState,
                     user = user,
                     profilePhotoState = profilePhotoState,
                     modifier = Modifier
@@ -126,6 +128,7 @@ fun ProfileTopAppBar(
 
 @Composable
 fun ProfileContent(
+    profileState: ProfileState,
     user: UserModel,
     modifier: Modifier = Modifier,
     profilePhotoState: ProfilePhotoState = ProfilePhotoState.Idle(photoUri = null),
@@ -147,6 +150,7 @@ fun ProfileContent(
                 text = stringResource(R.string.profile_save_changes),
                 icon = Icons.Sharp.Done,
                 enabled = passwordState.isValid && newPasswordState.isValid,
+                showLoader = profileState == ProfileState.UpdatingPassword,
                 onClick = {
                     onUpdatePassword(passwordState.text, newPasswordState.text)
                 }
@@ -365,6 +369,7 @@ fun ProfileContentViewPreview() {
             )
         }
         ProfileContentView(
+            profileState = ProfileState.Idle,
             user = userState,
             sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
         ) {}

@@ -9,6 +9,7 @@ import com.soyvictorherrera.nosedive.domain.usecase.ObserveCurrentUserUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.SignInUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.SignUpUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.UpdateProfilePhotoUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.user.UpdateUserPasswordUseCase
 import com.soyvictorherrera.nosedive.util.FileUtil
 import dagger.Module
 import dagger.Provides
@@ -69,6 +70,16 @@ class UseCaseModule {
             authRepository = authRepository,
             userRepository = userRepository,
             fileUtil = fileUtil
+        )
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideUpdateUserPasswordUseCase(
+        authRepository: AuthenticationRepository
+    ): UpdateUserPasswordUseCase {
+        return UpdateUserPasswordUseCase(
+            authRepository = authRepository
         )
     }
 

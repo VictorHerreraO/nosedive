@@ -11,4 +11,6 @@ interface AuthenticationDataSource {
 
     suspend fun getCurrentAuthentication(): Flow<Result<AuthenticationEntity>>
 
+    suspend fun updateUserPassword(password: String, newPassword: String): Flow<Result<Boolean>>
+
 }

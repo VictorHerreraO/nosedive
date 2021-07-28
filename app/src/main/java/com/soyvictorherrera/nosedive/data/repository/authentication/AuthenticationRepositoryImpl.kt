@@ -1,8 +1,8 @@
 package com.soyvictorherrera.nosedive.data.repository.authentication
 
-import com.soyvictorherrera.nosedive.util.Result
 import com.soyvictorherrera.nosedive.data.source.authentication.AuthenticationDataSource
 import com.soyvictorherrera.nosedive.data.source.authentication.AuthenticationEntity
+import com.soyvictorherrera.nosedive.util.Result
 import kotlinx.coroutines.flow.Flow
 
 class AuthenticationRepositoryImpl(
@@ -29,5 +29,15 @@ class AuthenticationRepositoryImpl(
 
     override suspend fun getCurrentAuthentication(): Flow<Result<AuthenticationEntity>> {
         return authDataSource.getCurrentAuthentication()
+    }
+
+    override suspend fun updateUserPassword(
+        password: String,
+        newPassword: String
+    ): Flow<Result<Boolean>> {
+        return authDataSource.updateUserPassword(
+            password = password,
+            newPassword = newPassword
+        )
     }
 }

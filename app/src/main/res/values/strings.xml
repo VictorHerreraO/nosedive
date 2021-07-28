@@ -40,4 +40,5 @@
     <string name="profile_error_unable_to_upload_photo">No fue posible actualizar tu foto de perfil</string>
     <string name="profile_error_unable_to_change_password">No fue posible actualizar tu contraseña</string>
     <string name="profile_error_user_not_found">No se pudieron cargar los datos</string>
+    <string name="profile_alert_password_updated">Contraseña actualizada con éxito</string>
 </resources>
