@@ -14,3 +14,7 @@ sealed class SessionState {
     object SignedOut: SessionState()
     object Checking: SessionState()
 }
+
+sealed class BottomSheetEvent() {
+    object ShowAddFriendBottomSheet: BottomSheetEvent()
+}

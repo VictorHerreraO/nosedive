@@ -5,9 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue.Hidden
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -19,6 +24,8 @@ import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import com.soyvictorherrera.nosedive.presentation.ui.navigateInTo
 import com.soyvictorherrera.nosedive.presentation.ui.navigateOutTo
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -26,6 +33,7 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
     private val stubUser = UserModel(name = "", email = "")
 
+    @ExperimentalMaterialApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -51,20 +59,45 @@ class HomeFragment : Fragment() {
             setContent {
                 NosediveTheme {
                     val userState by viewModel.user.observeAsState(stubUser)
+                    val scope = rememberCoroutineScope()
+                    val sheetState = rememberModalBottomSheetState(initialValue = Hidden)
                     val scaffoldState = rememberScaffoldState()
+
+                    viewModel.bottomSheetEvent.observe(viewLifecycleOwner) { sheetEvent ->
+                        sheetEvent.getContentIfNotHandled()?.let{ event ->
+                            scope.launch {
+                                when(event) {
+                                    BottomSheetEvent.ShowAddFriendBottomSheet -> {
+                                        sheetState.show()
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     HomeContentView(
                         user = userState,
                         userStats = UserStatsModel(),
+                        sheetState = sheetState,
                         scaffoldState = scaffoldState,
                     ) { event ->
-                        when(event) {
-                            HomeEvent.AddFriend -> {}
-                            HomeEvent.NewRate -> {}
-                            HomeEvent.ViewFriends -> {}
-                            HomeEvent.ViewNotifications -> {}
+                        when (event) {
+                            HomeEvent.AddFriend -> {
+                                viewModel.addFriend()
+                            }
+                            HomeEvent.NewRate -> {
+                            }
+                            HomeEvent.ViewFriends -> {
+                            }
+                            HomeEvent.ViewNotifications -> {
+                            }
                             HomeEvent.ViewProfile -> {
                                 viewModel.viewProfile()
+                            }
+                            HomeEvent.CodeScan -> {
+                            }
+                            HomeEvent.CodeShare -> {
+                                viewModel.codeShare()
                             }
                         }
                     }

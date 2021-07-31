@@ -17,50 +17,69 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
+import com.soyvictorherrera.nosedive.presentation.component.bottomSheet.AddContactSheetContent
 import com.soyvictorherrera.nosedive.presentation.component.card.NewAccountAlertCard
 import com.soyvictorherrera.nosedive.presentation.component.common.DefaultBottomAppBar
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserDetails
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserStats
+import com.soyvictorherrera.nosedive.presentation.theme.Black_32
 import com.soyvictorherrera.nosedive.presentation.theme.Forest_Green_07
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
+import com.soyvictorherrera.nosedive.presentation.theme.modalBottomSheetShape
 
 sealed class HomeEvent {
     object ViewProfile : HomeEvent()
     object ViewNotifications : HomeEvent()
     object ViewFriends : HomeEvent()
     object NewRate : HomeEvent()
-    object AddFriend : HomeEvent()
+    object AddFriend: HomeEvent()
+    object CodeScan : HomeEvent()
+    object CodeShare : HomeEvent()
 }
 
 @Composable
+@ExperimentalMaterialApi
 fun HomeContentView(
     user: UserModel,
     userStats: UserStatsModel,
+    sheetState: ModalBottomSheetState,
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     onNavigationEvent: (HomeEvent) -> Unit
 ) {
-    Scaffold(
-        scaffoldState = scaffoldState,
-        topBar = {
-            HomeTopBar(
-                onUserClick = { onNavigationEvent(HomeEvent.ViewProfile) },
-                onNotificationsClick = { onNavigationEvent(HomeEvent.ViewNotifications) }
+    ModalBottomSheetLayout(
+        sheetState = sheetState,
+        sheetShape = modalBottomSheetShape,
+        sheetContent = {
+            AddContactSheetContent(
+                onScanCodeSelected = { onNavigationEvent(HomeEvent.CodeScan) },
+                onShowCodeSelected = { onNavigationEvent(HomeEvent.CodeShare) }
             )
         },
-        content = {
-            HomeContent(
-                user = user,
-                userStats = userStats
-            )
-        },
-        bottomBar = {
-            HomeBottomBar(
-                onFriendsClick = { onNavigationEvent(HomeEvent.ViewFriends) },
-                onRateClick = { onNavigationEvent(HomeEvent.NewRate) },
-                onAddFriendClick = { onNavigationEvent(HomeEvent.AddFriend) }
-            )
-        }
-    )
+        scrimColor = Black_32
+    ) {
+        Scaffold(
+            scaffoldState = scaffoldState,
+            topBar = {
+                HomeTopBar(
+                    onUserClick = { onNavigationEvent(HomeEvent.ViewProfile) },
+                    onNotificationsClick = { onNavigationEvent(HomeEvent.ViewNotifications) }
+                )
+            },
+            content = {
+                HomeContent(
+                    user = user,
+                    userStats = userStats
+                )
+            },
+            bottomBar = {
+                HomeBottomBar(
+                    onFriendsClick = { onNavigationEvent(HomeEvent.ViewFriends) },
+                    onRateClick = { onNavigationEvent(HomeEvent.NewRate) },
+                    onAddFriendClick = { onNavigationEvent(HomeEvent.AddFriend) }
+                )
+            }
+        )
+    }
 }
 
 @Composable
@@ -154,6 +173,7 @@ fun HomeBottomBar(
 
 @Preview
 @Composable
+@ExperimentalMaterialApi
 fun HomeContentPreviewDark() {
     NosediveTheme(darkTheme = true) {
         HomeContentView(
@@ -161,7 +181,8 @@ fun HomeContentPreviewDark() {
                 name = "Víctor Herrera",
                 email = ""
             ),
-            userStats = UserStatsModel()
+            userStats = UserStatsModel(),
+            sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
         ) {}
     }
 }

@@ -39,6 +39,10 @@ class HomeViewModel @Inject constructor(
     val user: LiveData<UserModel>
         get() = _user
 
+    private val _bottomSheetEvent = MutableLiveData<Event<BottomSheetEvent>>()
+    val bottomSheetEvent: LiveData<Event<BottomSheetEvent>>
+        get() = _bottomSheetEvent
+
     init {
         viewModelScope.launch {
             observeCurrentUserUseCase.execute { result ->
@@ -62,6 +66,14 @@ class HomeViewModel @Inject constructor(
 
     fun viewProfile() {
         _navigateTo.value = Event(Screen.Profile)
+    }
+
+    fun addFriend() {
+        _bottomSheetEvent.value = Event(BottomSheetEvent.ShowAddFriendBottomSheet)
+    }
+
+    fun codeShare() {
+        // TODO: 30/07/2021 navigate
     }
 
 }
