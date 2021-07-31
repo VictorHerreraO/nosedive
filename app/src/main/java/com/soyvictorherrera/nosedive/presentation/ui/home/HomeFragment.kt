@@ -31,6 +31,15 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewModel.navigateTo.observe(viewLifecycleOwner) { navigateToEvent ->
+            navigateToEvent.getContentIfNotHandled()?.let { navigateTo ->
+                navigateInTo(
+                    to = navigateTo,
+                    from = Screen.Home
+                )
+            }
+        }
+
         return ComposeView(requireContext()).apply {
             id = R.id.homeFragment
 
@@ -49,9 +58,15 @@ class HomeFragment : Fragment() {
                         userStats = UserStatsModel(),
                         scaffoldState = scaffoldState,
                     ) { event ->
-                        // FIXME: 19/07/2021 navigate through view model
-                        if (event == HomeEvent.ViewProfile)
-                            navigateInTo(Screen.Profile, Screen.Home)
+                        when(event) {
+                            HomeEvent.AddFriend -> {}
+                            HomeEvent.NewRate -> {}
+                            HomeEvent.ViewFriends -> {}
+                            HomeEvent.ViewNotifications -> {}
+                            HomeEvent.ViewProfile -> {
+                                viewModel.viewProfile()
+                            }
+                        }
                     }
                 }
             }

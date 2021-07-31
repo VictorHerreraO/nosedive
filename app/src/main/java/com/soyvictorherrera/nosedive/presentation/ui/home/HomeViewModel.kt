@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.usecase.ObserveCurrentUserUseCase
 import com.soyvictorherrera.nosedive.presentation.ui.Event
+import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import com.soyvictorherrera.nosedive.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,6 +18,10 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val observeCurrentUserUseCase: ObserveCurrentUserUseCase
 ) : ViewModel() {
+
+    private val _navigateTo = MutableLiveData<Event<Screen>>()
+    val navigateTo: LiveData<Event<Screen>>
+        get() = _navigateTo
 
     private val _homeState = MutableLiveData<HomeState>(HomeState.Loading)
     val homeState: LiveData<HomeState>
@@ -53,6 +58,10 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun viewProfile() {
+        _navigateTo.value = Event(Screen.Profile)
     }
 
 }
