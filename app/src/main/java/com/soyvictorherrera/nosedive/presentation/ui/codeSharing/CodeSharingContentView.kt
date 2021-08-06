@@ -24,24 +24,32 @@ import com.soyvictorherrera.nosedive.presentation.component.button.SecondaryButt
 import com.soyvictorherrera.nosedive.presentation.component.modifier.contentPadding
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserPhoto
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
+import com.soyvictorherrera.nosedive.presentation.ui.codeSharing.CodeSharingEvent.*
+
+sealed class CodeSharingEvent {
+    object NavigateBack : CodeSharingEvent()
+    object GenerateSharingCode : CodeSharingEvent()
+    object ScanSharingCode : CodeSharingEvent()
+}
 
 @Composable
 fun CodeSharingContentView(
     user: UserModel,
     scaffoldState: ScaffoldState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNavigationEvent: (event: CodeSharingEvent) -> Unit
 ) {
     Scaffold(
         scaffoldState = scaffoldState,
         modifier = modifier,
         topBar = {
-            CodeSharingTopBar(onNavigateBack = { })
+            CodeSharingTopBar(onNavigateBack = { onNavigationEvent(NavigateBack) })
         },
         content = {
             CodeSharingContent(
                 user = user,
-                onGenerateSharingCode = {},
-                onScanSharingCode = {}
+                onGenerateSharingCode = { onNavigationEvent(GenerateSharingCode) },
+                onScanSharingCode = { onNavigationEvent(ScanSharingCode) }
             )
         }
     )
@@ -170,7 +178,8 @@ fun CodeSharingContentViewPreview() {
     NosediveTheme {
         CodeSharingContentView(
             user = UserModel(name = "Victor Herrera", email = ""),
-            scaffoldState = rememberScaffoldState()
+            scaffoldState = rememberScaffoldState(),
+            onNavigationEvent = {}
         )
     }
 }
