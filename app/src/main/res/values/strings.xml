@@ -44,4 +44,7 @@
     <string name="sheet_add_contact_option_scan_code">Escanear código</string>
     <string name="sheet_add_contact_option_show_code">Mostrar código</string>
     <string name="sheet_add_contact_title">Agregar un nuevo contacto</string>
+    <string name="code_sharing_not_working">¿No está funcionando?</string>
+    <string name="code_sharing_generate_code">Genera un código</string>
+    <string name="code_sharing_scan_code">Escanear código</string>
 </resources>

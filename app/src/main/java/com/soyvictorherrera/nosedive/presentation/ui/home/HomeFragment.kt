@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue.Hidden
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
@@ -24,7 +23,6 @@ import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import com.soyvictorherrera.nosedive.presentation.ui.navigateInTo
 import com.soyvictorherrera.nosedive.presentation.ui.navigateOutTo
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -64,10 +62,10 @@ class HomeFragment : Fragment() {
                     val scaffoldState = rememberScaffoldState()
 
                     viewModel.bottomSheetEvent.observe(viewLifecycleOwner) { sheetEvent ->
-                        sheetEvent.getContentIfNotHandled()?.let{ event ->
-                            scope.launch {
-                                when(event) {
-                                    BottomSheetEvent.ShowAddFriendBottomSheet -> {
+                        sheetEvent.getContentIfNotHandled()?.let { event ->
+                            when (event) {
+                                BottomSheetEvent.ShowAddFriendBottomSheet -> {
+                                    scope.launch {
                                         sheetState.show()
                                     }
                                 }
@@ -97,6 +95,7 @@ class HomeFragment : Fragment() {
                             HomeEvent.CodeScan -> {
                             }
                             HomeEvent.CodeShare -> {
+                                scope.launch { sheetState.hide() }
                                 viewModel.codeShare()
                             }
                         }

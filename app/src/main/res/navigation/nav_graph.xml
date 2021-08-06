@@ -21,4 +21,9 @@
         android:id="@+id/profileFragment"
         android:name="com.soyvictorherrera.nosedive.presentation.ui.profile.ProfileFragment"
         android:label="fragment_profile" />
+
+    <fragment
+        android:id="@+id/codeSharingFragment"
+        android:name="com.soyvictorherrera.nosedive.presentation.ui.codeSharing.CodeSharingFragment"
+        android:label="fragment_code_sharing" />
 </navigation>

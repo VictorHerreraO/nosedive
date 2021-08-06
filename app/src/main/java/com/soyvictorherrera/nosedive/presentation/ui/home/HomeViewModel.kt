@@ -73,7 +73,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun codeShare() {
-        // TODO: 30/07/2021 navigate
+        _navigateTo.value = Event(Screen.CodeSharing)
     }
 
 }

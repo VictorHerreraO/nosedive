@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
@@ -25,7 +26,8 @@ import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 fun UserPhoto(
     painter: Painter,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colors.surface
+    backgroundColor: Color = MaterialTheme.colors.surface,
+    borderWidth: Dp = 20.dp
 ) {
     Surface(
         modifier = modifier
@@ -37,7 +39,7 @@ fun UserPhoto(
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(all = 20.dp),
+                .padding(all = borderWidth),
             shape = CircleShape,
             border = BorderStroke(
                 width = 2.dp,
