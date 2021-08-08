@@ -49,9 +49,13 @@ class CodeSharingFragment : Fragment() {
             setContent {
                 NosediveTheme {
                     val user by viewModel.user.observeAsState(initial = stubUser)
+                    val imageCode by viewModel.imageCode.observeAsState(initial = ImageCodeState.Loading)
+                    val textCode by viewModel.textCode.observeAsState(initial = TextCodeState.None)
 
                     CodeSharingContentView(
                         user = user,
+                        imageCodeState = imageCode,
+                        textCodeState = textCode,
                         scaffoldState = rememberScaffoldState()
                     ) { event ->
                         when (event) {

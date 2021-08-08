@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.ArrowBack
+import androidx.compose.material.icons.sharp.ErrorOutline
 import androidx.compose.material.icons.sharp.PhotoCamera
 import androidx.compose.material.icons.sharp.Pin
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -36,6 +38,8 @@ sealed class CodeSharingEvent {
 fun CodeSharingContentView(
     user: UserModel,
     scaffoldState: ScaffoldState,
+    imageCodeState: ImageCodeState,
+    textCodeState: TextCodeState,
     modifier: Modifier = Modifier,
     onNavigationEvent: (event: CodeSharingEvent) -> Unit
 ) {
@@ -49,7 +53,9 @@ fun CodeSharingContentView(
             CodeSharingContent(
                 user = user,
                 onGenerateSharingCode = { onNavigationEvent(GenerateSharingCode) },
-                onScanSharingCode = { onNavigationEvent(ScanSharingCode) }
+                onScanSharingCode = { onNavigationEvent(ScanSharingCode) },
+                imageCodeState = imageCodeState,
+                textCodeState = textCodeState
             )
         }
     )
@@ -80,32 +86,26 @@ fun CodeSharingContent(
     user: UserModel,
     onGenerateSharingCode: () -> Unit,
     onScanSharingCode: () -> Unit,
+    imageCodeState: ImageCodeState,
+    textCodeState: TextCodeState,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.contentPadding(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
         UserCodeCard(user = user) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = CenterHorizontally
             ) {
-                Surface(
-                    color = Color.White,
-                    shape = MaterialTheme.shapes.small,
+                ImageCodePreview(
+                    imageCodeState = imageCodeState,
                     modifier = Modifier
                         .height(200.dp)
-                        .aspectRatio(1f)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
+                )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
@@ -150,7 +150,7 @@ fun UserCodeCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = CenterHorizontally
         ) {
             UserPhoto(
                 painter = user.photoUrl?.let { uri ->
@@ -169,7 +169,51 @@ fun UserCodeCard(
             cardContent()
         }
     }
+}
 
+@Composable
+fun ImageCodePreview(
+    imageCodeState: ImageCodeState,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        color = Color.White,
+        shape = MaterialTheme.shapes.small,
+        modifier = modifier.aspectRatio(1f)
+    ) {
+        when (imageCodeState) {
+            ImageCodeState.Loading -> {
+                Box {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .align(Center)
+                    )
+                }
+            }
+            is ImageCodeState.Generated -> {
+                Image(
+                    painter = rememberImagePainter(
+                        data = imageCodeState.codeUri
+                    ),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            ImageCodeState.Error -> {
+                Box {
+                    Icon(
+                        imageVector = Icons.Sharp.ErrorOutline,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.error,
+                        modifier = Modifier
+                            .size(36.dp)
+                            .align(Center)
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Preview
@@ -179,7 +223,9 @@ fun CodeSharingContentViewPreview() {
         CodeSharingContentView(
             user = UserModel(name = "Victor Herrera", email = ""),
             scaffoldState = rememberScaffoldState(),
-            onNavigationEvent = {}
+            onNavigationEvent = {},
+            imageCodeState = ImageCodeState.Error,
+            textCodeState = TextCodeState.None
         )
     }
 }

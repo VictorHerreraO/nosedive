@@ -1,5 +1,6 @@
 package com.soyvictorherrera.nosedive.presentation.ui.codeSharing
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,7 @@ import com.soyvictorherrera.nosedive.presentation.ui.Event
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import com.soyvictorherrera.nosedive.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,6 +28,14 @@ class CodeSharingViewModel @Inject constructor(
     val user: LiveData<UserModel>
         get() = _user
 
+    private val _imageCode = MutableLiveData<ImageCodeState>()
+    val imageCode: LiveData<ImageCodeState>
+        get() = _imageCode
+
+    private val _textCode = MutableLiveData<TextCodeState>()
+    val textCode: LiveData<TextCodeState>
+        get() = _textCode
+
     init {
         viewModelScope.launch {
             observeCurrentUserUseCase.execute { result ->
@@ -39,6 +49,18 @@ class CodeSharingViewModel @Inject constructor(
                     }
                 }
             }
+        }
+
+        viewModelScope.launch {
+            delay(3000)
+
+            _imageCode.value = ImageCodeState.Generated(
+                codeUri = Uri.parse("https://upload.wikimedia.org/wikipedia/commons/d/d7/Commons_QR_code.png")
+            )
+
+            delay(3000)
+
+            _imageCode.value = ImageCodeState.Error
         }
     }
 
