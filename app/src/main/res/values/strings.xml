@@ -47,4 +47,5 @@
     <string name="code_sharing_not_working">¿No está funcionando?</string>
     <string name="code_sharing_generate_code">Genera un código</string>
     <string name="code_sharing_scan_code">Escanear código</string>
+    <string name="code_sharing_your_single_use_code">Este es tu código de un solo uso:</string>
 </resources>

@@ -62,6 +62,24 @@ class CodeSharingViewModel @Inject constructor(
 
             _imageCode.value = ImageCodeState.Error
         }
+
+        viewModelScope.launch {
+            delay(3000)
+
+            _textCode.value = TextCodeState.None
+
+            delay(3000)
+
+            _textCode.value = TextCodeState.Loading
+
+            delay(3000)
+
+            _textCode.value = TextCodeState.Generated(code = "123456")
+
+            delay(3000)
+
+            _textCode.value = TextCodeState.Error
+        }
     }
 
     fun onGenerateSharingCode() {

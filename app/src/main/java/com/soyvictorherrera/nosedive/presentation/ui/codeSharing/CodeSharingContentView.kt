@@ -3,6 +3,7 @@ package com.soyvictorherrera.nosedive.presentation.ui.codeSharing
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.ArrowBack
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.sharp.Pin
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -109,17 +111,10 @@ fun CodeSharingContent(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                Text(
-                    text = stringResource(R.string.code_sharing_not_working),
-                    style = MaterialTheme.typography.caption
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                SecondaryButton(
-                    text = stringResource(R.string.code_sharing_generate_code),
-                    onClick = { onGenerateSharingCode() },
-                    icon = Icons.Sharp.Pin
+                TextCodePreview(
+                    textCodeState = textCodeState,
+                    onGenerateSharingCode = onGenerateSharingCode,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
@@ -216,6 +211,90 @@ fun ImageCodePreview(
     }
 }
 
+@Composable
+fun TextCodePreview(
+    textCodeState: TextCodeState,
+    onGenerateSharingCode: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = CenterHorizontally
+    ) {
+        when (textCodeState) {
+            TextCodeState.Error -> {
+                Text(
+                    text = "Error",
+                    style = MaterialTheme.typography.body1
+                )
+            }
+            is TextCodeState.Generated -> {
+                val fullCode = textCodeState.code
+                val aPart = fullCode.substring(0, 3)
+                val bPart = fullCode.substring(3, 6)
+
+                Text(
+                    text = stringResource(R.string.code_sharing_your_single_use_code),
+                    style = MaterialTheme.typography.caption
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(verticalAlignment = CenterVertically) {
+                    TextCodeChip(code = aPart)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(text = "-")
+                    Spacer(modifier = Modifier.width(4.dp))
+                    TextCodeChip(code = bPart)
+                }
+            }
+            TextCodeState.Loading -> {
+                Text(
+                    text = stringResource(R.string.code_sharing_not_working),
+                    style = MaterialTheme.typography.caption,
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                SecondaryButton(
+                    text = stringResource(R.string.code_sharing_generate_code),
+                    onClick = { /* */ },
+                    enabled = false,
+                    showLoader = true
+                )
+            }
+            TextCodeState.None -> {
+                Text(
+                    text = stringResource(R.string.code_sharing_not_working),
+                    style = MaterialTheme.typography.caption
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                SecondaryButton(
+                    text = stringResource(R.string.code_sharing_generate_code),
+                    onClick = { onGenerateSharingCode() },
+                    icon = Icons.Sharp.Pin
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun TextCodeChip(code: String) {
+    Surface(
+        elevation = 2.dp,
+        shape = RoundedCornerShape(2.dp)
+    ) {
+        Text(
+            text = code,
+            modifier = Modifier.padding(4.dp),
+            style = MaterialTheme.typography.subtitle1
+        )
+    }
+}
+
 @Preview
 @Composable
 fun CodeSharingContentViewPreview() {
@@ -224,8 +303,8 @@ fun CodeSharingContentViewPreview() {
             user = UserModel(name = "Victor Herrera", email = ""),
             scaffoldState = rememberScaffoldState(),
             onNavigationEvent = {},
-            imageCodeState = ImageCodeState.Error,
-            textCodeState = TextCodeState.None
+            imageCodeState = ImageCodeState.Loading,
+            textCodeState = TextCodeState.Generated(code = "123456")
         )
     }
 }
