@@ -53,7 +53,7 @@ class FirebaseUserDataSource(
                     )
                 } else {
                     this@callbackFlow.trySendBlocking(
-                        Result.Success(user)
+                        Result.Success(user.apply { id = snapshot.key })
                     )
                 }
             }

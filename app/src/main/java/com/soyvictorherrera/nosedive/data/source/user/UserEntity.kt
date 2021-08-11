@@ -3,11 +3,11 @@ package com.soyvictorherrera.nosedive.data.source.user
 import com.google.firebase.database.Exclude
 
 data class UserEntity(
-    @get:Exclude val id: String? = null,
-    val name: String? = null,
-    val email: String? = null,
-    val password: String? = null,
-    val photoUrl: String? = null,
-    val status: String? = null,
-    val score: Double? = null
+    @get:Exclude var id: String? = null,
+    var name: String? = null,
+    var email: String? = null,
+    var password: String? = null,
+    var photoUrl: String? = null,
+    var status: String? = null,
+    var score: Double? = null
 )
