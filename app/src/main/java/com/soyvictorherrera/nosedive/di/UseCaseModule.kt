@@ -9,6 +9,7 @@ import com.soyvictorherrera.nosedive.domain.usecase.ObserveCurrentUserUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.SignInUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.SignUpUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.UpdateProfilePhotoUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.sharing.GenerateQrCodeUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.user.UpdateUserPasswordUseCase
 import com.soyvictorherrera.nosedive.util.FileUtil
 import dagger.Module
@@ -80,6 +81,16 @@ class UseCaseModule {
     ): UpdateUserPasswordUseCase {
         return UpdateUserPasswordUseCase(
             authRepository = authRepository
+        )
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideGenerateQrCodeUseCase(
+        fileUtil: FileUtil
+    ): GenerateQrCodeUseCase {
+        return GenerateQrCodeUseCase(
+            fileUtil = fileUtil
         )
     }
 

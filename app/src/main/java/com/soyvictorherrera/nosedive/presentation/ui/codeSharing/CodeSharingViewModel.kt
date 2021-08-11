@@ -1,23 +1,26 @@
 package com.soyvictorherrera.nosedive.presentation.ui.codeSharing
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.usecase.ObserveCurrentUserUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.sharing.GenerateQrCodeUseCase
 import com.soyvictorherrera.nosedive.presentation.ui.Event
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
+import com.soyvictorherrera.nosedive.presentation.ui.TAG
 import com.soyvictorherrera.nosedive.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CodeSharingViewModel @Inject constructor(
-    private val observeCurrentUserUseCase: ObserveCurrentUserUseCase
+    private val observeCurrentUserUseCase: ObserveCurrentUserUseCase,
+    private val generateQrCodeUseCase: GenerateQrCodeUseCase
 ) : ViewModel() {
 
     private val _navigateTo = MutableLiveData<Event<Screen>>()
@@ -37,53 +40,11 @@ class CodeSharingViewModel @Inject constructor(
         get() = _textCode
 
     init {
-        viewModelScope.launch {
-            observeCurrentUserUseCase.execute { result ->
-                when (result) {
-                    is Result.Success -> {
-                        _user.value = result.data!!
-                    }
-                    is Result.Error -> {
-                    }
-                    Result.Loading -> {
-                    }
-                }
-            }
-        }
-
-        viewModelScope.launch {
-            delay(3000)
-
-            _imageCode.value = ImageCodeState.Generated(
-                codeUri = Uri.parse("https://upload.wikimedia.org/wikipedia/commons/d/d7/Commons_QR_code.png")
-            )
-
-            delay(3000)
-
-            _imageCode.value = ImageCodeState.Error
-        }
-
-        viewModelScope.launch {
-            delay(3000)
-
-            _textCode.value = TextCodeState.None
-
-            delay(3000)
-
-            _textCode.value = TextCodeState.Loading
-
-            delay(3000)
-
-            _textCode.value = TextCodeState.Generated(code = "123456")
-
-            delay(3000)
-
-            _textCode.value = TextCodeState.Error
-        }
+        observeCurrentUser()
     }
 
     fun onGenerateSharingCode() {
-
+        _textCode.value = TextCodeState.Loading
     }
 
     fun onNavigateBack() {
@@ -94,5 +55,53 @@ class CodeSharingViewModel @Inject constructor(
 
     }
 
+    private fun observeCurrentUser() {
+        viewModelScope.launch {
+            observeCurrentUserUseCase.execute { result ->
+                when (result) {
+                    is Result.Success -> {
+                        val currentUser: UserModel = result.data
+                        _user.value = currentUser
+                        generateQrCode(user = currentUser)
+                    }
+                    is Result.Error -> {
+                        _imageCode.value = ImageCodeState.Error
+                    }
+                    Result.Loading -> {
+                        _imageCode.value = ImageCodeState.Loading
+                    }
+                }
+            }
+        }
+    }
 
+    private fun generateQrCode(user: UserModel) {
+        viewModelScope.launch {
+            val userId = user.id
+            if (userId.isNullOrEmpty()) {
+                _imageCode.value = ImageCodeState.Error
+                Log.e(TAG, "user id was empty or null")
+            } else {
+                Log.d(TAG, "generating QrCode for ID = $userId")
+                generateQrCodeUseCase.apply {
+                    qrContent = userId
+                }.execute { result ->
+                    when (result) {
+                        is Result.Error -> {
+                            _imageCode.value = ImageCodeState.Error
+                            Log.e(TAG, "error generating QR code", result.exception)
+                        }
+                        Result.Loading -> {
+                            _imageCode.value = ImageCodeState.Loading
+                        }
+                        is Result.Success -> {
+                            val codeUri = Uri.parse(result.data.toString())
+                            _imageCode.value = ImageCodeState.Generated(codeUri = codeUri)
+                            Log.d(TAG, "codeUri is = $codeUri")
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

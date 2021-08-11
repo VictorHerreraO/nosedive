@@ -1,6 +1,5 @@
 package com.soyvictorherrera.nosedive.domain.mapper
 
-import android.net.Uri
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.model.UserStatus
@@ -15,7 +14,7 @@ class UserEntityMapper : DomainMapper<UserEntity, UserModel>() {
             email = email ?: "",
             password = password,
             photoUrl = photoUrl?.let { url -> URI(url) },
-            status = if (status.isNullOrEmpty()) UserStatus.BLOCKED else UserStatus.valueOf(status),
+            status = status?.let { UserStatus.valueOf(it) } ?: UserStatus.BLOCKED,
             score = score ?: 0.0
         )
     }

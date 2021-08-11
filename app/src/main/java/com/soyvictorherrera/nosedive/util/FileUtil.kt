@@ -13,19 +13,18 @@ private const val FILE_MODE_READ_ONLY = "r"
 
 class FileUtil(private val context: Context) {
 
+    /**
+     * Generates an URI pointing to a temp file
+     *
+     * @return URI for a tmp file
+     */
     fun getTmpImageUri(): URI {
         val tmpFile = File.createTempFile("img_", ".tmp", context.cacheDir).apply {
             createNewFile()
             deleteOnExit()
         }
 
-        return URI(
-            FileProvider.getUriForFile(
-                context,
-                "${BuildConfig.APPLICATION_ID}.provider",
-                tmpFile
-            ).toString()
-        )
+        return getURIForFile(tmpFile)
     }
 
     /**
@@ -52,5 +51,21 @@ class FileUtil(private val context: Context) {
             IOUtils.copy(inputStream, outputStream)
             file
         } else null
+    }
+
+    /**
+     * Generates a URI for the provided file using the app's FileProvider
+     *
+     * @param file File to get uri for
+     * @return URI for the provided file
+     */
+    fun getURIForFile(file: File): URI {
+        return URI(
+            FileProvider.getUriForFile(
+                context,
+                "${BuildConfig.APPLICATION_ID}.provider",
+                file
+            ).toString()
+        )
     }
 }
