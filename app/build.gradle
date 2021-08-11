@@ -111,6 +111,10 @@ dependencies {
     def commons_version = '2.9.0'
     implementation group: 'commons-io', name: 'commons-io', version: commons_version
 
+    // QRGen
+    def qrgen_version = "2.6.0"
+    implementation "com.github.kenglxn.QRGen:android:$qrgen_version"
+
     // Testing
     def junit_version = '4.13.2'
     testImplementation "junit:junit:$junit_version"
