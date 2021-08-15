@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.usecase.ObserveCurrentUserUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.sharing.GenerateQrCodeUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.sharing.GenerateTextSharingCodeUseCase
 import com.soyvictorherrera.nosedive.presentation.ui.Event
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import com.soyvictorherrera.nosedive.presentation.ui.TAG
@@ -20,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CodeSharingViewModel @Inject constructor(
     private val observeCurrentUserUseCase: ObserveCurrentUserUseCase,
-    private val generateQrCodeUseCase: GenerateQrCodeUseCase
+    private val generateQrCodeUseCase: GenerateQrCodeUseCase,
+    private val generateTextSharingCodeUseCase: GenerateTextSharingCodeUseCase
 ) : ViewModel() {
 
     private val _navigateTo = MutableLiveData<Event<Screen>>()
@@ -44,7 +46,7 @@ class CodeSharingViewModel @Inject constructor(
     }
 
     fun onGenerateSharingCode() {
-        _textCode.value = TextCodeState.Loading
+        generateTextSharingCode()
     }
 
     fun onNavigateBack() {
@@ -104,4 +106,42 @@ class CodeSharingViewModel @Inject constructor(
             }
         }
     }
+
+    private fun generateTextSharingCode() {
+        _user.value?.let { user ->
+            val uId = user.id
+
+            if (uId.isNullOrEmpty()) {
+                _textCode.value = TextCodeState.Error
+            } else {
+                _textCode.value = TextCodeState.Loading
+
+                viewModelScope.launch {
+                    generateTextSharingCodeUseCase.apply {
+                        userId = uId
+                    }.execute { result ->
+                        when (result) {
+                            is Result.Error -> {
+                                _textCode.value = TextCodeState.Error
+                                Log.e(TAG, "error al generar el código de texto")
+                            }
+                            Result.Loading -> {
+                                _textCode.value = TextCodeState.Loading
+                            }
+                            is Result.Success -> {
+                                val sharingCode = result.data
+                                Log.d(
+                                    TAG,
+                                    "El código generado es ${sharingCode.publicCode} para el usuario ${sharingCode.userId}"
+                                )
+                                _textCode.value =
+                                    TextCodeState.Generated(code = sharingCode.publicCode)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

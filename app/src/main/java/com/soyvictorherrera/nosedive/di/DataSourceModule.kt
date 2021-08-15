@@ -7,6 +7,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.soyvictorherrera.nosedive.data.source.authentication.AuthenticationDataSource
 import com.soyvictorherrera.nosedive.data.source.authentication.firebase.FirebaseAuthenticationDataSource
+import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeDataSource
+import com.soyvictorherrera.nosedive.data.source.sharingCode.firebase.FirebaseSharingCodeDataSource
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
 import com.soyvictorherrera.nosedive.data.source.user.firebase.FirebaseUserDataSource
 import dagger.Module
@@ -47,7 +49,6 @@ class DataSourceModule {
     fun provideUserDatabaseReference(database: FirebaseDatabase): DatabaseReference {
         return database.getReference("user")
     }
-    //endregion
 
     @Provides
     @Singleton
@@ -55,6 +56,14 @@ class DataSourceModule {
     fun provideUserPhotoStorageReference(storage: FirebaseStorage): StorageReference {
         return storage.getReference("userPhoto")
     }
+
+    @Provides
+    @Singleton
+    @Named("sharingCodeRef")
+    fun provideSharingCodeDatabaseReference(database: FirebaseDatabase): DatabaseReference {
+        return database.getReference("sharingCode")
+    }
+    //endregion
 
     //region Data sources
     @Provides
@@ -72,6 +81,16 @@ class DataSourceModule {
         return FirebaseUserDataSource(
             users = users,
             userPhotos = userPhotos
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseSharingCodeDataSource(
+        @Named("sharingCodeRef") sharingCodes: DatabaseReference
+    ): SharingCodeDataSource {
+        return FirebaseSharingCodeDataSource(
+            sharingCodes = sharingCodes
         )
     }
     //endregion
