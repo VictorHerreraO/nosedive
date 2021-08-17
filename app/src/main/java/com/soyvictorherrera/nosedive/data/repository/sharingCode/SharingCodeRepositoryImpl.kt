@@ -14,13 +14,13 @@ class SharingCodeRepositoryImpl(
     }
 
     override suspend fun getSharingCode(
-        sharingCodeId: String
+        publicSharingCode: String
     ): Flow<Result<SharingCodeEntity>> {
-        return sharingCodeSource.getSharingCode(sharingCodeId = sharingCodeId)
+        return sharingCodeSource.getSharingCode(publicSharingCode = publicSharingCode)
     }
 
-    override suspend fun deleteSharingCode(sharingCodeId: String): Flow<Result<Unit>> {
-        return sharingCodeSource.deleteSharingCode(sharingCodeId = sharingCodeId)
+    override suspend fun deleteSharingCode(publicSharingCode: String): Flow<Result<Unit>> {
+        return sharingCodeSource.deleteSharingCode(publicSharingCode = publicSharingCode)
     }
 
 }

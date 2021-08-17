@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.usecase.ObserveCurrentUserUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.sharing.DeleteTextSharingCodeUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.sharing.GenerateQrCodeUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.sharing.GenerateTextSharingCodeUseCase
 import com.soyvictorherrera.nosedive.presentation.ui.Event
@@ -15,6 +16,8 @@ import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import com.soyvictorherrera.nosedive.presentation.ui.TAG
 import com.soyvictorherrera.nosedive.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,7 +25,8 @@ import javax.inject.Inject
 class CodeSharingViewModel @Inject constructor(
     private val observeCurrentUserUseCase: ObserveCurrentUserUseCase,
     private val generateQrCodeUseCase: GenerateQrCodeUseCase,
-    private val generateTextSharingCodeUseCase: GenerateTextSharingCodeUseCase
+    private val generateTextSharingCodeUseCase: GenerateTextSharingCodeUseCase,
+    private val deleteTextSharingCodeUseCase: DeleteTextSharingCodeUseCase
 ) : ViewModel() {
 
     private val _navigateTo = MutableLiveData<Event<Screen>>()
@@ -55,6 +59,10 @@ class CodeSharingViewModel @Inject constructor(
 
     fun onScanSharingCode() {
 
+    }
+
+    fun onSharingEnd() {
+        deleteTextSharingCode()
     }
 
     private fun observeCurrentUser() {
@@ -141,6 +149,33 @@ class CodeSharingViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    private fun deleteTextSharingCode() {
+        Log.d(TAG, "deleting text sharing code")
+        val textCode = textCode.value
+        if (textCode !is TextCodeState.Generated) return
+
+        // Launch coroutine in a non-viewmodel-dependent  scope
+        CoroutineScope(IO).launch {
+            Log.d(TAG, "launching coroutine")
+            deleteTextSharingCodeUseCase.apply {
+                publicSharingCode = textCode.code
+            }.execute { result ->
+                when (result) {
+                    is Result.Error -> {
+                        Log.d(TAG, "error deleting code", result.exception)
+                    }
+                    Result.Loading -> {
+                        Log.d(TAG, "loading")
+                    }
+                    is Result.Success -> {
+                        Log.d(TAG, "success deleting code")
+                    }
+                }
+            }
+            Log.d(TAG, "coroutine done")
         }
     }
 

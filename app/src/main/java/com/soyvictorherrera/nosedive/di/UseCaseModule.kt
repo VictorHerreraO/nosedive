@@ -6,13 +6,13 @@ import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
 import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeEntity
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
 import com.soyvictorherrera.nosedive.domain.mapper.DomainMapper
-import com.soyvictorherrera.nosedive.domain.mapper.SharingCodeEntityMapper
 import com.soyvictorherrera.nosedive.domain.model.SharingCodeModel
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.usecase.ObserveCurrentUserUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.SignInUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.SignUpUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.UpdateProfilePhotoUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.sharing.DeleteTextSharingCodeUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.sharing.GenerateQrCodeUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.sharing.GenerateTextSharingCodeUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.user.UpdateUserPasswordUseCase
@@ -108,6 +108,16 @@ class UseCaseModule {
         return GenerateTextSharingCodeUseCase(
             sharingCodeRepository = sharingCodeRepository,
             sharingCodeEntityMapper = sharingCodeEntityMapper
+        )
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideDeleteTextSharingCodeUseCase(
+        sharingCodeRepository: SharingCodeRepository
+    ): DeleteTextSharingCodeUseCase {
+        return DeleteTextSharingCodeUseCase(
+            sharingCodeRepository = sharingCodeRepository
         )
     }
 

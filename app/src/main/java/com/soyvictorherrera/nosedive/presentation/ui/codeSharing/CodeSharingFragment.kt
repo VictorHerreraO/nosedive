@@ -75,4 +75,9 @@ class CodeSharingFragment : Fragment() {
         }
     }
 
+    override fun onDestroy() {
+        viewModel.onSharingEnd()
+        super.onDestroy()
+    }
+
 }

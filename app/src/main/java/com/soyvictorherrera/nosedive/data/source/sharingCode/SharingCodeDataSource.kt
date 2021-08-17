@@ -7,8 +7,8 @@ interface SharingCodeDataSource {
 
     suspend fun saveSharingCode(entity: SharingCodeEntity): Flow<Result<SharingCodeEntity>>
 
-    suspend fun getSharingCode(sharingCodeId: String): Flow<Result<SharingCodeEntity>>
+    suspend fun getSharingCode(publicSharingCode: String): Flow<Result<SharingCodeEntity>>
 
-    suspend fun deleteSharingCode(sharingCodeId: String): Flow<Result<Unit>>
+    suspend fun deleteSharingCode(publicSharingCode: String): Flow<Result<Unit>>
 
 }

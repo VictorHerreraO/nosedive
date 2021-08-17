@@ -13,7 +13,9 @@ class FirebaseSharingCodeDataSource(
     private val sharingCodes: DatabaseReference
 ) : SharingCodeDataSource {
 
-    override suspend fun saveSharingCode(entity: SharingCodeEntity): Flow<Result<SharingCodeEntity>> {
+    override suspend fun saveSharingCode(
+        entity: SharingCodeEntity
+    ): Flow<Result<SharingCodeEntity>> {
         return try {
             val publicCode = entity.code
             val userId = entity.userId
@@ -32,32 +34,34 @@ class FirebaseSharingCodeDataSource(
     }
 
     override suspend fun getSharingCode(
-        sharingCodeId: String
+        publicSharingCode: String
     ): Flow<Result<SharingCodeEntity>> {
         return try {
-            if (sharingCodeId.isEmpty()) {
+            if (publicSharingCode.isEmpty()) {
                 throw IllegalArgumentException("{sharingCodeId} must not be empty")
             }
 
-            sharingCodes.child(sharingCodeId)
+            sharingCodes.child(publicSharingCode)
                 .get()
                 .await()
                 .getValue(SharingCodeEntity::class.java)
                 ?.let { entity ->
                     flowOf(Result.Success(data = entity))
-                } ?: throw RuntimeException("no sharingCode found with id {$sharingCodeId}")
+                } ?: throw RuntimeException("no sharingCode found with id {$publicSharingCode}")
         } catch (ex: Exception) {
             flowOf(Result.Error(exception = ex))
         }
     }
 
-    override suspend fun deleteSharingCode(sharingCodeId: String): Flow<Result<Unit>> {
+    override suspend fun deleteSharingCode(
+        publicSharingCode: String
+    ): Flow<Result<Unit>> {
         return try {
-            if (sharingCodeId.isEmpty()) {
+            if (publicSharingCode.isEmpty()) {
                 throw IllegalArgumentException("{sharingCodeId} must not be empty")
             }
 
-            sharingCodes.child(sharingCodeId).removeValue().await()
+            sharingCodes.child(publicSharingCode).removeValue().await()
 
             flowOf(Result.Success(data = Unit))
         } catch (ex: Exception) {
