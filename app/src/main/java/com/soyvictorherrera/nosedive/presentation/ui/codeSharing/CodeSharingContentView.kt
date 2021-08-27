@@ -25,6 +25,7 @@ import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.presentation.component.button.ActionButton
 import com.soyvictorherrera.nosedive.presentation.component.button.SecondaryButton
+import com.soyvictorherrera.nosedive.presentation.component.common.NoTitleTopAppBar
 import com.soyvictorherrera.nosedive.presentation.component.modifier.contentPadding
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserPhoto
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
@@ -49,7 +50,7 @@ fun CodeSharingContentView(
         scaffoldState = scaffoldState,
         modifier = modifier,
         topBar = {
-            CodeSharingTopBar(onNavigateBack = { onNavigationEvent(NavigateBack) })
+            NoTitleTopAppBar(onNavigateBack = { onNavigationEvent(NavigateBack) })
         },
         content = {
             CodeSharingContent(
@@ -60,26 +61,6 @@ fun CodeSharingContentView(
                 textCodeState = textCodeState
             )
         }
-    )
-}
-
-@Composable
-fun CodeSharingTopBar(
-    onNavigateBack: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    TopAppBar(
-        title = { /* No title */ },
-        navigationIcon = {
-            IconButton(onClick = { onNavigateBack() }) {
-                Icon(
-                    imageVector = Icons.Sharp.ArrowBack,
-                    contentDescription = null
-                )
-            }
-        },
-        modifier = modifier.fillMaxWidth(),
-        elevation = 0.dp
     )
 }
 
