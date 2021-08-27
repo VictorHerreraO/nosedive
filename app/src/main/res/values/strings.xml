@@ -48,4 +48,6 @@
     <string name="code_sharing_generate_code">Genera un código</string>
     <string name="code_sharing_scan_code">Escanear código</string>
     <string name="code_sharing_your_single_use_code">Este es tu código de un solo uso:</string>
+    <string name="code_scanning_scan_code">Escanéa el código con la cámara de tu teléfono</string>
+    <string name="code_scanning_show_code">Mostrar código</string>
 </resources>
