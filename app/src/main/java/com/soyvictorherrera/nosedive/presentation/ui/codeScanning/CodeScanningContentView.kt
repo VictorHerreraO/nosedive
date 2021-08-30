@@ -21,9 +21,11 @@ import com.soyvictorherrera.nosedive.presentation.component.common.NoTitleTopApp
 import com.soyvictorherrera.nosedive.presentation.component.modifier.contentPadding
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 import com.soyvictorherrera.nosedive.presentation.ui.codeScanning.CodeScanningEvent.NavigateBack
+import com.soyvictorherrera.nosedive.presentation.ui.codeScanning.CodeScanningEvent.NavigateCodeShow
 
 sealed class CodeScanningEvent {
     object NavigateBack : CodeScanningEvent()
+    object NavigateCodeShow : CodeScanningEvent()
 }
 
 @Composable
@@ -37,13 +39,18 @@ fun CodeScanningContentView(
             NoTitleTopAppBar(onNavigateBack = { onNavigationEvent(NavigateBack) })
         },
         content = {
-            CodeScanningContent()
+            CodeScanningContent(
+                onShowCode = { onNavigationEvent(NavigateCodeShow) }
+            )
         }
     )
 }
 
 @Composable
-fun CodeScanningContent(modifier: Modifier = Modifier) {
+fun CodeScanningContent(
+    modifier: Modifier = Modifier,
+    onShowCode: () -> Unit
+) {
     Column(
         modifier = modifier.contentPadding(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -67,7 +74,7 @@ fun CodeScanningContent(modifier: Modifier = Modifier) {
 
         ActionButton(
             text = stringResource(R.string.code_scanning_show_code),
-            onClick = { /*TODO*/ },
+            onClick = { onShowCode() },
             icon = Icons.Sharp.PhotoCamera
         )
     }

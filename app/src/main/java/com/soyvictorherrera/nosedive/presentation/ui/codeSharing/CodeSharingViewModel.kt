@@ -58,7 +58,7 @@ class CodeSharingViewModel @Inject constructor(
     }
 
     fun onScanSharingCode() {
-
+        _navigateTo.value = Event(Screen.CodeScanning)
     }
 
     fun onSharingEnd() {

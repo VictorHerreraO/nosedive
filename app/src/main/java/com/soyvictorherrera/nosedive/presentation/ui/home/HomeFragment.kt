@@ -93,6 +93,8 @@ class HomeFragment : Fragment() {
                                 viewModel.viewProfile()
                             }
                             HomeEvent.CodeScan -> {
+                                scope.launch { sheetState.hide() }
+                                viewModel.codeScan()
                             }
                             HomeEvent.CodeShare -> {
                                 scope.launch { sheetState.hide() }

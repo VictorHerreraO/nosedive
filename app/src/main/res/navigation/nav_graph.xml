@@ -8,6 +8,7 @@
         android:id="@+id/signInFragment"
         android:name="com.soyvictorherrera.nosedive.presentation.ui.signIn.SignInFragment"
         android:label="fragment_sign_in" />
+
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.soyvictorherrera.nosedive.presentation.ui.signUp.SignUpFragment"
@@ -26,4 +27,9 @@
         android:id="@+id/codeSharingFragment"
         android:name="com.soyvictorherrera.nosedive.presentation.ui.codeSharing.CodeSharingFragment"
         android:label="fragment_code_sharing" />
+
+    <fragment
+        android:id="@+id/codeScanningFragment"
+        android:name="com.soyvictorherrera.nosedive.presentation.ui.codeScanning.CodeScanningFragment"
+        android:label="fragment_code_scanning" />
 </navigation>

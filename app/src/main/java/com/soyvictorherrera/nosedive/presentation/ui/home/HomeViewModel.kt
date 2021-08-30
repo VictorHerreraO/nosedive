@@ -76,4 +76,8 @@ class HomeViewModel @Inject constructor(
         _navigateTo.value = Event(Screen.CodeSharing)
     }
 
+    fun codeScan() {
+        _navigateTo.value = Event(Screen.CodeScanning)
+    }
+
 }

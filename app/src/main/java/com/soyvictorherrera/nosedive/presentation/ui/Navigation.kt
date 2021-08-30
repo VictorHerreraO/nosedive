@@ -12,6 +12,7 @@ sealed class Screen(@IdRes val resId: Int) {
     object Home : Screen(resId = R.id.homeFragment)
     object Profile : Screen(resId = R.id.profileFragment)
     object CodeSharing : Screen(resId = R.id.codeSharingFragment)
+    object CodeScanning : Screen(resId = R.id.codeScanningFragment)
 }
 
 fun Fragment.navigateInTo(to: Screen, from: Screen, clearStack: Boolean = false) {
