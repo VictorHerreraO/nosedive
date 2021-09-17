@@ -25,7 +25,7 @@ class GenerateTextSharingCodeUseCase(
             return flowOf(Result.Error(exception = IllegalArgumentException("{userId} must not be empty")))
         }
 
-        val publicCode = RandomStringUtils.randomNumeric(6)
+        val publicCode = RandomStringUtils.randomNumeric(SharingCodeModel.LENGTH)
         val entity = SharingCodeEntity(
             code = publicCode,
             userId = uId

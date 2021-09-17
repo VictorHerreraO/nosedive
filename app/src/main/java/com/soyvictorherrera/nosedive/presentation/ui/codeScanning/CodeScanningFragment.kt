@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
+import com.soyvictorherrera.nosedive.presentation.ui.codeScanning.TextCodeInputState.Idle
 import com.soyvictorherrera.nosedive.presentation.ui.navigateInTo
 import com.soyvictorherrera.nosedive.presentation.ui.popUpTo
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,13 +45,20 @@ class CodeScanningFragment : Fragment() {
 
             setContent {
                 NosediveTheme {
-                    CodeScanningContentView { event ->
+                    val inputState by viewModel.codeInputState.observeAsState(initial = Idle)
+
+                    CodeScanningContentView(
+                        inputState = inputState
+                    ) { event ->
                         when (event) {
                             CodeScanningEvent.NavigateBack -> {
                                 viewModel.onNavigateBack()
                             }
                             CodeScanningEvent.NavigateCodeShow -> {
                                 viewModel.onNavigateCodeShow()
+                            }
+                            CodeScanningEvent.WriteCode -> {
+                                viewModel.onWriteCode()
                             }
                         }
                     }

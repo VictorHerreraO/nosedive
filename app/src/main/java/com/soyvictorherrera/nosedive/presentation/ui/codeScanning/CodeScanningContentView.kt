@@ -2,15 +2,17 @@ package com.soyvictorherrera.nosedive.presentation.ui.codeScanning
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.PhotoCamera
 import androidx.compose.material.icons.sharp.Pin
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,16 +22,19 @@ import com.soyvictorherrera.nosedive.presentation.component.button.SecondaryButt
 import com.soyvictorherrera.nosedive.presentation.component.common.NoTitleTopAppBar
 import com.soyvictorherrera.nosedive.presentation.component.modifier.contentPadding
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
-import com.soyvictorherrera.nosedive.presentation.ui.codeScanning.CodeScanningEvent.NavigateBack
-import com.soyvictorherrera.nosedive.presentation.ui.codeScanning.CodeScanningEvent.NavigateCodeShow
+import com.soyvictorherrera.nosedive.presentation.ui.codeScanning.CodeScanningEvent.*
+import com.soyvictorherrera.nosedive.presentation.ui.codeScanning.TextCodeInputState.Idle
+import com.soyvictorherrera.nosedive.presentation.ui.codeScanning.TextCodeInputState.Ready
 
 sealed class CodeScanningEvent {
     object NavigateBack : CodeScanningEvent()
     object NavigateCodeShow : CodeScanningEvent()
+    object WriteCode : CodeScanningEvent()
 }
 
 @Composable
 fun CodeScanningContentView(
+    inputState: TextCodeInputState,
     modifier: Modifier = Modifier,
     onNavigationEvent: (event: CodeScanningEvent) -> Unit
 ) {
@@ -40,6 +45,8 @@ fun CodeScanningContentView(
         },
         content = {
             CodeScanningContent(
+                inputState = inputState,
+                onWriteCode = { onNavigationEvent(WriteCode) },
                 onShowCode = { onNavigationEvent(NavigateCodeShow) }
             )
         }
@@ -48,6 +55,8 @@ fun CodeScanningContentView(
 
 @Composable
 fun CodeScanningContent(
+    inputState: TextCodeInputState,
+    onWriteCode: () -> Unit,
     modifier: Modifier = Modifier,
     onShowCode: () -> Unit
 ) {
@@ -66,7 +75,10 @@ fun CodeScanningContent(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                InputTextCode()
+                InputTextCode(
+                    inputState = inputState,
+                    onWriteCode = onWriteCode
+                )
             }
         }
 
@@ -138,32 +150,102 @@ fun CameraPreview(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun InputTextCode(modifier: Modifier = Modifier) {
+fun InputTextCode(
+    inputState: TextCodeInputState,
+    modifier: Modifier = Modifier,
+    onWriteCode: () -> Unit
+) {
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = stringResource(id = R.string.code_sharing_not_working),
-            style = MaterialTheme.typography.caption
-        )
+        var code by remember { mutableStateOf("") }
+        when (inputState) {
+            Idle -> {
+                Text(
+                    text = stringResource(id = R.string.code_sharing_not_working),
+                    style = MaterialTheme.typography.caption
+                )
 
-        Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-        SecondaryButton(
-            text = "Ingresa un código",
-            onClick = { /*TODO*/ },
-            icon = Icons.Sharp.Pin
-        )
+                SecondaryButton(
+                    text = stringResource(R.string.code_scanning_write_a_code),
+                    onClick = { onWriteCode() },
+                    icon = Icons.Sharp.Pin
+                )
+            }
+            is Ready -> {
+                TextCodeField(
+                    code = code,
+                    onValueChange = {
+                        inputState.code = it
+                        code = it
+                    }
+                )
+            }
+            is TextCodeInputState.Error -> {
+
+            }
+            TextCodeInputState.Loading -> {
+                TextCodeField(code = code, loading = true)
+            }
+        }
     }
 }
 
-@Preview
 @Composable
-fun CodeScanningContentViewPreview() {
-    NosediveTheme {
-        CodeScanningContentView() {
-
+fun TextCodeField(
+    code: String,
+    loading: Boolean = false,
+    onValueChange: (it: String) -> Unit = {}
+) {
+    TextField(
+        value = code,
+        modifier = Modifier.fillMaxWidth(),
+        label = {
+            Text(text = stringResource(R.string.code_scanning_write_the_code))
+        },
+        onValueChange = onValueChange,
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Number
+        ),
+        singleLine = true,
+        enabled = !loading,
+        trailingIcon = {
+            if (loading) {
+                CircularProgressIndicator()
+            }
         }
+    )
+}
+
+@Preview(name = "Text Code Idle")
+@Composable
+fun CodeScanningContentViewIdlePreview() {
+    NosediveTheme {
+        CodeScanningContentView(
+            inputState = Idle
+        ) {}
+    }
+}
+
+@Preview(name = "Text Code Ready")
+@Composable
+fun CodeScanningContentViewReadyPreview() {
+    NosediveTheme {
+        CodeScanningContentView(
+            inputState = Ready(code = "")
+        ) {}
+    }
+}
+
+@Preview(name = "Text Code Loading")
+@Composable
+fun CodeScanningContentViewLoadingPreview() {
+    NosediveTheme {
+        CodeScanningContentView(
+            inputState = TextCodeInputState.Loading
+        ) {}
     }
 }

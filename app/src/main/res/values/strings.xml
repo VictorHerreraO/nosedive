@@ -50,4 +50,6 @@
     <string name="code_sharing_your_single_use_code">Este es tu código de un solo uso:</string>
     <string name="code_scanning_scan_code">Escanéa el código con la cámara de tu teléfono</string>
     <string name="code_scanning_show_code">Mostrar código</string>
+    <string name="code_scanning_write_a_code">Ingresa un código</string>
+    <string name="code_scanning_write_the_code">Escribe el código</string>
 </resources>
