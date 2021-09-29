@@ -1,21 +1,23 @@
 package com.soyvictorherrera.nosedive.presentation.ui.codeScanning
 
+import android.view.ViewGroup
+import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.sharp.ErrorOutline
 import androidx.compose.material.icons.sharp.PhotoCamera
 import androidx.compose.material.icons.sharp.Pin
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.presentation.component.button.ActionButton
 import com.soyvictorherrera.nosedive.presentation.component.button.SecondaryButton
@@ -35,6 +37,7 @@ sealed class CodeScanningEvent {
 @Composable
 fun CodeScanningContentView(
     inputState: TextCodeInputState,
+    scanState: CodeScanState,
     modifier: Modifier = Modifier,
     onNavigationEvent: (event: CodeScanningEvent) -> Unit
 ) {
@@ -46,6 +49,7 @@ fun CodeScanningContentView(
         content = {
             CodeScanningContent(
                 inputState = inputState,
+                scanState = scanState,
                 onWriteCode = { onNavigationEvent(WriteCode) },
                 onShowCode = { onNavigationEvent(NavigateCodeShow) }
             )
@@ -56,6 +60,7 @@ fun CodeScanningContentView(
 @Composable
 fun CodeScanningContent(
     inputState: TextCodeInputState,
+    scanState: CodeScanState,
     onWriteCode: () -> Unit,
     modifier: Modifier = Modifier,
     onShowCode: () -> Unit
@@ -71,7 +76,10 @@ fun CodeScanningContent(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CameraPreview(modifier = Modifier.size(200.dp))
+                CameraPreview(
+                    scanState = scanState,
+                    modifier = Modifier.size(200.dp),
+                )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
@@ -132,19 +140,50 @@ fun UserCodeScanCard(
 }
 
 @Composable
-fun CameraPreview(modifier: Modifier = Modifier) {
+fun CameraPreview(
+    scanState: CodeScanState,
+    modifier: Modifier = Modifier
+) {
     Surface(
-        modifier = modifier.aspectRatio(1f),
-        color = MaterialTheme.colors.primary
+        modifier = modifier.aspectRatio(1f)
     ) {
-        Surface(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxSize(),
-            color = Color.White,
-            shape = CircleShape
-        ) {
-
+        when (scanState) {
+            CodeScanState.Idle -> {
+                Box {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .align(Alignment.Center)
+                    )
+                }
+            }
+            CodeScanState.Active -> {
+                AndroidView(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxSize(),
+                    factory = { context ->
+                        PreviewView(context).apply {
+                            layoutParams = ViewGroup.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.MATCH_PARENT
+                            )
+                        }
+                    }
+                )
+            }
+            CodeScanState.Error -> {
+                Box {
+                    Icon(
+                        imageVector = Icons.Sharp.ErrorOutline,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.error,
+                        modifier = Modifier
+                            .size(36.dp)
+                            .align(Alignment.Center)
+                    )
+                }
+            }
         }
     }
 }
@@ -225,7 +264,8 @@ fun TextCodeField(
 fun CodeScanningContentViewIdlePreview() {
     NosediveTheme {
         CodeScanningContentView(
-            inputState = Idle
+            inputState = Idle,
+            scanState = CodeScanState.Idle
         ) {}
     }
 }
@@ -235,7 +275,8 @@ fun CodeScanningContentViewIdlePreview() {
 fun CodeScanningContentViewReadyPreview() {
     NosediveTheme {
         CodeScanningContentView(
-            inputState = Ready(code = "")
+            inputState = Ready(code = ""),
+            scanState = CodeScanState.Idle
         ) {}
     }
 }
@@ -245,7 +286,8 @@ fun CodeScanningContentViewReadyPreview() {
 fun CodeScanningContentViewLoadingPreview() {
     NosediveTheme {
         CodeScanningContentView(
-            inputState = TextCodeInputState.Loading
+            inputState = TextCodeInputState.Loading,
+            scanState = CodeScanState.Idle
         ) {}
     }
 }

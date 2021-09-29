@@ -20,3 +20,9 @@ sealed class TextCodeError {
     object Unknown : TextCodeError()
     object NotFound : TextCodeError()
 }
+
+sealed class CodeScanState {
+    object Idle: CodeScanState()
+    object Active: CodeScanState()
+    object Error: CodeScanState()
+}

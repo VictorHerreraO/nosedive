@@ -24,6 +24,10 @@ class CodeScanningViewModel @Inject constructor(
     val codeInputState: LiveData<TextCodeInputState>
         get() = _codeInputState
 
+    private val _codeScanState = MutableLiveData<CodeScanState>()
+    val codeScanState: LiveData<CodeScanState>
+        get() = _codeScanState
+
     fun onNavigateBack() {
         _navigateTo.value = Event(Screen.Home)
     }
@@ -40,6 +44,10 @@ class CodeScanningViewModel @Inject constructor(
                 _codeInputState.value = TextCodeInputState.Loading
             }
         })
+    }
+
+    fun onCameraPermissionRequestResult(isGranted: Boolean) {
+        _codeScanState.value = if (isGranted) CodeScanState.Active else CodeScanState.Error
     }
 
 }
