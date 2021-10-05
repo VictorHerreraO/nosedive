@@ -32,6 +32,7 @@ sealed class CodeScanningEvent {
     object NavigateBack : CodeScanningEvent()
     object NavigateCodeShow : CodeScanningEvent()
     object WriteCode : CodeScanningEvent()
+    data class QrPreviewCreated(val view: PreviewView) : CodeScanningEvent()
 }
 
 @Composable
@@ -51,7 +52,8 @@ fun CodeScanningContentView(
                 inputState = inputState,
                 scanState = scanState,
                 onWriteCode = { onNavigationEvent(WriteCode) },
-                onShowCode = { onNavigationEvent(NavigateCodeShow) }
+                onShowCode = { onNavigationEvent(NavigateCodeShow) },
+                onPreviewInflated = { onNavigationEvent(QrPreviewCreated(it)) }
             )
         }
     )
@@ -63,7 +65,8 @@ fun CodeScanningContent(
     scanState: CodeScanState,
     onWriteCode: () -> Unit,
     modifier: Modifier = Modifier,
-    onShowCode: () -> Unit
+    onShowCode: () -> Unit,
+    onPreviewInflated: (PreviewView) -> Unit
 ) {
     Column(
         modifier = modifier.contentPadding(),
@@ -79,6 +82,7 @@ fun CodeScanningContent(
                 CameraPreview(
                     scanState = scanState,
                     modifier = Modifier.size(200.dp),
+                    onPreviewInflated = onPreviewInflated
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -142,7 +146,8 @@ fun UserCodeScanCard(
 @Composable
 fun CameraPreview(
     scanState: CodeScanState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onPreviewInflated: (PreviewView) -> Unit
 ) {
     Surface(
         modifier = modifier.aspectRatio(1f)
@@ -169,6 +174,9 @@ fun CameraPreview(
                                 ViewGroup.LayoutParams.MATCH_PARENT
                             )
                         }
+                    },
+                    update = { preview ->
+                        onPreviewInflated(preview)
                     }
                 )
             }

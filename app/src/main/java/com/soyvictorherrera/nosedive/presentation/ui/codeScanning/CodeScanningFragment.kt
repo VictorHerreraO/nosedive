@@ -8,12 +8,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
@@ -26,6 +31,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class CodeScanningFragment : Fragment() {
 
     private val viewModel: CodeScanningViewModel by viewModels()
+    private var cameraSelector: CameraSelector? = null
+    private var cameraProvider: ProcessCameraProvider? = null
+    private var previewUseCase: Preview? = null
+    private var previewView: PreviewView? = null
 
     private val cameraPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -37,11 +46,7 @@ class CodeScanningFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        if (isCameraPermissionGranted()) {
             viewModel.onCameraPermissionRequestResult(true)
         } else {
             cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
@@ -86,11 +91,68 @@ class CodeScanningFragment : Fragment() {
                             CodeScanningEvent.WriteCode -> {
                                 viewModel.onWriteCode()
                             }
+                            is CodeScanningEvent.QrPreviewCreated -> {
+                                previewView = event.view
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun isCameraPermissionGranted(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    fun setupCamera() {
+        cameraSelector = CameraSelector.Builder()
+            .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+            .build()
+
+        ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
+        ).get(CameraXViewModel::class.java)
+            .processCameraProvider
+            .observe(this) { provider ->
+                cameraProvider = provider
+                if (isCameraPermissionGranted()) {
+                    bindPreviewUseCase()
+                } else {
+                    cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                }
+            }
+    }
+
+    fun bindPreviewUseCase() {
+        val provider = cameraProvider ?: return
+
+        previewUseCase?.let {
+            provider.unbind(it)
+        }
+
+        previewUseCase = Preview.Builder()
+            // .setTargetAspectRatio()
+            // .setTargetRotation()
+            .build()
+            .also { preview ->
+                previewView?.let {
+                    preview.setSurfaceProvider(it.surfaceProvider)
+                }
+            }
+
+        try {
+        provider.bindToLifecycle(this, cameraSelector!!, previewUseCase)
+        } catch (ex: Exception) {
+            Log.e(TAG, "error", ex)
+        }
+
+        // TODO: Aqu[]i vamos en el paso #6
+
     }
 
 }
