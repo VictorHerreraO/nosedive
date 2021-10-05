@@ -153,7 +153,7 @@ fun CameraPreview(
         modifier = modifier.aspectRatio(1f)
     ) {
         when (scanState) {
-            CodeScanState.Idle -> {
+            CodeScanState.Waiting -> {
                 Box {
                     CircularProgressIndicator(
                         modifier = Modifier
@@ -273,7 +273,7 @@ fun CodeScanningContentViewIdlePreview() {
     NosediveTheme {
         CodeScanningContentView(
             inputState = Idle,
-            scanState = CodeScanState.Idle
+            scanState = CodeScanState.Waiting
         ) {}
     }
 }
@@ -284,7 +284,7 @@ fun CodeScanningContentViewReadyPreview() {
     NosediveTheme {
         CodeScanningContentView(
             inputState = Ready(code = ""),
-            scanState = CodeScanState.Idle
+            scanState = CodeScanState.Waiting
         ) {}
     }
 }
@@ -295,7 +295,7 @@ fun CodeScanningContentViewLoadingPreview() {
     NosediveTheme {
         CodeScanningContentView(
             inputState = TextCodeInputState.Loading,
-            scanState = CodeScanState.Idle
+            scanState = CodeScanState.Waiting
         ) {}
     }
 }

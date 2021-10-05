@@ -22,7 +22,7 @@ sealed class TextCodeError {
 }
 
 sealed class CodeScanState {
-    object Idle: CodeScanState()
+    object Waiting: CodeScanState()
     object Active: CodeScanState()
     object Error: CodeScanState()
 }
