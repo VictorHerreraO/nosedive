@@ -89,24 +89,29 @@ class CodeScanningFragment : Fragment() {
 
                     CodeScanningContentView(
                         inputState = inputState,
-                        scanState = scanState
-                    ) { event ->
-                        when (event) {
-                            CodeScanningEvent.NavigateBack -> {
-                                viewModel.onNavigateBack()
+                        scanState = scanState,
+                        onNavigationEvent = { event ->
+                            when (event) {
+                                CodeScanningEvent.NavigateBack -> {
+                                    viewModel.onNavigateBack()
+                                }
+                                CodeScanningEvent.NavigateCodeShow -> {
+                                    viewModel.onNavigateCodeShow()
+                                }
                             }
-                            CodeScanningEvent.NavigateCodeShow -> {
-                                viewModel.onNavigateCodeShow()
-                            }
-                            CodeScanningEvent.WriteCode -> {
-                                viewModel.onWriteCode()
-                            }
-                            is CodeScanningEvent.QrPreviewCreated -> {
-                                previewView = event.view
-                                setupCamera()
+                        },
+                        onActionEvent = { event ->
+                            when (event) {
+                                CodeScanningActionEvent.WriteCode -> {
+                                    viewModel.onWriteCode()
+                                }
+                                is CodeScanningActionEvent.QrPreviewCreated -> {
+                                    previewView = event.view
+                                    setupCamera()
+                                }
                             }
                         }
-                    }
+                    )
                 }
             }
         }

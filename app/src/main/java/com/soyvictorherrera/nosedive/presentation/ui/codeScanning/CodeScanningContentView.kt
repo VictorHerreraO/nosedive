@@ -24,15 +24,19 @@ import com.soyvictorherrera.nosedive.presentation.component.button.SecondaryButt
 import com.soyvictorherrera.nosedive.presentation.component.common.NoTitleTopAppBar
 import com.soyvictorherrera.nosedive.presentation.component.modifier.contentPadding
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
-import com.soyvictorherrera.nosedive.presentation.ui.codeScanning.CodeScanningEvent.*
+import com.soyvictorherrera.nosedive.presentation.ui.codeScanning.CodeScanningEvent.NavigateBack
+import com.soyvictorherrera.nosedive.presentation.ui.codeScanning.CodeScanningEvent.NavigateCodeShow
 import com.soyvictorherrera.nosedive.presentation.ui.codeScanning.TextCodeInputState.Idle
 import com.soyvictorherrera.nosedive.presentation.ui.codeScanning.TextCodeInputState.Ready
 
 sealed class CodeScanningEvent {
     object NavigateBack : CodeScanningEvent()
     object NavigateCodeShow : CodeScanningEvent()
-    object WriteCode : CodeScanningEvent()
-    data class QrPreviewCreated(val view: PreviewView) : CodeScanningEvent()
+}
+
+sealed class CodeScanningActionEvent {
+    object WriteCode : CodeScanningActionEvent()
+    data class QrPreviewCreated(val view: PreviewView) : CodeScanningActionEvent()
 }
 
 @Composable
@@ -40,7 +44,8 @@ fun CodeScanningContentView(
     inputState: TextCodeInputState,
     scanState: CodeScanState,
     modifier: Modifier = Modifier,
-    onNavigationEvent: (event: CodeScanningEvent) -> Unit
+    onNavigationEvent: (event: CodeScanningEvent) -> Unit,
+    onActionEvent: (event: CodeScanningActionEvent) -> Unit
 ) {
     Scaffold(
         modifier = modifier,
@@ -51,9 +56,8 @@ fun CodeScanningContentView(
             CodeScanningContent(
                 inputState = inputState,
                 scanState = scanState,
-                onWriteCode = { onNavigationEvent(WriteCode) },
-                onShowCode = { onNavigationEvent(NavigateCodeShow) },
-                onPreviewCreated = { onNavigationEvent(QrPreviewCreated(it)) }
+                onNavigationEvent = onNavigationEvent,
+                onActionEvent = onActionEvent
             )
         }
     )
@@ -63,10 +67,9 @@ fun CodeScanningContentView(
 fun CodeScanningContent(
     inputState: TextCodeInputState,
     scanState: CodeScanState,
-    onWriteCode: () -> Unit,
     modifier: Modifier = Modifier,
-    onShowCode: () -> Unit,
-    onPreviewCreated: (PreviewView) -> Unit
+    onNavigationEvent: (event: CodeScanningEvent) -> Unit,
+    onActionEvent: (event: CodeScanningActionEvent) -> Unit
 ) {
     Column(
         modifier = modifier.contentPadding(),
@@ -82,14 +85,18 @@ fun CodeScanningContent(
                 CameraPreview(
                     scanState = scanState,
                     modifier = Modifier.size(200.dp),
-                    onPreviewCreated = onPreviewCreated
+                    onPreviewCreated = { preview ->
+                        onActionEvent(CodeScanningActionEvent.QrPreviewCreated(view = preview))
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
                 InputTextCode(
                     inputState = inputState,
-                    onWriteCode = onWriteCode
+                    onWriteCode = {
+                        onActionEvent(CodeScanningActionEvent.WriteCode)
+                    }
                 )
             }
         }
@@ -98,7 +105,7 @@ fun CodeScanningContent(
 
         ActionButton(
             text = stringResource(R.string.code_scanning_show_code),
-            onClick = { onShowCode() },
+            onClick = { onNavigationEvent(NavigateCodeShow) },
             icon = Icons.Sharp.PhotoCamera
         )
     }
@@ -266,35 +273,15 @@ fun TextCodeField(
     )
 }
 
-@Preview(name = "Text Code Idle")
+@Preview
 @Composable
 fun CodeScanningContentViewIdlePreview() {
     NosediveTheme {
         CodeScanningContentView(
             inputState = Idle,
-            scanState = CodeScanState.Waiting
-        ) {}
-    }
-}
-
-@Preview(name = "Text Code Ready")
-@Composable
-fun CodeScanningContentViewReadyPreview() {
-    NosediveTheme {
-        CodeScanningContentView(
-            inputState = Ready(code = ""),
-            scanState = CodeScanState.Waiting
-        ) {}
-    }
-}
-
-@Preview(name = "Text Code Loading")
-@Composable
-fun CodeScanningContentViewLoadingPreview() {
-    NosediveTheme {
-        CodeScanningContentView(
-            inputState = TextCodeInputState.Loading,
-            scanState = CodeScanState.Waiting
-        ) {}
+            scanState = CodeScanState.Waiting,
+            onNavigationEvent = {},
+            onActionEvent = {}
+        )
     }
 }
