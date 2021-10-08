@@ -53,7 +53,7 @@ fun CodeScanningContentView(
                 scanState = scanState,
                 onWriteCode = { onNavigationEvent(WriteCode) },
                 onShowCode = { onNavigationEvent(NavigateCodeShow) },
-                onPreviewInflated = { onNavigationEvent(QrPreviewCreated(it)) }
+                onPreviewCreated = { onNavigationEvent(QrPreviewCreated(it)) }
             )
         }
     )
@@ -66,7 +66,7 @@ fun CodeScanningContent(
     onWriteCode: () -> Unit,
     modifier: Modifier = Modifier,
     onShowCode: () -> Unit,
-    onPreviewInflated: (PreviewView) -> Unit
+    onPreviewCreated: (PreviewView) -> Unit
 ) {
     Column(
         modifier = modifier.contentPadding(),
@@ -82,7 +82,7 @@ fun CodeScanningContent(
                 CameraPreview(
                     scanState = scanState,
                     modifier = Modifier.size(200.dp),
-                    onPreviewInflated = onPreviewInflated
+                    onPreviewCreated = onPreviewCreated
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -147,7 +147,7 @@ fun UserCodeScanCard(
 fun CameraPreview(
     scanState: CodeScanState,
     modifier: Modifier = Modifier,
-    onPreviewInflated: (PreviewView) -> Unit
+    onPreviewCreated: (PreviewView) -> Unit
 ) {
     Surface(
         modifier = modifier.aspectRatio(1f)
@@ -173,10 +173,9 @@ fun CameraPreview(
                                 ViewGroup.LayoutParams.MATCH_PARENT,
                                 ViewGroup.LayoutParams.MATCH_PARENT
                             )
+                        }.also { preview ->
+                            onPreviewCreated(preview)
                         }
-                    },
-                    update = { preview ->
-                        onPreviewInflated(preview)
                     }
                 )
             }
