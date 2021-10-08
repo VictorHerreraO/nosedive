@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import net.glxn.qrgen.android.QRCode
+import org.json.JSONObject
 import java.net.URI
 
 class GenerateQrCodeUseCase(
@@ -33,7 +34,7 @@ class GenerateQrCodeUseCase(
                 emit(
                     Result.Success(
                         data = fileUtil.getURIForFile(
-                            QRCode.from(content)
+                            QRCode.from(buildContent(content))
                                 .withSize(qrCodeWidth, qrCodeHeight)
                                 .file()
                         )
@@ -43,6 +44,12 @@ class GenerateQrCodeUseCase(
                 emit(Result.Error(exception = ex))
             }
         }
+    }
+
+    private fun buildContent(userId: String): String = with(JSONObject()) {
+        put("u", userId)
+        put("v", 1)
+        toString()
     }
 
 }
