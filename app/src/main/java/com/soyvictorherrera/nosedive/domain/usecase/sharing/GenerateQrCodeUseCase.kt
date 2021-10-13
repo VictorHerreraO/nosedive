@@ -49,7 +49,7 @@ class GenerateQrCodeUseCase(
     private fun buildContent(userId: String): String = with(JSONObject()) {
         put("u", userId)
         put("v", 1)
-        toString()
+        return@with toString()
     }
 
 }

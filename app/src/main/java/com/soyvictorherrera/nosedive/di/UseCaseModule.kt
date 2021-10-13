@@ -15,6 +15,7 @@ import com.soyvictorherrera.nosedive.domain.usecase.UpdateProfilePhotoUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.sharing.DeleteTextSharingCodeUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.sharing.GenerateQrCodeUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.sharing.GenerateTextSharingCodeUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.sharing.ReadQrCodeUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.user.UpdateUserPasswordUseCase
 import com.soyvictorherrera.nosedive.util.FileUtil
 import dagger.Module
@@ -119,6 +120,12 @@ class UseCaseModule {
         return DeleteTextSharingCodeUseCase(
             sharingCodeRepository = sharingCodeRepository
         )
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideReadQrCodeUseCase(): ReadQrCodeUseCase {
+        return ReadQrCodeUseCase()
     }
 
 }

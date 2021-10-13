@@ -205,8 +205,10 @@ class CodeScanningFragment : Fragment() {
         )
         barcodeScanner.process(inputImage)
             .addOnSuccessListener { barcodes ->
-                barcodes.forEach {
-                    Log.d(TAG, it.rawValue ?: "no raw value")
+                barcodes.forEach { barcode ->
+                    barcode.rawValue?.let { value ->
+                        viewModel.onQrCodeDetected(value)
+                    }
                 }
             }
             .addOnFailureListener {
