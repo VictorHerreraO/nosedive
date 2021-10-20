@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.soyvictorherrera.nosedive.domain.model.SharingCodeModel
+import com.soyvictorherrera.nosedive.domain.usecase.sharing.GetTextSharingCodeUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.sharing.ReadQrCodeUseCase
 import com.soyvictorherrera.nosedive.presentation.ui.Event
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
@@ -13,11 +14,13 @@ import com.soyvictorherrera.nosedive.presentation.ui.TAG
 import com.soyvictorherrera.nosedive.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class CodeScanningViewModel @Inject constructor(
-    private val readQrCodeUseCase: ReadQrCodeUseCase
+    private val readQrCodeUseCase: ReadQrCodeUseCase,
+    private val getTextSharingCodeUseCase: GetTextSharingCodeUseCase
 ) : ViewModel() {
 
     private val _navigateTo = MutableLiveData<Event<Screen>>()
@@ -46,6 +49,7 @@ class CodeScanningViewModel @Inject constructor(
             if (code.length >= SharingCodeModel.LENGTH) {
                 Log.d(TAG, "trigger code search with [$code]")
                 _codeInputState.value = TextCodeInputState.Loading
+                findByPublicSharingCode(publicCode = code)
             }
         })
     }
@@ -66,6 +70,27 @@ class CodeScanningViewModel @Inject constructor(
                     Result.Loading -> Unit
                     is Result.Success -> {
                         Log.d(TAG, "aquí debería navegar a la pantalla del usuario ${result.data}")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun findByPublicSharingCode(publicCode: String) {
+        if (publicCode.length < SharingCodeModel.LENGTH) return
+
+        viewModelScope.launch {
+            getTextSharingCodeUseCase.apply {
+                this.publicCode = publicCode
+            }.execute { result ->
+                when (result) {
+                    Result.Loading -> Unit
+                    is Result.Error -> {
+                        // TODO: 20/10/2021 mostrar feedback al usuario de que no se pudo encontrar el código
+                        Timber.e(result.exception)
+                    }
+                    is Result.Success -> {
+                        Timber.i("El código $publicCode apunta al usuario ${result.data.userId}")
                     }
                 }
             }

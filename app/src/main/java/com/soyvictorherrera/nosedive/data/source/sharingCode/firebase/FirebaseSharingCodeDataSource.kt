@@ -46,7 +46,7 @@ class FirebaseSharingCodeDataSource(
                 .await()
                 .getValue(SharingCodeEntity::class.java)
                 ?.let { entity ->
-                    flowOf(Result.Success(data = entity))
+                    flowOf(Result.Success(data = entity.apply { code = publicSharingCode }))
                 } ?: throw RuntimeException("no sharingCode found with id {$publicSharingCode}")
         } catch (ex: Exception) {
             flowOf(Result.Error(exception = ex))
