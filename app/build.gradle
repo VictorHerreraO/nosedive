@@ -128,6 +128,10 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:1.0.1"
     implementation "androidx.camera:camera-view:1.0.0-alpha28"
 
+    // Timber logs
+    def timber_version = '5.0.1'
+    implementation "com.jakewharton.timber:timber:$timber_version"
+
     // Testing
     def junit_version = '4.13.2'
     testImplementation "junit:junit:$junit_version"
