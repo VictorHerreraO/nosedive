@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.mlkit.vision.barcode.Barcode
@@ -68,9 +69,19 @@ class CodeScanningFragment : Fragment() {
 
         viewModel.navigateTo.observe(viewLifecycleOwner) { navigationEvent ->
             navigationEvent.getContentIfNotHandled()?.let { screen ->
-                if (screen == Screen.Home) {
-                    popUpTo(Screen.Home)
-                } else navigateInTo(to = screen, from = Screen.CodeScanning)
+                when (screen) {
+                    Screen.Home -> {
+                        popUpTo(Screen.Home)
+                    }
+                    is Screen.FriendProfile -> {
+                        navigateInTo(
+                            to = screen,
+                            from = Screen.CodeScanning,
+                            args = bundleOf("user-id" to screen.userId)
+                        )
+                    }
+                    else -> navigateInTo(to = screen, from = Screen.CodeScanning)
+                }
             }
         }
 

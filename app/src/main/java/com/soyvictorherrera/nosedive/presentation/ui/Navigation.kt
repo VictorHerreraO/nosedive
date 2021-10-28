@@ -1,5 +1,6 @@
 package com.soyvictorherrera.nosedive.presentation.ui
 
+import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -13,14 +14,20 @@ sealed class Screen(@IdRes val resId: Int) {
     object Profile : Screen(resId = R.id.profileFragment)
     object CodeSharing : Screen(resId = R.id.codeSharingFragment)
     object CodeScanning : Screen(resId = R.id.codeScanningFragment)
+    data class FriendProfile(val userId: String) : Screen(resId = R.id.friendProfileFragment)
 }
 
-fun Fragment.navigateInTo(to: Screen, from: Screen, clearStack: Boolean = false) {
+fun Fragment.navigateInTo(
+    to: Screen,
+    from: Screen,
+    clearStack: Boolean = false,
+    args: Bundle? = null
+) {
     if (to == from) throw IllegalArgumentException("Can't navigate in to $to")
 
     findNavController().navigate(
         resId = to.resId,
-        args = null,
+        args = args,
         navOptions = navOptions {
             anim {
                 enter = android.R.anim.fade_in

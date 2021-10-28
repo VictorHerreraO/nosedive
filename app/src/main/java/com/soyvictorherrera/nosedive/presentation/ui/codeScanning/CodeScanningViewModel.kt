@@ -70,6 +70,7 @@ class CodeScanningViewModel @Inject constructor(
                     Result.Loading -> Unit
                     is Result.Success -> {
                         Log.d(TAG, "aquí debería navegar a la pantalla del usuario ${result.data}")
+                        navigateToFriendProfile(userId = result.data)
                     }
                 }
             }
@@ -91,10 +92,17 @@ class CodeScanningViewModel @Inject constructor(
                     }
                     is Result.Success -> {
                         Timber.i("El código $publicCode apunta al usuario ${result.data.userId}")
+                        navigateToFriendProfile(result.data.userId)
                     }
                 }
             }
         }
+    }
+
+    private fun navigateToFriendProfile(userId: String) {
+        _navigateTo.value = Event(
+            Screen.FriendProfile(userId)
+        )
     }
 
 }

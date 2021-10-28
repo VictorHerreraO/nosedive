@@ -32,4 +32,9 @@
         android:id="@+id/codeScanningFragment"
         android:name="com.soyvictorherrera.nosedive.presentation.ui.codeScanning.CodeScanningFragment"
         android:label="fragment_code_scanning" />
+
+    <fragment
+        android:id="@+id/friendProfileFragment"
+        android:name="com.soyvictorherrera.nosedive.presentation.ui.friendProfile.FriendProfileFragment"
+        android:label="fragment_friend_profile" />
 </navigation>
