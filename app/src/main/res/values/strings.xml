@@ -52,4 +52,5 @@
     <string name="code_scanning_show_code">Mostrar código</string>
     <string name="code_scanning_write_a_code">Ingresa un código</string>
     <string name="code_scanning_write_the_code">Escribe el código</string>
+    <string name="friend_profile_rate_user">Calificar a %s</string>
 </resources>

@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.soyvictorherrera.nosedive.R
+import com.soyvictorherrera.nosedive.domain.model.UserModel
+import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 import timber.log.Timber
 
@@ -31,7 +33,15 @@ class FriendProfileFragment : Fragment() {
             setContent {
                 NosediveTheme {
                     FriendProfileContentView(
+                        user = UserModel(name = "Jessica Herrera", email = ""),
+                        userStats = UserStatsModel(
+                            followers = 17,
+                            ratings = 20,
+                            following = 11
+                        ),
+                        onActionEvent = { event ->
 
+                        }
                     )
                 }
             }
