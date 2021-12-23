@@ -39,9 +39,8 @@ class FriendProfileFragment : Fragment() {
                             ratings = 20,
                             following = 11
                         ),
-                        onActionEvent = { event ->
-
-                        }
+                        onNavigationEvent = { },
+                        onActionEvent = { }
                     )
                 }
             }

@@ -18,8 +18,12 @@ import com.soyvictorherrera.nosedive.presentation.component.button.MainButton
 import com.soyvictorherrera.nosedive.presentation.component.common.NoTitleTopAppBar
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserDetails
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserStats
-import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 import com.soyvictorherrera.nosedive.presentation.extensions.getPhotoUri
+import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
+
+sealed class FriendProfileEvent {
+    object NavigateBack : FriendProfileEvent()
+}
 
 sealed class FriendProfileActionEvent {
     object RateUser : FriendProfileActionEvent()
@@ -30,12 +34,15 @@ fun FriendProfileContentView(
     user: UserModel,
     userStats: UserStatsModel,
     modifier: Modifier = Modifier,
+    onNavigationEvent: (event: FriendProfileEvent) -> Unit,
     onActionEvent: (event: FriendProfileActionEvent) -> Unit
 ) {
     Scaffold(
         modifier = modifier,
         topBar = {
-            NoTitleTopAppBar(onNavigateBack = { })
+            NoTitleTopAppBar(onNavigateBack = {
+                onNavigationEvent(FriendProfileEvent.NavigateBack)
+            })
         },
         content = {
             FriendProfileContent(
@@ -112,6 +119,7 @@ fun FriendProfileContentViewPreview() {
                 ratings = 20,
                 following = 11
             ),
+            onNavigationEvent = { },
             onActionEvent = { }
         )
     }
