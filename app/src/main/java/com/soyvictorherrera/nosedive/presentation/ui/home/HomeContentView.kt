@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
@@ -26,6 +27,7 @@ import com.soyvictorherrera.nosedive.presentation.theme.Black_32
 import com.soyvictorherrera.nosedive.presentation.theme.Forest_Green_07
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 import com.soyvictorherrera.nosedive.presentation.theme.modalBottomSheetShape
+import com.soyvictorherrera.nosedive.presentation.extensions.getPhotoUri
 
 sealed class HomeEvent {
     object ViewProfile : HomeEvent()
@@ -129,8 +131,8 @@ fun HomeContent(
         UserDetails(
             userName = user.name,
             userPhotoBackgroundColor = Forest_Green_07,
-            userPhotoPainter = user.photoUrl?.let { uri ->
-                rememberImagePainter(Uri.parse(uri.toString()))
+            userPhotoPainter = user.getPhotoUri()?.let { uri ->
+                rememberImagePainter(uri)
             }
         )
 
