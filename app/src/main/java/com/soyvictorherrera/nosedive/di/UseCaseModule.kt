@@ -13,6 +13,7 @@ import com.soyvictorherrera.nosedive.domain.usecase.SignInUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.SignUpUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.UpdateProfilePhotoUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.sharing.*
+import com.soyvictorherrera.nosedive.domain.usecase.user.ObserveUserProfileUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.user.UpdateUserPasswordUseCase
 import com.soyvictorherrera.nosedive.util.FileUtil
 import dagger.Module
@@ -134,6 +135,18 @@ class UseCaseModule {
         return GetTextSharingCodeUseCase(
             sharingCodeRepository = sharingCodeRepository,
             sharingCodeEntityMapper = sharingCodeEntityMapper
+        )
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideObserveUserProfileUseCase(
+        userRepository: UserRepository,
+        userEntityMapper: DomainMapper<UserEntity, UserModel>
+    ): ObserveUserProfileUseCase {
+        return ObserveUserProfileUseCase(
+            userRepository = userRepository,
+            userEntityMapper = userEntityMapper
         )
     }
 
