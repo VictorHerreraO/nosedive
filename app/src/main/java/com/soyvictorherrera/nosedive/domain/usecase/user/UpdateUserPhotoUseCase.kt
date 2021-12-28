@@ -1,7 +1,8 @@
-package com.soyvictorherrera.nosedive.domain.usecase
+package com.soyvictorherrera.nosedive.domain.usecase.user
 
 import com.soyvictorherrera.nosedive.data.repository.authentication.AuthenticationRepository
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
+import com.soyvictorherrera.nosedive.domain.usecase.BaseUseCase
 import com.soyvictorherrera.nosedive.util.FileUtil
 import com.soyvictorherrera.nosedive.util.ImageCompressor
 import com.soyvictorherrera.nosedive.util.Result
@@ -12,7 +13,7 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.net.URI
 
-class UpdateProfilePhotoUseCase(
+class UpdateUserPhotoUseCase(
     private val authRepository: AuthenticationRepository,
     private val userRepository: UserRepository,
     private val fileUtil: FileUtil

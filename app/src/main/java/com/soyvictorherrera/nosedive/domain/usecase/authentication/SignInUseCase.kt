@@ -1,4 +1,4 @@
-package com.soyvictorherrera.nosedive.domain.usecase
+package com.soyvictorherrera.nosedive.domain.usecase.authentication
 
 import com.soyvictorherrera.nosedive.util.Result
 import com.soyvictorherrera.nosedive.data.repository.authentication.AuthenticationRepository

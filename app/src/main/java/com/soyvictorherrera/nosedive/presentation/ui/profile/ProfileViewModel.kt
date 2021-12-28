@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.soyvictorherrera.nosedive.domain.model.UserModel
-import com.soyvictorherrera.nosedive.domain.usecase.ObserveCurrentUserUseCase
-import com.soyvictorherrera.nosedive.domain.usecase.UpdateProfilePhotoUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.user.ObserveCurrentUserUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.user.UpdateUserPhotoUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.user.UpdateUserPasswordUseCase
 import com.soyvictorherrera.nosedive.presentation.ui.Event
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val observeCurrentUserUseCase: ObserveCurrentUserUseCase,
-    private val updateProfilePhotoUseCase: UpdateProfilePhotoUseCase,
+    private val updateUserPhotoUseCase: UpdateUserPhotoUseCase,
     private val updateUserPasswordUseCase: UpdateUserPasswordUseCase,
     private val fileUtil: FileUtil
 ) : ViewModel() {
@@ -138,7 +138,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun updateProfilePhoto(fileUri: Uri) {
         viewModelScope.launch {
-            updateProfilePhotoUseCase.apply {
+            updateUserPhotoUseCase.apply {
                 this.fileUri = URI(fileUri.toString())
             }.execute { result ->
                 when (result) {

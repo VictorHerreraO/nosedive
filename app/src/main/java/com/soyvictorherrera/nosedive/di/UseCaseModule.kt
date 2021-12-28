@@ -8,13 +8,13 @@ import com.soyvictorherrera.nosedive.data.source.user.UserEntity
 import com.soyvictorherrera.nosedive.domain.mapper.DomainMapper
 import com.soyvictorherrera.nosedive.domain.model.SharingCodeModel
 import com.soyvictorherrera.nosedive.domain.model.UserModel
-import com.soyvictorherrera.nosedive.domain.usecase.ObserveCurrentUserUseCase
-import com.soyvictorherrera.nosedive.domain.usecase.SignInUseCase
-import com.soyvictorherrera.nosedive.domain.usecase.SignUpUseCase
-import com.soyvictorherrera.nosedive.domain.usecase.UpdateProfilePhotoUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.authentication.SignInUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.authentication.SignUpUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.sharing.*
+import com.soyvictorherrera.nosedive.domain.usecase.user.ObserveCurrentUserUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.user.ObserveUserProfileUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.user.UpdateUserPasswordUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.user.UpdateUserPhotoUseCase
 import com.soyvictorherrera.nosedive.util.FileUtil
 import dagger.Module
 import dagger.Provides
@@ -70,8 +70,8 @@ class UseCaseModule {
         authRepository: AuthenticationRepository,
         userRepository: UserRepository,
         fileUtil: FileUtil
-    ): UpdateProfilePhotoUseCase {
-        return UpdateProfilePhotoUseCase(
+    ): UpdateUserPhotoUseCase {
+        return UpdateUserPhotoUseCase(
             authRepository = authRepository,
             userRepository = userRepository,
             fileUtil = fileUtil
