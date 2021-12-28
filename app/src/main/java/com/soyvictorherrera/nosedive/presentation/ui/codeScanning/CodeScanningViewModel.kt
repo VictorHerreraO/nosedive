@@ -23,6 +23,10 @@ class CodeScanningViewModel @Inject constructor(
     private val getTextSharingCodeUseCase: GetTextSharingCodeUseCase
 ) : ViewModel() {
 
+    companion object {
+        const val QR_READINGS_THRESHOLD = 500L
+    }
+
     private val _navigateTo = MutableLiveData<Event<Screen>>()
     val navigateTo: LiveData<Event<Screen>>
         get() = _navigateTo
@@ -34,6 +38,11 @@ class CodeScanningViewModel @Inject constructor(
     private val _codeScanState = MutableLiveData<CodeScanState>()
     val codeScanState: LiveData<CodeScanState>
         get() = _codeScanState
+
+    private var lastReadMillis = 0L
+    private val millisSinceLastRead: Long
+        get() = System.currentTimeMillis() - lastReadMillis
+
 
     fun onNavigateBack() {
         _navigateTo.value = Event(Screen.Home)
@@ -59,6 +68,9 @@ class CodeScanningViewModel @Inject constructor(
     }
 
     fun onQrCodeDetected(value: String) {
+        if (millisSinceLastRead < QR_READINGS_THRESHOLD) return
+        lastReadMillis = System.currentTimeMillis()
+
         viewModelScope.launch {
             readQrCodeUseCase.apply {
                 rawValue = value
