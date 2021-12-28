@@ -6,11 +6,14 @@ import com.soyvictorherrera.nosedive.data.repository.sharingCode.SharingCodeRepo
 import com.soyvictorherrera.nosedive.data.repository.sharingCode.SharingCodeRepositoryImpl
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepositoryImpl
+import com.soyvictorherrera.nosedive.data.repository.userScore.UserScoreRepository
+import com.soyvictorherrera.nosedive.data.repository.userScore.UserScoreRepositoryImpl
 import com.soyvictorherrera.nosedive.data.repository.userStats.UserStatsRepository
 import com.soyvictorherrera.nosedive.data.repository.userStats.UserStatsRepositoryImpl
 import com.soyvictorherrera.nosedive.data.source.authentication.AuthenticationDataSource
 import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeDataSource
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
+import com.soyvictorherrera.nosedive.data.source.userScore.UserScoreDataSource
 import com.soyvictorherrera.nosedive.data.source.userStats.UserStatsDataSource
 import dagger.Module
 import dagger.Provides
@@ -44,6 +47,12 @@ class RepositoryModule {
     @Singleton
     fun provideUserStatsRepository(userStatsDataSource: UserStatsDataSource): UserStatsRepository {
         return UserStatsRepositoryImpl(userStatsDataSource = userStatsDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserScoreRepository(userScoreDataSource: UserScoreDataSource): UserScoreRepository {
+        return UserScoreRepositoryImpl(userScoreDataSource = userScoreDataSource)
     }
 
 }

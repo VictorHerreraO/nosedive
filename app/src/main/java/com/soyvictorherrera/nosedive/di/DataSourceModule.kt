@@ -11,6 +11,8 @@ import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeDataSour
 import com.soyvictorherrera.nosedive.data.source.sharingCode.firebase.FirebaseSharingCodeDataSource
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
 import com.soyvictorherrera.nosedive.data.source.user.firebase.FirebaseUserDataSource
+import com.soyvictorherrera.nosedive.data.source.userScore.UserScoreDataSource
+import com.soyvictorherrera.nosedive.data.source.userScore.firebase.FirebaseUserScoreDataSource
 import com.soyvictorherrera.nosedive.data.source.userStats.UserStatsDataSource
 import com.soyvictorherrera.nosedive.data.source.userStats.firebase.FirebaseUserStatsDataSource
 import dagger.Module
@@ -29,6 +31,7 @@ class DataSourceModule {
         const val UserPhotoRef = "userPhotoRef"
         const val SharingCodeRef = "sharingCodeRef"
         const val UserStatsRef = "userStatsRef"
+        const val UserScoreRef = "userScoreRef"
     }
 
     private object FirebasePaths {
@@ -36,6 +39,7 @@ class DataSourceModule {
         const val UserPhoto = "userPhoto"
         const val SharingCode = "sharingCode"
         const val UserStats = "userStats"
+        const val UserScore = "userScore"
     }
 
     //region Firebase instances
@@ -86,6 +90,13 @@ class DataSourceModule {
     fun provideUserStatsDatabaseReference(database: FirebaseDatabase): DatabaseReference {
         return database.getReference(FirebasePaths.UserStats)
     }
+
+    @Provides
+    @Singleton
+    @Named(Names.UserScoreRef)
+    fun provideUserScoreDatabaseReference(database: FirebaseDatabase): DatabaseReference {
+        return database.getReference(FirebasePaths.UserScore)
+    }
     //endregion
 
     //region Data sources
@@ -124,6 +135,16 @@ class DataSourceModule {
     ): UserStatsDataSource {
         return FirebaseUserStatsDataSource(
             stats = stats
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserScoreDataSource(
+        @Named(Names.UserScoreRef) scores: DatabaseReference
+    ): UserScoreDataSource {
+        return FirebaseUserScoreDataSource(
+            scores = scores
         )
     }
     //endregion
