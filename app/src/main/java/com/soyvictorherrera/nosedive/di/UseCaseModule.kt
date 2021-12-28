@@ -3,18 +3,18 @@ package com.soyvictorherrera.nosedive.di
 import com.soyvictorherrera.nosedive.data.repository.authentication.AuthenticationRepository
 import com.soyvictorherrera.nosedive.data.repository.sharingCode.SharingCodeRepository
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
+import com.soyvictorherrera.nosedive.data.repository.userStats.UserStatsRepository
 import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeEntity
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
+import com.soyvictorherrera.nosedive.data.source.userStats.UserStatsEntity
 import com.soyvictorherrera.nosedive.domain.mapper.DomainMapper
 import com.soyvictorherrera.nosedive.domain.model.SharingCodeModel
 import com.soyvictorherrera.nosedive.domain.model.UserModel
+import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
 import com.soyvictorherrera.nosedive.domain.usecase.authentication.SignInUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.authentication.SignUpUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.sharing.*
-import com.soyvictorherrera.nosedive.domain.usecase.user.ObserveCurrentUserUseCase
-import com.soyvictorherrera.nosedive.domain.usecase.user.ObserveUserProfileUseCase
-import com.soyvictorherrera.nosedive.domain.usecase.user.UpdateUserPasswordUseCase
-import com.soyvictorherrera.nosedive.domain.usecase.user.UpdateUserPhotoUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.user.*
 import com.soyvictorherrera.nosedive.util.FileUtil
 import dagger.Module
 import dagger.Provides
@@ -147,6 +147,18 @@ class UseCaseModule {
         return ObserveUserProfileUseCase(
             userRepository = userRepository,
             userEntityMapper = userEntityMapper
+        )
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideObserveUserStatsUseCase(
+        statsRepository: UserStatsRepository,
+        statsEntityMapper: DomainMapper<UserStatsEntity, UserStatsModel>
+    ): ObserveUserStatsUseCase {
+        return ObserveUserStatsUseCase(
+            statsRepository = statsRepository,
+            statsEntityMapper = statsEntityMapper
         )
     }
 

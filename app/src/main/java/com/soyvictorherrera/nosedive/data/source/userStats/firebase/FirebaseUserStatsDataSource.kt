@@ -28,7 +28,7 @@ class FirebaseUserStatsDataSource(
                     )
                 } else {
                     this@callbackFlow.trySendBlocking(
-                        Result.Success(stats.copy(userId = userId))
+                        Result.Success(stats)
                     )
                 }
             }
