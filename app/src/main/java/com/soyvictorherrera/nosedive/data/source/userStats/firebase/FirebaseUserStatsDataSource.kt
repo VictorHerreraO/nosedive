@@ -24,7 +24,7 @@ class FirebaseUserStatsDataSource(
                 val stats = snapshot.getValue(UserStatsEntity::class.java)
                 if (stats == null) {
                     this@callbackFlow.trySendBlocking(
-                        Result.Error(RuntimeException("Unable to read user stats"))
+                        Result.Error(RuntimeException("Unable to read user stats, userId was [$userId]"))
                     )
                 } else {
                     this@callbackFlow.trySendBlocking(

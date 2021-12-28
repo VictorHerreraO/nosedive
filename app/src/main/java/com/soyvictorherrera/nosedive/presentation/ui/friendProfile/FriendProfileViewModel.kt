@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.soyvictorherrera.nosedive.domain.model.UserModel
+import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
 import com.soyvictorherrera.nosedive.domain.usecase.user.ObserveUserProfileUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.user.ObserveUserStatsUseCase
 import com.soyvictorherrera.nosedive.presentation.ui.Event
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import com.soyvictorherrera.nosedive.util.Result
@@ -16,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FriendProfileViewModel @Inject constructor(
-    private val observeUserProfileUseCase: ObserveUserProfileUseCase
+    private val observeUserProfileUseCase: ObserveUserProfileUseCase,
+    private val observeUserStatsUseCase: ObserveUserStatsUseCase
 ) : ViewModel() {
 
     private val _navigateTo = MutableLiveData<Event<Screen>>()
@@ -26,6 +29,10 @@ class FriendProfileViewModel @Inject constructor(
     private val _friendModel = MutableLiveData<UserModel>()
     val friendModel: LiveData<UserModel>
         get() = _friendModel
+
+    private val _friendStats = MutableLiveData<UserStatsModel>()
+    val friendStats: LiveData<UserStatsModel>
+        get() = _friendStats
 
     fun onUserIdChanged(userId: String) {
         viewModelScope.launch {
@@ -41,6 +48,20 @@ class FriendProfileViewModel @Inject constructor(
                     }
                     is Result.Success -> {
                         _friendModel.value = result.data!!
+                    }
+                }
+            }
+        }
+        viewModelScope.launch {
+            observeUserStatsUseCase.apply {
+                this.userId = userId
+            }.execute { result ->
+                when (result) {
+                    is Result.Error -> Timber.e(result.exception)
+                    Result.Loading -> Unit
+                    is Result.Success -> {
+                        Timber.d("user stats updated")
+                        _friendStats.value = result.data!!
                     }
                 }
             }
