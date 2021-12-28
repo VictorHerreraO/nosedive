@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.ArrowBack
 import androidx.compose.material.icons.sharp.ErrorOutline
 import androidx.compose.material.icons.sharp.PhotoCamera
 import androidx.compose.material.icons.sharp.Pin

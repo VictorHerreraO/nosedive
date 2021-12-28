@@ -1,6 +1,5 @@
 package com.soyvictorherrera.nosedive.data.source.user.firebase
 
-import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -8,7 +7,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.StorageReference
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
-import com.soyvictorherrera.nosedive.presentation.ui.TAG
 import com.soyvictorherrera.nosedive.util.Result
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi

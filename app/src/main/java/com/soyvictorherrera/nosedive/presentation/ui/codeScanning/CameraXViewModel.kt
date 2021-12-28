@@ -1,7 +1,6 @@
 package com.soyvictorherrera.nosedive.presentation.ui.codeScanning
 
 import android.app.Application
-import android.util.Log
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel

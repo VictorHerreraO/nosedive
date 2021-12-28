@@ -1,6 +1,5 @@
 package com.soyvictorherrera.nosedive.presentation.ui.home
 
-import android.net.Uri
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
@@ -14,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
@@ -23,11 +21,11 @@ import com.soyvictorherrera.nosedive.presentation.component.card.NewAccountAlert
 import com.soyvictorherrera.nosedive.presentation.component.common.DefaultBottomAppBar
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserDetails
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserStats
+import com.soyvictorherrera.nosedive.presentation.extensions.getPhotoUri
 import com.soyvictorherrera.nosedive.presentation.theme.Black_32
 import com.soyvictorherrera.nosedive.presentation.theme.Forest_Green_07
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 import com.soyvictorherrera.nosedive.presentation.theme.modalBottomSheetShape
-import com.soyvictorherrera.nosedive.presentation.extensions.getPhotoUri
 
 sealed class HomeEvent {
     object ViewProfile : HomeEvent()
