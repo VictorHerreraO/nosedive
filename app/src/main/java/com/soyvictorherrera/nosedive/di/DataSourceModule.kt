@@ -11,6 +11,8 @@ import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeDataSour
 import com.soyvictorherrera.nosedive.data.source.sharingCode.firebase.FirebaseSharingCodeDataSource
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
 import com.soyvictorherrera.nosedive.data.source.user.firebase.FirebaseUserDataSource
+import com.soyvictorherrera.nosedive.data.source.userStats.UserStatsDataSource
+import com.soyvictorherrera.nosedive.data.source.userStats.firebase.FirebaseUserStatsDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,6 +23,20 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class DataSourceModule {
+
+    private object Names {
+        const val UserRef = "userRef"
+        const val UserPhotoRef = "userPhotoRef"
+        const val SharingCodeRef = "sharingCodeRef"
+        const val UserStatsRef = "userStatsRef"
+    }
+
+    private object FirebasePaths {
+        const val User = "user"
+        const val UserPhoto = "userPhoto"
+        const val SharingCode = "sharingCode"
+        const val UserStats = "userStats"
+    }
 
     //region Firebase instances
     @Provides
@@ -45,23 +61,30 @@ class DataSourceModule {
     //region Firebase database references
     @Provides
     @Singleton
-    @Named("userRef")
+    @Named(Names.UserRef)
     fun provideUserDatabaseReference(database: FirebaseDatabase): DatabaseReference {
-        return database.getReference("user")
+        return database.getReference(FirebasePaths.User)
     }
 
     @Provides
     @Singleton
-    @Named("userPhotoRef")
+    @Named(Names.UserPhotoRef)
     fun provideUserPhotoStorageReference(storage: FirebaseStorage): StorageReference {
-        return storage.getReference("userPhoto")
+        return storage.getReference(FirebasePaths.UserPhoto)
     }
 
     @Provides
     @Singleton
-    @Named("sharingCodeRef")
+    @Named(Names.SharingCodeRef)
     fun provideSharingCodeDatabaseReference(database: FirebaseDatabase): DatabaseReference {
-        return database.getReference("sharingCode")
+        return database.getReference(FirebasePaths.SharingCode)
+    }
+
+    @Provides
+    @Singleton
+    @Named(Names.UserStatsRef)
+    fun provideUserStatsDatabaseReference(database: FirebaseDatabase): DatabaseReference {
+        return database.getReference(FirebasePaths.UserStats)
     }
     //endregion
 
@@ -75,8 +98,8 @@ class DataSourceModule {
     @Provides
     @Singleton
     fun provideUserDataSource(
-        @Named("userRef") users: DatabaseReference,
-        @Named("userPhotoRef") userPhotos: StorageReference
+        @Named(Names.UserRef) users: DatabaseReference,
+        @Named(Names.UserPhotoRef) userPhotos: StorageReference
     ): UserDataSource {
         return FirebaseUserDataSource(
             users = users,
@@ -87,10 +110,20 @@ class DataSourceModule {
     @Provides
     @Singleton
     fun provideFirebaseSharingCodeDataSource(
-        @Named("sharingCodeRef") sharingCodes: DatabaseReference
+        @Named(Names.SharingCodeRef) sharingCodes: DatabaseReference
     ): SharingCodeDataSource {
         return FirebaseSharingCodeDataSource(
             sharingCodes = sharingCodes
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseUserStatsDataSource(
+        @Named(Names.UserStatsRef) stats: DatabaseReference
+    ): UserStatsDataSource {
+        return FirebaseUserStatsDataSource(
+            stats = stats
         )
     }
     //endregion
