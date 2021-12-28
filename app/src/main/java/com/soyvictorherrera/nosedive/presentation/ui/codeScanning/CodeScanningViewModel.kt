@@ -53,10 +53,10 @@ class CodeScanningViewModel @Inject constructor(
     }
 
     fun onWriteCode() {
-        Log.d(TAG, "onWriteCode() called")
+        Timber.d("onWriteCode() called")
         _codeInputState.value = TextCodeInputState.Ready(code = "", onCodeChange = { code ->
             if (code.length >= SharingCodeModel.LENGTH) {
-                Log.d(TAG, "trigger code search with [$code]")
+                Timber.d("trigger code search with [$code]")
                 _codeInputState.value = TextCodeInputState.Loading
                 findByPublicSharingCode(publicCode = code)
             }
@@ -77,11 +77,11 @@ class CodeScanningViewModel @Inject constructor(
             }.execute { result ->
                 when (result) {
                     is Result.Error -> {
-                        Log.w(TAG, "Error al procesar el QR", result.exception)
+                        Timber.w(result.exception, "Error al procesar el QR")
                     }
                     Result.Loading -> Unit
                     is Result.Success -> {
-                        Log.d(TAG, "aquí debería navegar a la pantalla del usuario ${result.data}")
+                        Timber.d("aquí debería navegar a la pantalla del usuario ${result.data}")
                         navigateToFriendProfile(userId = result.data)
                     }
                 }

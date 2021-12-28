@@ -12,6 +12,7 @@ import com.soyvictorherrera.nosedive.presentation.ui.Event
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,15 +45,15 @@ class SignInViewModel @Inject constructor(
                 _signInState.value = SignInState.Idle
                 when (result) {
                     is Result.Success -> {
-                        Log.d("signIn", "success: ${result.data}")
+                        Timber.d("success: ${result.data}")
                         _navigateTo.value = Event(Screen.Home)
                     }
                     is Result.Error -> {
-                        Log.d("signIn", "error: ", result.exception)
+                        Timber.d(result.exception, "error: ")
                         _signInError.value = Event(SignInError.WrongCredentials)
                     }
                     else -> {
-                        Log.d("signIn", "else")
+                        Timber.d("else")
                     }
                 }
             }

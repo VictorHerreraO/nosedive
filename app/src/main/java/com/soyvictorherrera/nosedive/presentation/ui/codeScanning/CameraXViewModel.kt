@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import timber.log.Timber
 import java.util.concurrent.ExecutionException
 
 /**
@@ -29,9 +30,9 @@ class CameraXViewModel(application: Application) : AndroidViewModel(application)
                             cameraProviderLiveData!!.setValue(cameraProviderFuture.get())
                         } catch (e: ExecutionException) {
                             // Handle any errors (including cancellation) here.
-                            Log.e(TAG, "Unhandled exception", e)
+                            Timber.e(e, "Unhandled exception")
                         } catch (e: InterruptedException) {
-                            Log.e(TAG, "Unhandled exception", e)
+                            Timber.e(e, "Unhandled exception")
                         }
                     },
                     ContextCompat.getMainExecutor(getApplication())

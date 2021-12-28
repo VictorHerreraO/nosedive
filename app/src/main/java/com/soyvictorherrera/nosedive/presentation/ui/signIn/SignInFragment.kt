@@ -19,6 +19,7 @@ import com.soyvictorherrera.nosedive.presentation.ui.navigateInTo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class SignInFragment : Fragment() {
@@ -49,7 +50,7 @@ class SignInFragment : Fragment() {
 
             setContent {
                 NosediveTheme {
-                    Log.d("onCreateView: ", "recomposing...")
+                    Timber.d("recomposing...")
 
                     val scaffoldState = rememberScaffoldState()
                     val scope = rememberCoroutineScope()

@@ -12,6 +12,7 @@ import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import com.soyvictorherrera.nosedive.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,11 +54,11 @@ class HomeViewModel @Inject constructor(
                         _homeState.value = HomeState.Idle
                     }
                     is Result.Error -> {
-                        Log.d("getCurrentUser", "error by:", result.exception)
+                        Timber.d(result.exception, "error by:")
                         _sessionState.value = SessionState.SignedOut
                     }
                     else -> {
-                        Log.d("getCurrentUser", "else")
+                        Timber.d("else")
                     }
                 }
             }

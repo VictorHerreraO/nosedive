@@ -34,6 +34,7 @@ import com.soyvictorherrera.nosedive.presentation.ui.TAG
 import com.soyvictorherrera.nosedive.presentation.ui.navigateInTo
 import com.soyvictorherrera.nosedive.presentation.ui.popUpTo
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import java.util.concurrent.Executors
 
 @AndroidEntryPoint
@@ -175,7 +176,7 @@ class CodeScanningFragment : Fragment() {
                 previewUseCase
             )
         } catch (ex: Exception) {
-            Log.e(TAG, "error", ex)
+            Timber.e(ex, "error")
         }
     }
 
@@ -223,7 +224,7 @@ class CodeScanningFragment : Fragment() {
                 }
             }
             .addOnFailureListener {
-                Log.e(TAG, it.message ?: "no message")
+                Timber.e(it.message ?: "no message")
             }
             .addOnCompleteListener {
                 imageProxy.close()

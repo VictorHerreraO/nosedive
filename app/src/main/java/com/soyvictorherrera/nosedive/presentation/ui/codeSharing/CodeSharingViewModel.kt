@@ -19,6 +19,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -90,16 +91,16 @@ class CodeSharingViewModel @Inject constructor(
             val userId = user.id
             if (userId.isNullOrEmpty()) {
                 _imageCode.value = ImageCodeState.Error
-                Log.e(TAG, "user id was empty or null")
+                Timber.e("user id was empty or null")
             } else {
-                Log.d(TAG, "generating QrCode for ID = $userId")
+                Timber.d("generating QrCode for ID = $userId")
                 generateQrCodeUseCase.apply {
                     qrContent = userId
                 }.execute { result ->
                     when (result) {
                         is Result.Error -> {
                             _imageCode.value = ImageCodeState.Error
-                            Log.e(TAG, "error generating QR code", result.exception)
+                            Timber.e(result.exception, "error generating QR code")
                         }
                         Result.Loading -> {
                             _imageCode.value = ImageCodeState.Loading
@@ -107,7 +108,7 @@ class CodeSharingViewModel @Inject constructor(
                         is Result.Success -> {
                             val codeUri = Uri.parse(result.data.toString())
                             _imageCode.value = ImageCodeState.Generated(codeUri = codeUri)
-                            Log.d(TAG, "codeUri is = $codeUri")
+                            Timber.d("codeUri is = $codeUri")
                         }
                     }
                 }
@@ -131,17 +132,14 @@ class CodeSharingViewModel @Inject constructor(
                         when (result) {
                             is Result.Error -> {
                                 _textCode.value = TextCodeState.Error
-                                Log.e(TAG, "error al generar el código de texto")
+                                Timber.e("error al generar el código de texto")
                             }
                             Result.Loading -> {
                                 _textCode.value = TextCodeState.Loading
                             }
                             is Result.Success -> {
                                 val sharingCode = result.data
-                                Log.d(
-                                    TAG,
-                                    "El código generado es ${sharingCode.publicCode} para el usuario ${sharingCode.userId}"
-                                )
+                                Timber.d("El código generado es ${sharingCode.publicCode} para el usuario ${sharingCode.userId}")
                                 _textCode.value =
                                     TextCodeState.Generated(code = sharingCode.publicCode)
                             }
@@ -153,29 +151,29 @@ class CodeSharingViewModel @Inject constructor(
     }
 
     private fun deleteTextSharingCode() {
-        Log.d(TAG, "deleting text sharing code")
+        Timber.d("deleting text sharing code")
         val textCode = textCode.value
         if (textCode !is TextCodeState.Generated) return
 
         // Launch coroutine in a non-viewmodel-dependent  scope
         CoroutineScope(IO).launch {
-            Log.d(TAG, "launching coroutine")
+            Timber.d("launching coroutine")
             deleteTextSharingCodeUseCase.apply {
                 publicSharingCode = textCode.code
             }.execute { result ->
                 when (result) {
                     is Result.Error -> {
-                        Log.d(TAG, "error deleting code", result.exception)
+                        Timber.d(result.exception, "error deleting code")
                     }
                     Result.Loading -> {
-                        Log.d(TAG, "loading")
+                        Timber.d("loading")
                     }
                     is Result.Success -> {
-                        Log.d(TAG, "success deleting code")
+                        Timber.d("success deleting code")
                     }
                 }
             }
-            Log.d(TAG, "coroutine done")
+            Timber.d("coroutine done")
         }
     }
 

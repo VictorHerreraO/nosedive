@@ -12,6 +12,7 @@ import com.soyvictorherrera.nosedive.presentation.ui.Event
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -48,15 +49,15 @@ class SignUpViewModel @Inject constructor(
                 _signUpState.value = SignUpState.Idle
                 when (result) {
                     is Result.Success -> {
-                        Log.d("signUp:", "success: ${result.data}")
+                        Timber.d("success: ${result.data}")
                         _navigateTo.value = Event(Screen.Home)
                     }
                     is Result.Error -> {
-                        Log.e("signUp:", "error by: ", result.exception)
+                        Timber.e(result.exception, "error by: ")
                         _signUpError.value = Event(SignUpError.UnableToCreateAccount)
                     }
                     else -> {
-                        Log.d("signUp:", "else")
+                        Timber.d("else")
                         _signUpError.value = Event(SignUpError.ErrorUnknown)
                     }
                 }

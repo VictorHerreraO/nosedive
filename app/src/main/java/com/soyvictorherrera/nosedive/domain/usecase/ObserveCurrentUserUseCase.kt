@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 
 class ObserveCurrentUserUseCase(
     private val authRepository: AuthenticationRepository,
@@ -43,7 +44,7 @@ class ObserveCurrentUserUseCase(
                 }
             }
             .catch { throwable ->
-                Log.e(TAG, "flow catch -> ", throwable)
+                Timber.e(throwable, "flow catch -> ")
                 emit(Result.Error(RuntimeException(throwable.cause)))
             }
     }

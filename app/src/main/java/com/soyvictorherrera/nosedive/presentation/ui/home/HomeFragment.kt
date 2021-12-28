@@ -24,6 +24,7 @@ import com.soyvictorherrera.nosedive.presentation.ui.navigateInTo
 import com.soyvictorherrera.nosedive.presentation.ui.navigateOutTo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -109,9 +110,9 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("onViewCreated:", "called!")
+        Timber.d("called!")
         viewModel.sessionState.observe(viewLifecycleOwner) { sessionState ->
-            Log.d("onViewCreated:", "sessionState change")
+            Timber.d("sessionState change")
             if (sessionState == SessionState.SignedOut) {
                 navigateOutTo(Screen.SignIn, Screen.Home)
             }

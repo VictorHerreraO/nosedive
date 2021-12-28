@@ -17,6 +17,7 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 import java.io.File
 import java.io.FileInputStream
 import java.net.URI
@@ -106,7 +107,7 @@ class FirebaseUserDataSource(
                 // Return URI
                 this@callbackFlow.trySendBlocking(
                     Result.Success(URI(uriString)).also {
-                        Log.d(TAG, "trySendBlocking uri ${it.data}")
+                        Timber.d("trySendBlocking uri ${it.data}")
                     }
                 )
             }

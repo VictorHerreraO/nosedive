@@ -17,6 +17,7 @@ import com.soyvictorherrera.nosedive.util.FileUtil
 import com.soyvictorherrera.nosedive.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.net.URI
 import javax.inject.Inject
 
@@ -66,10 +67,10 @@ class ProfileViewModel @Inject constructor(
                     }
                     is Result.Error -> {
                         _profileError.value = Event(ProfileError.UserNotFound)
-                        Log.e(TAG, "", result.exception)
+                        Timber.e(result.exception, "")
                     }
                     Result.Loading -> {
-                        Log.d(TAG, "loading")
+                        Timber.d("loading")
                     }
                 }
             }
@@ -92,7 +93,7 @@ class ProfileViewModel @Inject constructor(
                         _profileState.value = ProfileState.Idle
                     }
                     is Result.Error -> {
-                        Log.e(TAG, "error by:", result.exception)
+                        Timber.e(result.exception, "error by:")
                         _profileError.value = Event(ProfileError.UnableToChangePassword)
                         _profileState.value = ProfileState.Idle
                     }
@@ -126,14 +127,14 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun onUserPhotoTakenSuccessfully() {
-        Log.d(TAG, "photo located at {$workingUri}")
+        Timber.d("photo located at {$workingUri}")
         workingUri?.let { uri ->
             updateProfilePhoto(uri)
         }
     }
 
     fun onUserPhotoSelectedSuccessfully(fileUri: Uri) {
-        Log.d(TAG, "file located at {$fileUri}")
+        Timber.d("file located at {$fileUri}")
         updateProfilePhoto(fileUri)
     }
 
@@ -145,13 +146,13 @@ class ProfileViewModel @Inject constructor(
                 when (result) {
                     is Result.Success -> {
                         val uriString = result.data.toString()
-                        Log.d(TAG, "upload result {$uriString}")
+                        Timber.d("upload result {$uriString}")
                         _profilePhotoState.value = ProfilePhotoState.Idle(
                             photoUri = Uri.parse(uriString)
                         )
                     }
                     is Result.Error -> {
-                        Log.e(TAG, "error by: ", result.exception)
+                        Timber.e(result.exception, "error by: ")
                         _profilePhotoState.value = ProfilePhotoState.Idle(null)
                         _profileError.value = Event(ProfileError.UnableToUploadPhoto)
                     }
