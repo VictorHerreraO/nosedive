@@ -7,6 +7,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.soyvictorherrera.nosedive.data.source.authentication.AuthenticationDataSource
 import com.soyvictorherrera.nosedive.data.source.authentication.firebase.FirebaseAuthenticationDataSource
+import com.soyvictorherrera.nosedive.data.source.friend.FriendDataSource
+import com.soyvictorherrera.nosedive.data.source.friend.firebase.FirebaseFriendDataSource
 import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeDataSource
 import com.soyvictorherrera.nosedive.data.source.sharingCode.firebase.FirebaseSharingCodeDataSource
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
@@ -32,6 +34,7 @@ class DataSourceModule {
         const val SharingCodeRef = "sharingCodeRef"
         const val UserStatsRef = "userStatsRef"
         const val UserScoreRef = "userScoreRef"
+        const val FriendRef = "friendRef"
     }
 
     private object FirebasePaths {
@@ -40,6 +43,7 @@ class DataSourceModule {
         const val SharingCode = "sharingCode"
         const val UserStats = "userStats"
         const val UserScore = "userScore"
+        const val Friend = "friend"
     }
 
     //region Firebase instances
@@ -97,6 +101,13 @@ class DataSourceModule {
     fun provideUserScoreDatabaseReference(database: FirebaseDatabase): DatabaseReference {
         return database.getReference(FirebasePaths.UserScore)
     }
+
+    @Provides
+    @Singleton
+    @Named(Names.FriendRef)
+    fun provideFriendDatabaseReference(database: FirebaseDatabase): DatabaseReference {
+        return database.getReference(FirebasePaths.Friend)
+    }
     //endregion
 
     //region Data sources
@@ -145,6 +156,16 @@ class DataSourceModule {
     ): UserScoreDataSource {
         return FirebaseUserScoreDataSource(
             scores = scores
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideFriendDataSource(
+        friends: DatabaseReference
+    ): FriendDataSource {
+        return FirebaseFriendDataSource(
+            friends = friends
         )
     }
     //endregion

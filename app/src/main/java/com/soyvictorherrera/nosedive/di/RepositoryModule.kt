@@ -2,6 +2,8 @@ package com.soyvictorherrera.nosedive.di
 
 import com.soyvictorherrera.nosedive.data.repository.authentication.AuthenticationRepository
 import com.soyvictorherrera.nosedive.data.repository.authentication.AuthenticationRepositoryImpl
+import com.soyvictorherrera.nosedive.data.repository.friend.FriendRepository
+import com.soyvictorherrera.nosedive.data.repository.friend.FriendRepositoryImpl
 import com.soyvictorherrera.nosedive.data.repository.sharingCode.SharingCodeRepository
 import com.soyvictorherrera.nosedive.data.repository.sharingCode.SharingCodeRepositoryImpl
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
@@ -11,6 +13,7 @@ import com.soyvictorherrera.nosedive.data.repository.userScore.UserScoreReposito
 import com.soyvictorherrera.nosedive.data.repository.userStats.UserStatsRepository
 import com.soyvictorherrera.nosedive.data.repository.userStats.UserStatsRepositoryImpl
 import com.soyvictorherrera.nosedive.data.source.authentication.AuthenticationDataSource
+import com.soyvictorherrera.nosedive.data.source.friend.FriendDataSource
 import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeDataSource
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
 import com.soyvictorherrera.nosedive.data.source.userScore.UserScoreDataSource
@@ -53,6 +56,12 @@ class RepositoryModule {
     @Singleton
     fun provideUserScoreRepository(userScoreDataSource: UserScoreDataSource): UserScoreRepository {
         return UserScoreRepositoryImpl(userScoreDataSource = userScoreDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFriendRepository(friendDataSource: FriendDataSource): FriendRepository {
+        return FriendRepositoryImpl(friendDataSource = friendDataSource)
     }
 
 }
