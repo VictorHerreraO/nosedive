@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,18 +21,15 @@ fun UserScoreCompact(
         modifier = modifier,
         horizontalAlignment = horizontalAlignment
     ) {
-        val first = remember {
-            mutableStateOf(SCORE_FORMAT.format(score).let {
-                it.substring(0, it.length - 3)
-            })
+        val first: String
+        val last: String
+        SCORE_FORMAT.format(score).let {
+            first = it.substring(0, it.length - 3)
+            last = it.substring(it.length - 3, it.length - 1)
         }
-        val last = remember {
-            mutableStateOf(SCORE_FORMAT.format(score).let {
-                it.substring(it.length - 3, it.length - 1)
-            })
-        }
-        Text(text = first.value, style = MaterialTheme.typography.h4)
-        Text(text = last.value, style = MaterialTheme.typography.subtitle1)
+
+        Text(text = first, style = MaterialTheme.typography.h4)
+        Text(text = last, style = MaterialTheme.typography.subtitle1)
     }
 }
 

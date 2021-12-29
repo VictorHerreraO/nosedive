@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.soyvictorherrera.nosedive.R
+import com.soyvictorherrera.nosedive.domain.model.UserScoreModel
 import com.soyvictorherrera.nosedive.presentation.theme.Forest_Green
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 
@@ -39,7 +40,7 @@ fun NewAccountAlertCard(modifier: Modifier = Modifier) {
                     fontSize = 18.sp
                 )
                 Text(
-                    text = stringResource(R.string.alert_new_account_desc, 10),
+                    text = stringResource(R.string.alert_new_account_desc, UserScoreModel.REQUIRED_COUNT),
                     style = MaterialTheme.typography.caption
                 )
             }

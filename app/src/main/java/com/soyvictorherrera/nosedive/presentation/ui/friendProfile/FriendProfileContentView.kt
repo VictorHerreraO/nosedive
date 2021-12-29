@@ -33,6 +33,7 @@ sealed class FriendProfileActionEvent {
 fun FriendProfileContentView(
     user: UserModel,
     userStats: UserStatsModel,
+    userScore: Double?,
     modifier: Modifier = Modifier,
     onNavigationEvent: (event: FriendProfileEvent) -> Unit,
     onActionEvent: (event: FriendProfileActionEvent) -> Unit
@@ -47,7 +48,8 @@ fun FriendProfileContentView(
         content = {
             FriendProfileContent(
                 user = user,
-                userStats = userStats
+                userStats = userStats,
+                userScore = userScore
             )
         },
         bottomBar = {
@@ -63,6 +65,7 @@ fun FriendProfileContentView(
 fun FriendProfileContent(
     user: UserModel,
     userStats: UserStatsModel,
+    userScore: Double?,
     modifier: Modifier = Modifier
 ): Unit = Column(
     modifier = modifier.padding(horizontal = 32.dp),
@@ -72,6 +75,7 @@ fun FriendProfileContent(
 
     UserDetails(
         userName = user.name,
+        userScore = userScore,
         userPhotoPainter = user.getPhotoUri()?.let { uri ->
             rememberImagePainter(uri)
         }
@@ -119,6 +123,7 @@ fun FriendProfileContentViewPreview() {
                 ratings = 20,
                 following = 11
             ),
+            userScore = 4.3127,
             onNavigationEvent = { },
             onActionEvent = { }
         )

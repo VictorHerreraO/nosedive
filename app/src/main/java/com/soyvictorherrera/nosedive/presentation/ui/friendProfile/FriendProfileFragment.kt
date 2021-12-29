@@ -47,11 +47,13 @@ class FriendProfileFragment : Fragment() {
             setContent {
                 val friendModel by viewModel.friendModel.observeAsState()
                 val friendStats by viewModel.friendStats.observeAsState(UserStatsModel())
+                val friendAvgScore by viewModel.friendAvgScore.observeAsState()
 
                 NosediveTheme {
                     FriendProfileContentView(
                         user = friendModel ?: return@NosediveTheme,
                         userStats = friendStats,
+                        userScore = friendAvgScore,
                         onNavigationEvent = this@FriendProfileFragment::onNavigationEvent,
                         onActionEvent = this@FriendProfileFragment::onActionEvent
                     )

@@ -7,6 +7,10 @@ class UserScoreModel(
     var count: Int = 0
 ) : Serializable {
 
+    companion object {
+        const val REQUIRED_COUNT = 10
+    }
+
     val average: Double
         get() = sum.toDouble() / count.toDouble()
 
