@@ -120,13 +120,13 @@ dependencies {
     implementation "com.github.kenglxn.QRGen:android:$qrgen_version"
 
     // ML kit barcode scanning
-    def barcode_scan_version = '17.0.0'
+    def barcode_scan_version = '17.0.1'
     implementation "com.google.mlkit:barcode-scanning:$barcode_scan_version"
 
     // Jetpack CameraX
-    implementation "androidx.camera:camera-camera2:1.0.1"
-    implementation "androidx.camera:camera-lifecycle:1.0.1"
-    implementation "androidx.camera:camera-view:1.0.0-alpha28"
+    implementation "androidx.camera:camera-camera2:1.0.2"
+    implementation "androidx.camera:camera-lifecycle:1.0.2"
+    implementation "androidx.camera:camera-view:1.0.0-alpha32"
 
     // Timber logs
     def timber_version = '5.0.1'
