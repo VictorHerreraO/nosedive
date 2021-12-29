@@ -19,6 +19,7 @@ import com.soyvictorherrera.nosedive.domain.usecase.authentication.SignUpUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.sharing.*
 import com.soyvictorherrera.nosedive.domain.usecase.user.*
 import com.soyvictorherrera.nosedive.util.FileUtil
+import com.soyvictorherrera.nosedive.util.PreferenceUtil
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,11 +34,13 @@ class UseCaseModule {
     @ViewModelScoped
     fun provideSignInUseCase(
         authRepository: AuthenticationRepository,
-        userRepository: UserRepository
+        userRepository: UserRepository,
+        preferenceUtil: PreferenceUtil
     ): SignInUseCase {
         return SignInUseCase(
             authRepository = authRepository,
-            userRepository = userRepository
+            userRepository = userRepository,
+            preferences = preferenceUtil
         )
     }
 
@@ -45,11 +48,13 @@ class UseCaseModule {
     @ViewModelScoped
     fun provideSignUpUseCase(
         authRepository: AuthenticationRepository,
-        userRepository: UserRepository
+        userRepository: UserRepository,
+        preferenceUtil: PreferenceUtil
     ): SignUpUseCase {
         return SignUpUseCase(
             authRepository = authRepository,
-            userRepository = userRepository
+            userRepository = userRepository,
+            preferences = preferenceUtil
         )
     }
 

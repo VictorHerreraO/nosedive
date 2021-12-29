@@ -1,14 +1,14 @@
 package com.soyvictorherrera.nosedive.domain.usecase.authentication
 
-import com.soyvictorherrera.nosedive.util.Result
 import com.soyvictorherrera.nosedive.data.repository.authentication.AuthenticationRepository
-import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
 import com.soyvictorherrera.nosedive.data.source.authentication.AuthenticationEntity
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
+import com.soyvictorherrera.nosedive.util.PreferenceUtil
+import com.soyvictorherrera.nosedive.util.Result
 
 class SignInUseCase(
     private val authRepository: AuthenticationRepository,
-    private val userRepository: UserRepository
+    private val preferences: PreferenceUtil
 ) {
 
     suspend operator fun invoke(user: UserEntity): Result<AuthenticationEntity> {
@@ -21,7 +21,9 @@ class SignInUseCase(
         return authRepository.signIn(
             email = email,
             password = pwd
-        )
+        ).also {
+            preferences.setSessionOpen(it is Result.Success)
+        }
     }
 
 }

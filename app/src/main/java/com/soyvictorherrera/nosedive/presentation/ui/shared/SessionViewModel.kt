@@ -7,9 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.usecase.user.ObserveCurrentUserUseCase
 import com.soyvictorherrera.nosedive.presentation.ui.home.SessionState
+import com.soyvictorherrera.nosedive.util.PreferenceUtil
 import com.soyvictorherrera.nosedive.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -23,7 +27,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SessionViewModel @Inject constructor(
-    private val observeCurrentUserUseCase: ObserveCurrentUserUseCase
+    private val observeCurrentUserUseCase: ObserveCurrentUserUseCase,
+    private val preferences: PreferenceUtil
 ) : ViewModel() {
 
     private val _state = MutableLiveData<SessionState>(SessionState.Checking)
@@ -34,8 +39,23 @@ class SessionViewModel @Inject constructor(
     val user: LiveData<UserModel>
         get() = _user
 
+    private var observeCurrentUserJob: Job? = null
+
     init {
-        observeCurrentUser()
+        observeSessionOpen()
+    }
+
+    private fun observeSessionOpen() {
+        preferences.observeSessionOpen().onEach { isSessionOpen ->
+            Timber.i("session open updated, value is [$isSessionOpen]")
+            if (isSessionOpen) {
+                observeCurrentUserJob = observeCurrentUser()
+                _state.value = SessionState.SignedIn
+            } else {
+                observeCurrentUserJob?.cancel(CancellationException("[sessionOpen] was false"))
+                _state.value = SessionState.SignedOut
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun observeCurrentUser(): Job = viewModelScope.launch {
@@ -50,8 +70,9 @@ class SessionViewModel @Inject constructor(
                 }
                 is Result.Success -> {
                     Timber.i("current user updated")
-                    _state.value = SessionState.SignedIn
-                    _user.value = result.data!!
+                    _user.value = result.data!!.also {
+                        preferences.setUserId(it.id!!)
+                    }
                 }
             }
         }
