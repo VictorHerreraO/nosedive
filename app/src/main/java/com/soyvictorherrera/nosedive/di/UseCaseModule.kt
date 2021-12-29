@@ -1,19 +1,18 @@
 package com.soyvictorherrera.nosedive.di
 
 import com.soyvictorherrera.nosedive.data.repository.authentication.AuthenticationRepository
+import com.soyvictorherrera.nosedive.data.repository.friend.FriendRepository
 import com.soyvictorherrera.nosedive.data.repository.sharingCode.SharingCodeRepository
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
 import com.soyvictorherrera.nosedive.data.repository.userScore.UserScoreRepository
 import com.soyvictorherrera.nosedive.data.repository.userStats.UserStatsRepository
+import com.soyvictorherrera.nosedive.data.source.friend.firebase.FriendEntity
 import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeEntity
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
 import com.soyvictorherrera.nosedive.data.source.userScore.UserScoreEntity
 import com.soyvictorherrera.nosedive.data.source.userStats.UserStatsEntity
 import com.soyvictorherrera.nosedive.domain.mapper.DomainMapper
-import com.soyvictorherrera.nosedive.domain.model.SharingCodeModel
-import com.soyvictorherrera.nosedive.domain.model.UserModel
-import com.soyvictorherrera.nosedive.domain.model.UserScoreModel
-import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
+import com.soyvictorherrera.nosedive.domain.model.*
 import com.soyvictorherrera.nosedive.domain.usecase.authentication.SignInUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.authentication.SignUpUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.sharing.*
@@ -39,7 +38,6 @@ class UseCaseModule {
     ): SignInUseCase {
         return SignInUseCase(
             authRepository = authRepository,
-            userRepository = userRepository,
             preferences = preferenceUtil
         )
     }
@@ -179,6 +177,18 @@ class UseCaseModule {
         return ObserveUserScoreUseCase(
             scoreRepository,
             scoreEntityMapper
+        )
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideObserveUserFriendListUseCase(
+        friendRepository: FriendRepository,
+        friendEntityMapper: DomainMapper<FriendEntity, FriendModel>
+    ): ObserveUserFriendListUseCase {
+        return ObserveUserFriendListUseCase(
+            friendRepository = friendRepository,
+            friendEntityMapper = friendEntityMapper
         )
     }
 
