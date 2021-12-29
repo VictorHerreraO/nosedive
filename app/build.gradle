@@ -108,7 +108,7 @@ dependencies {
     implementation "io.coil-kt:coil-compose:$coil_version"
 
     // Apache Commons-IO
-    def commons_version = '2.9.0'
+    def commons_version = '2.11.0'
     implementation "commons-io:commons-io:$commons_version"
 
     // Apache Commons-Lang 3
