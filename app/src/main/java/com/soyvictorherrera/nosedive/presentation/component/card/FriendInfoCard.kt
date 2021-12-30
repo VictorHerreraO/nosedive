@@ -14,9 +14,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.soyvictorherrera.nosedive.R
-import com.soyvictorherrera.nosedive.domain.model.UserModel
+import com.soyvictorherrera.nosedive.domain.model.FriendModel
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserPhoto
-import com.soyvictorherrera.nosedive.presentation.extensions.getPhotoUri
+import com.soyvictorherrera.nosedive.presentation.extensions.toUri
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 import com.soyvictorherrera.nosedive.presentation.theme.Wild_Watermelon
 
@@ -24,7 +24,7 @@ private const val SCORE_FORMAT = "%.1f"
 
 @Composable
 fun FriendInfoCard(
-    user: UserModel,
+    user: FriendModel,
     onItemClick: () -> Unit,
     modifier: Modifier = Modifier,
 ): Unit = Card(
@@ -40,8 +40,8 @@ fun FriendInfoCard(
         verticalAlignment = Alignment.CenterVertically
     ) {
         UserPhoto(
-            painter = user.getPhotoUri().let { uri ->
-                if (uri != null) rememberImagePainter(uri)
+            painter = user.photoUrl.let { url ->
+                if (url != null) rememberImagePainter(url.toUri())
                 else painterResource(R.drawable.ic_launcher_foreground)
             },
             modifier = Modifier.size(40.dp),
@@ -76,9 +76,9 @@ fun FriendInfoCard(
 fun FriendInfoCardPreview() {
     NosediveTheme {
         FriendInfoCard(
-            user = UserModel(
+            user = FriendModel(
+                id = "",
                 name = "Jessica Herrera",
-                email = "",
                 score = 4.333
             ),
             onItemClick = {}
