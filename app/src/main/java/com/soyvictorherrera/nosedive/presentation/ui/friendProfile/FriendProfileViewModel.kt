@@ -122,11 +122,16 @@ class FriendProfileViewModel @Inject constructor(
                 this.userId = userId
             }.execute { result ->
                 when (result) {
-                    is Result.Error -> Timber.e(result.exception)
+                    is Result.Error -> result.exception.let { ex ->
+                        Timber.e(ex)
+                        if (ex is RuntimeException) {
+                            Timber.e("friend may not have an score yet")
+                            _friendAvgScore.value = null
+                        }
+                    }
                     Result.Loading -> Unit
-                    is Result.Success -> {
+                    is Result.Success -> result.data.let { score ->
                         Timber.i("friend score updated")
-                        val score = result.data
                         _friendAvgScore.value = if (score.count >= UserScoreModel.REQUIRED_COUNT) {
                             score.average
                         } else null
