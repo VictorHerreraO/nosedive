@@ -51,6 +51,10 @@ class FriendProfileFragment : Fragment() {
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
 
+            viewModel.canFollowFriend.observe(viewLifecycleOwner) { canFollow ->
+                Timber.e("new value for canFollow is [$canFollow]")
+            }
+
             setContent {
                 val friendModel by viewModel.friendModel.observeAsState()
                 val friendStats by viewModel.friendStats.observeAsState(UserStatsModel())

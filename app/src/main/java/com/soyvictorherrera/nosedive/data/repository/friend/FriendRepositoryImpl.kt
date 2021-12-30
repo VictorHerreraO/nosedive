@@ -13,4 +13,8 @@ class FriendRepositoryImpl(
         return friendDataSource.observeFriendList(userId)
     }
 
+    override suspend fun addFriend(userId: String, friendEntity: FriendEntity): Result<Unit> {
+        return friendDataSource.addFriend(userId, friendEntity)
+    }
+
 }

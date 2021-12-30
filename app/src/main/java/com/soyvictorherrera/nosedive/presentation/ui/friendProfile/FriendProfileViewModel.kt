@@ -8,11 +8,14 @@ import com.soyvictorherrera.nosedive.domain.model.FriendModel
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.model.UserScoreModel
 import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
+import com.soyvictorherrera.nosedive.domain.usecase.friend.AddUserFriendUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.user.ObserveUserProfileUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.user.ObserveUserScoreUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.user.ObserveUserStatsUseCase
+import com.soyvictorherrera.nosedive.presentation.extensions.toFriendModel
 import com.soyvictorherrera.nosedive.presentation.ui.Event
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
+import com.soyvictorherrera.nosedive.util.PreferenceUtil
 import com.soyvictorherrera.nosedive.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -21,9 +24,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FriendProfileViewModel @Inject constructor(
+    private val preferences: PreferenceUtil,
     private val observeUserProfileUseCase: ObserveUserProfileUseCase,
     private val observeUserStatsUseCase: ObserveUserStatsUseCase,
-    private val observeUserScoreUseCase: ObserveUserScoreUseCase
+    private val observeUserScoreUseCase: ObserveUserScoreUseCase,
+    private val addUserFriendUseCase: AddUserFriendUseCase
 ) : ViewModel() {
 
     private val _navigateTo = MutableLiveData<Event<Screen>>()
@@ -74,7 +79,7 @@ class FriendProfileViewModel @Inject constructor(
     }
 
     fun onFollowUser() {
-
+        addUserFriend()
     }
 
     private fun observeFriendUserProfile(userId: String) {
@@ -88,7 +93,6 @@ class FriendProfileViewModel @Inject constructor(
                     is Result.Success -> {
                         Timber.i("friend profile updated")
                         _friendModel.value = result.data!!
-                        _canFollowFriend.value = true
                     }
                 }
             }
@@ -137,6 +141,28 @@ class FriendProfileViewModel @Inject constructor(
             it.id == friendUserId
         }.let {
             _canFollowFriend.value = it == null
+        }
+    }
+
+    private fun addUserFriend() {
+        val canFollow = canFollowFriend.value ?: return
+        val model = friendModel.value ?: return
+
+        if (!canFollow) return
+
+        viewModelScope.launch {
+            addUserFriendUseCase.apply {
+                this.userId = preferences.getUserId()
+                this.friend = model.toFriendModel()
+            }.execute().let { result ->
+                when (result) {
+                    is Result.Error -> Timber.e(result.exception)
+                    Result.Loading -> Unit
+                    is Result.Success -> {
+                        Timber.i("now following [${model.id}]")
+                    }
+                }
+            }
         }
     }
 

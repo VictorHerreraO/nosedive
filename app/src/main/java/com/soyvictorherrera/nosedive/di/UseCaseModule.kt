@@ -15,6 +15,7 @@ import com.soyvictorherrera.nosedive.domain.mapper.DomainMapper
 import com.soyvictorherrera.nosedive.domain.model.*
 import com.soyvictorherrera.nosedive.domain.usecase.authentication.SignInUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.authentication.SignUpUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.friend.AddUserFriendUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.sharing.*
 import com.soyvictorherrera.nosedive.domain.usecase.user.*
 import com.soyvictorherrera.nosedive.util.FileUtil
@@ -189,6 +190,18 @@ class UseCaseModule {
         return ObserveUserFriendListUseCase(
             friendRepository = friendRepository,
             friendEntityMapper = friendEntityMapper
+        )
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideAddUserFriendUseCase(
+        friendRepository: FriendRepository,
+        friendEntityMapper: DomainMapper<FriendEntity, FriendModel>
+    ): AddUserFriendUseCase {
+        return AddUserFriendUseCase(
+            friendRepository,
+            friendEntityMapper
         )
     }
 
