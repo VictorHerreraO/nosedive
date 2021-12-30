@@ -162,7 +162,7 @@ class DataSourceModule {
     @Provides
     @Singleton
     fun provideFriendDataSource(
-        friends: DatabaseReference
+        @Named(Names.FriendRef) friends: DatabaseReference
     ): FriendDataSource {
         return FirebaseFriendDataSource(
             friends = friends
