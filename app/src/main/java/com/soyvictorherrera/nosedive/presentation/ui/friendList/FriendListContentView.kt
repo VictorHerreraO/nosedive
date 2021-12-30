@@ -15,8 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.domain.model.FriendModel
-import com.soyvictorherrera.nosedive.presentation.component.card.FriendInfoCard
 import com.soyvictorherrera.nosedive.presentation.component.common.ProminentTopAppBar
+import com.soyvictorherrera.nosedive.presentation.component.item.FriendListItem
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 
 sealed class FriendListEvent {
@@ -26,6 +26,7 @@ sealed class FriendListEvent {
 }
 
 @Composable
+@ExperimentalMaterialApi
 fun FriendListContentView(
     friendList: List<FriendModel>,
     modifier: Modifier = Modifier,
@@ -86,6 +87,7 @@ fun FriendListTopAppBar(
 )
 
 @Composable
+@ExperimentalMaterialApi
 fun FriendListContent(
     userList: List<FriendModel>,
     onUserClick: (user: FriendModel) -> Unit,
@@ -95,7 +97,7 @@ fun FriendListContent(
     verticalArrangement = Arrangement.spacedBy(1.dp)
 ) {
     items(userList) { user ->
-        FriendInfoCard(
+        FriendListItem(
             user = user,
             onItemClick = { onUserClick(user) }
         )
@@ -104,6 +106,7 @@ fun FriendListContent(
 
 @Preview
 @Composable
+@ExperimentalMaterialApi
 fun FriendListContentViewPreview() {
     NosediveTheme {
         FriendListContentView(
