@@ -1,5 +1,7 @@
 package com.soyvictorherrera.nosedive.presentation.ui.friendProfile
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
@@ -33,6 +35,7 @@ sealed class FriendProfileActionEvent {
 }
 
 @Composable
+@ExperimentalAnimationApi
 fun FriendProfileContentView(
     user: UserModel,
     userStats: UserStatsModel,
@@ -97,6 +100,7 @@ fun FriendProfileContent(
 }
 
 @Composable
+@ExperimentalAnimationApi
 fun FriendProfileBottomBar(
     user: UserModel,
     canFollowUser: Boolean,
@@ -112,14 +116,16 @@ fun FriendProfileBottomBar(
         icon = Icons.Sharp.Star
     )
 
-    if (canFollowUser) {
-        Spacer(modifier = Modifier.height(16.dp))
+    AnimatedVisibility(visible = canFollowUser) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Spacer(modifier = Modifier.height(16.dp))
 
-        ActionButton(
-            text = stringResource(R.string.friend_profile_follow_user),
-            onClick = { onActionEvent(FriendProfileActionEvent.FollowUser) },
-            icon = Icons.Sharp.PersonAdd
-        )
+            ActionButton(
+                text = stringResource(R.string.friend_profile_follow_user),
+                onClick = { onActionEvent(FriendProfileActionEvent.FollowUser) },
+                icon = Icons.Sharp.PersonAdd
+            )
+        }
     }
 
     Spacer(modifier = Modifier.height(64.dp))
@@ -127,6 +133,7 @@ fun FriendProfileBottomBar(
 
 @Preview
 @Composable
+@ExperimentalAnimationApi
 fun FriendProfileContentViewPreview() {
     NosediveTheme {
         FriendProfileContentView(
