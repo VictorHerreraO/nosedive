@@ -10,6 +10,7 @@ import com.soyvictorherrera.nosedive.util.PreferenceUtil
 import com.soyvictorherrera.nosedive.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -35,11 +36,11 @@ class UserDetailsViewModel @Inject constructor(
         observeUserIdPreference()
     }
 
-    private fun observeUserIdPreference() = viewModelScope.launch {
+    private fun observeUserIdPreference() {
         preferences.observeUserId(null).onEach { id ->
             cancelJobs()
             id?.let { onUserIdChanged(it) }
-        }
+        }.launchIn(viewModelScope)
     }
 
     private fun cancelJobs() {

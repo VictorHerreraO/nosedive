@@ -3,6 +3,7 @@ package com.soyvictorherrera.nosedive.presentation.ui.friendProfile
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.sharp.PersonAdd
 import androidx.compose.material.icons.sharp.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,6 +15,7 @@ import coil.compose.rememberImagePainter
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
+import com.soyvictorherrera.nosedive.presentation.component.button.ActionButton
 import com.soyvictorherrera.nosedive.presentation.component.button.MainButton
 import com.soyvictorherrera.nosedive.presentation.component.common.NoTitleTopAppBar
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserDetails
@@ -27,6 +29,7 @@ sealed class FriendProfileEvent {
 
 sealed class FriendProfileActionEvent {
     object RateUser : FriendProfileActionEvent()
+    object FollowUser : FriendProfileActionEvent()
 }
 
 @Composable
@@ -34,6 +37,7 @@ fun FriendProfileContentView(
     user: UserModel,
     userStats: UserStatsModel,
     userScore: Double?,
+    canFollowUser: Boolean,
     modifier: Modifier = Modifier,
     onNavigationEvent: (event: FriendProfileEvent) -> Unit,
     onActionEvent: (event: FriendProfileActionEvent) -> Unit
@@ -55,6 +59,7 @@ fun FriendProfileContentView(
         bottomBar = {
             FriendProfileBottomBar(
                 user = user,
+                canFollowUser = canFollowUser,
                 onActionEvent = onActionEvent
             )
         }
@@ -94,16 +99,28 @@ fun FriendProfileContent(
 @Composable
 fun FriendProfileBottomBar(
     user: UserModel,
+    canFollowUser: Boolean,
     modifier: Modifier = Modifier,
     onActionEvent: (event: FriendProfileActionEvent) -> Unit
 ): Unit = Column(
-    modifier = modifier.padding(horizontal = 32.dp)
+    modifier = modifier.padding(horizontal = 32.dp),
+    horizontalAlignment = Alignment.CenterHorizontally
 ) {
     MainButton(
         text = stringResource(R.string.friend_profile_rate_user, user.name),
         onClick = { onActionEvent(FriendProfileActionEvent.RateUser) },
         icon = Icons.Sharp.Star
     )
+
+    if (canFollowUser) {
+        Spacer(modifier = Modifier.height(16.dp))
+
+        ActionButton(
+            text = stringResource(R.string.friend_profile_follow_user),
+            onClick = { onActionEvent(FriendProfileActionEvent.FollowUser) },
+            icon = Icons.Sharp.PersonAdd
+        )
+    }
 
     Spacer(modifier = Modifier.height(64.dp))
 }
@@ -124,6 +141,7 @@ fun FriendProfileContentViewPreview() {
                 following = 11
             ),
             userScore = 4.3127,
+            canFollowUser = true,
             onNavigationEvent = { },
             onActionEvent = { }
         )

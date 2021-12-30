@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.soyvictorherrera.nosedive.domain.model.FriendModel
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.model.UserScoreModel
 import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
@@ -41,10 +42,27 @@ class FriendProfileViewModel @Inject constructor(
     val friendAvgScore: LiveData<Double?>
         get() = _friendAvgScore
 
-    fun onUserIdChanged(userId: String) {
-        observeUserProfile(userId)
-        observeUserStats(userId)
-        observeUserScore(userId)
+    private val _canFollowFriend = MutableLiveData<Boolean>()
+    val canFollowFriend: LiveData<Boolean>
+        get() = _canFollowFriend
+
+    private lateinit var friendUserId: String
+    private var currentUserFriendList = emptyList<FriendModel>()
+        set(value) {
+            field = value
+            onCurrentUserFriendListUpdated(value)
+        }
+
+    fun onFriendUserIdChanged(userId: String) {
+        this.friendUserId = userId
+
+        observeFriendUserProfile(userId)
+        observeFriendUserStats(userId)
+        observeFriendUserScore(userId)
+    }
+
+    fun onCurrentUserFriendListChanged(friendList: List<FriendModel>) {
+        this.currentUserFriendList = friendList
     }
 
     fun onNavigateBack() {
@@ -55,7 +73,11 @@ class FriendProfileViewModel @Inject constructor(
 
     }
 
-    private fun observeUserProfile(userId: String) {
+    fun onFollowUser() {
+
+    }
+
+    private fun observeFriendUserProfile(userId: String) {
         viewModelScope.launch {
             observeUserProfileUseCase.apply {
                 this.userId = userId
@@ -66,13 +88,14 @@ class FriendProfileViewModel @Inject constructor(
                     is Result.Success -> {
                         Timber.i("friend profile updated")
                         _friendModel.value = result.data!!
+                        _canFollowFriend.value = true
                     }
                 }
             }
         }
     }
 
-    private fun observeUserStats(userId: String) {
+    private fun observeFriendUserStats(userId: String) {
         viewModelScope.launch {
             observeUserStatsUseCase.apply {
                 this.userId = userId
@@ -89,7 +112,7 @@ class FriendProfileViewModel @Inject constructor(
         }
     }
 
-    private fun observeUserScore(userId: String) {
+    private fun observeFriendUserScore(userId: String) {
         viewModelScope.launch {
             observeUserScoreUseCase.apply {
                 this.userId = userId
@@ -106,6 +129,14 @@ class FriendProfileViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    private fun onCurrentUserFriendListUpdated(friendList: List<FriendModel>) {
+        friendList.firstOrNull {
+            it.id == friendUserId
+        }.let {
+            _canFollowFriend.value = it == null
         }
     }
 
