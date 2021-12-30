@@ -14,32 +14,48 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.soyvictorherrera.nosedive.R
-import com.soyvictorherrera.nosedive.domain.model.UserModel
+import com.soyvictorherrera.nosedive.domain.model.FriendModel
 import com.soyvictorherrera.nosedive.presentation.component.card.FriendInfoCard
 import com.soyvictorherrera.nosedive.presentation.component.common.ProminentTopAppBar
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 
+sealed class FriendListEvent {
+    object NavigateBack : FriendListEvent()
+    object SearchFriend : FriendListEvent()
+    data class FriendSelected(val friend: FriendModel) : FriendListEvent()
+}
+
 @Composable
 fun FriendListContentView(
-    userList: List<UserModel>,
-    modifier: Modifier = Modifier
+    friendList: List<FriendModel>,
+    modifier: Modifier = Modifier,
+    onFriendListEvent: (event: FriendListEvent) -> Unit
 ): Unit = Scaffold(
     modifier = modifier,
     topBar = {
         FriendListTopAppBar(
-            onNavigationEvent = { /*TODO*/ },
-            onActionEvent = { /*TODO*/ }
+            onNavigateBack = {
+                onFriendListEvent(FriendListEvent.NavigateBack)
+            },
+            onSearch = {
+                onFriendListEvent(FriendListEvent.SearchFriend)
+            }
         )
     },
     content = {
-        FriendListContent(userList = userList)
+        FriendListContent(
+            userList = friendList,
+            onUserClick = {
+                onFriendListEvent(FriendListEvent.FriendSelected(it))
+            }
+        )
     }
 )
 
 @Composable
 fun FriendListTopAppBar(
-    onNavigationEvent: () -> Unit,
-    onActionEvent: () -> Unit,
+    onNavigateBack: () -> Unit,
+    onSearch: () -> Unit,
     modifier: Modifier = Modifier
 ): Unit = ProminentTopAppBar(
     modifier = modifier,
@@ -50,7 +66,7 @@ fun FriendListTopAppBar(
         )
     },
     navigationIcon = {
-        IconButton(onClick = { onNavigationEvent() }) {
+        IconButton(onClick = { onNavigateBack() }) {
             Icon(
                 imageVector = Icons.Sharp.ArrowBack,
                 contentDescription = null
@@ -58,7 +74,7 @@ fun FriendListTopAppBar(
         }
     },
     actions = {
-        IconButton(onClick = { onActionEvent() }) {
+        IconButton(onClick = { onSearch() }) {
             Icon(
                 imageVector = Icons.Sharp.Search,
                 contentDescription = null,
@@ -71,7 +87,8 @@ fun FriendListTopAppBar(
 
 @Composable
 fun FriendListContent(
-    userList: List<UserModel>,
+    userList: List<FriendModel>,
+    onUserClick: (user: FriendModel) -> Unit,
     modifier: Modifier = Modifier
 ) = LazyColumn(
     modifier = modifier.padding(horizontal = 16.dp),
@@ -80,7 +97,7 @@ fun FriendListContent(
     items(userList) { user ->
         FriendInfoCard(
             user = user,
-            onItemClick = { }
+            onItemClick = { onUserClick(user) }
         )
     }
 }
@@ -90,12 +107,12 @@ fun FriendListContent(
 fun FriendListContentViewPreview() {
     NosediveTheme {
         FriendListContentView(
-            userList = listOf(
-                UserModel(
-                    name = "Jessica Herrera",
-                    email = ""
+            friendList = listOf(
+                FriendModel(
+                    id = "",
+                    name = "Jessica Herrera"
                 )
             )
-        )
+        ) {}
     }
 }

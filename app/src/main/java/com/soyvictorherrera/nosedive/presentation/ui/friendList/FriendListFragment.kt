@@ -14,6 +14,7 @@ import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 import com.soyvictorherrera.nosedive.presentation.ui.shared.UserDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class FriendListFragment : Fragment() {
@@ -44,9 +45,24 @@ class FriendListFragment : Fragment() {
                     val friendList by viewModel.friendList.observeAsState(initial = emptyList())
 
                     FriendListContentView(
-                        userList = friendList
+                        friendList = friendList,
+                        onFriendListEvent = ::onFriendListEvent
                     )
                 }
+            }
+        }
+    }
+
+    private fun onFriendListEvent(event: FriendListEvent) {
+        when (event) {
+            is FriendListEvent.FriendSelected -> {
+                Timber.i("friend [${event.friend.name}] selected")
+            }
+            FriendListEvent.NavigateBack -> {
+                Timber.i("Navigate back")
+            }
+            FriendListEvent.SearchFriend -> {
+                Timber.i("Search friend here")
             }
         }
     }
