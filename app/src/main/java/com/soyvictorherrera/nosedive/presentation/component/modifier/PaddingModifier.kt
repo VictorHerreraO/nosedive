@@ -28,3 +28,7 @@ fun Modifier.sheetPadding(
     top = top,
     bottom = bottom
 )
+
+fun Modifier.listPadding(
+    horizontal: Dp = 16.dp
+) = this.padding(horizontal = horizontal)

@@ -1,7 +1,6 @@
 package com.soyvictorherrera.nosedive.presentation.ui.friendList
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
@@ -17,6 +16,7 @@ import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.domain.model.FriendModel
 import com.soyvictorherrera.nosedive.presentation.component.common.ProminentTopAppBar
 import com.soyvictorherrera.nosedive.presentation.component.item.FriendListItem
+import com.soyvictorherrera.nosedive.presentation.component.modifier.listPadding
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 
 sealed class FriendListEvent {
@@ -93,7 +93,7 @@ fun FriendListContent(
     onUserClick: (user: FriendModel) -> Unit,
     modifier: Modifier = Modifier
 ) = LazyColumn(
-    modifier = modifier.padding(horizontal = 16.dp),
+    modifier = modifier.listPadding(),
     verticalArrangement = Arrangement.spacedBy(1.dp)
 ) {
     items(userList) { user ->

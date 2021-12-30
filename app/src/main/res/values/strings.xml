@@ -55,4 +55,6 @@
     <string name="friend_profile_rate_user">Calificar a %s</string>
     <string name="friend_profile_follow_user">Seguir</string>
     <string name="friend_list_title">Contactos</string>
+    <string name="sheet_recently_rated_title">Calificados recientemente</string>
+    <string name="sheet_action_all_contacts">Todos los contactos</string>
 </resources>
