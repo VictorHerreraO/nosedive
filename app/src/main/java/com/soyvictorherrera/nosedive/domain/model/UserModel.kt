@@ -11,5 +11,5 @@ class UserModel(
     var password: String? = null,
     var photoUrl: URI? = null,
     var status: UserStatus = UserStatus.ACTIVE,
-    var score: Double = 0.0
+    var score: Double? = null
 )

@@ -15,7 +15,7 @@ class UserEntityMapper : DomainMapper<UserEntity, UserModel>() {
             password = password,
             photoUrl = photoUrl?.let { url -> URI(url) },
             status = status?.let { UserStatus.valueOf(it) } ?: UserStatus.BLOCKED,
-            score = score ?: 0.0
+            score = score
         )
     }
 

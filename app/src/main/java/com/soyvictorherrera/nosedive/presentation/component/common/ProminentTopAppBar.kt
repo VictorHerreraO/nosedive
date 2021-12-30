@@ -45,6 +45,7 @@ fun ProminentTopAppBar(
             Spacer(modifier = Modifier.width(72.dp))
             title.invoke()
         }
+        Spacer(modifier = Modifier.height(40.dp))
     }
 }
 

@@ -54,4 +54,5 @@
     <string name="code_scanning_write_the_code">Escribe el código</string>
     <string name="friend_profile_rate_user">Calificar a %s</string>
     <string name="friend_profile_follow_user">Seguir</string>
+    <string name="friend_list_title">Contactos</string>
 </resources>

@@ -27,7 +27,8 @@ fun UserPhoto(
     painter: Painter,
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colors.surface,
-    borderWidth: Dp = 20.dp
+    borderWidth: Dp = 20.dp,
+    borderStrokeWidth: Dp = 2.dp
 ) {
     Surface(
         modifier = modifier
@@ -42,7 +43,7 @@ fun UserPhoto(
                 .padding(all = borderWidth),
             shape = CircleShape,
             border = BorderStroke(
-                width = 2.dp,
+                width = borderStrokeWidth,
                 color = Color.White
             )
         ) {
