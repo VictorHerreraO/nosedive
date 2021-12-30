@@ -7,6 +7,7 @@ import com.soyvictorherrera.nosedive.domain.model.UserModel
 /**
  * Devolver photoUrl como [android.net.Uri]
  */
+@Deprecated("Use [URI.toUri()] instead")
 fun UserModel.getPhotoUri(): Uri? {
     return this.photoUrl?.let { uri ->
         Uri.parse(uri.toString())
