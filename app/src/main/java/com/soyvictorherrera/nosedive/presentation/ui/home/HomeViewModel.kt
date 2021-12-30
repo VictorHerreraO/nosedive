@@ -45,4 +45,8 @@ class HomeViewModel @Inject constructor(
         _navigateTo.value = Event(Screen.CodeScanning)
     }
 
+    fun viewFriendList() {
+        _navigateTo.value = Event(Screen.FriendList)
+    }
+
 }

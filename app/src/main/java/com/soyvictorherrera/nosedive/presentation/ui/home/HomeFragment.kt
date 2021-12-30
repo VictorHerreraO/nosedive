@@ -89,6 +89,7 @@ class HomeFragment : Fragment() {
                             HomeEvent.NewRate -> {
                             }
                             HomeEvent.ViewFriends -> {
+                                viewModel.viewFriendList()
                             }
                             HomeEvent.ViewNotifications -> {
                             }

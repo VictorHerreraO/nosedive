@@ -15,6 +15,7 @@ sealed class Screen(@IdRes val resId: Int) {
     object CodeSharing : Screen(resId = R.id.codeSharingFragment)
     object CodeScanning : Screen(resId = R.id.codeScanningFragment)
     data class FriendProfile(val userId: String) : Screen(resId = R.id.friendProfileFragment)
+    object FriendList : Screen(resId = R.id.friendListFragment)
 }
 
 fun Fragment.navigateInTo(

@@ -37,4 +37,9 @@
         android:id="@+id/friendProfileFragment"
         android:name="com.soyvictorherrera.nosedive.presentation.ui.friendProfile.FriendProfileFragment"
         android:label="fragment_friend_profile" />
+
+    <fragment
+        android:id="@+id/friendListFragment"
+        android:name="com.soyvictorherrera.nosedive.presentation.ui.friendList.FriendListFragment"
+        android:label="fragment_friend_list"/>
 </navigation>
