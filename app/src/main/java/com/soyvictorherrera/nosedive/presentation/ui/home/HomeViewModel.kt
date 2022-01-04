@@ -38,7 +38,9 @@ class HomeViewModel @Inject constructor(
     }
 
     fun rateFriend() {
-        _bottomSheetEvent.value = Event(BottomSheetEvent.ShowRateFriendBottomSheet)
+        // TODO: 04/01/2022 remove this
+        // _bottomSheetEvent.value = Event(BottomSheetEvent.ShowRateFriendBottomSheet)
+        _navigateTo.value = Event(Screen.RateUser(""))
     }
 
     fun codeShare() {
