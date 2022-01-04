@@ -12,6 +12,9 @@ import androidx.fragment.app.viewModels
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
+import com.soyvictorherrera.nosedive.presentation.ui.Screen
+import com.soyvictorherrera.nosedive.presentation.ui.navigateInTo
+import com.soyvictorherrera.nosedive.presentation.ui.popUpTo
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,6 +30,13 @@ class RateUserFragment : Fragment() {
     ): View {
         arguments?.getString("user-id")?.let { id ->
             viewModel.onUserIdChanged(id)
+        }
+
+        viewModel.navigateTo.observe(viewLifecycleOwner) { navigateToEvent ->
+            navigateToEvent.getContentIfNotHandled()?.let { screen ->
+                if (screen == Screen.Home) popUpTo(screen)
+                else navigateInTo(to = screen, from = Screen.RateUser(""))
+            }
         }
 
         return ComposeView(requireContext()).apply {

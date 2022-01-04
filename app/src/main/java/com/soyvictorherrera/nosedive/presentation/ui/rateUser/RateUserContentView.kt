@@ -22,11 +22,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.presentation.component.common.NoTitleTopAppBar
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserPhoto
 import com.soyvictorherrera.nosedive.presentation.component.rate.RatingBar
+import com.soyvictorherrera.nosedive.presentation.extensions.toUri
 import com.soyvictorherrera.nosedive.presentation.theme.Grey
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 import kotlin.math.roundToInt
@@ -73,7 +75,9 @@ fun RateUserContent(
     horizontalAlignment = Alignment.CenterHorizontally
 ) {
     UserPhoto(
-        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+        painter = user.photoUrl?.let { url ->
+            rememberImagePainter(url.toUri())
+        } ?: painterResource(id = R.drawable.ic_launcher_foreground),
         modifier = Modifier.size(162.dp)
     )
 
