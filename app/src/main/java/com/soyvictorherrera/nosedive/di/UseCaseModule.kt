@@ -2,11 +2,13 @@ package com.soyvictorherrera.nosedive.di
 
 import com.soyvictorherrera.nosedive.data.repository.authentication.AuthenticationRepository
 import com.soyvictorherrera.nosedive.data.repository.friend.FriendRepository
+import com.soyvictorherrera.nosedive.data.repository.rating.RatingRepository
 import com.soyvictorherrera.nosedive.data.repository.sharingCode.SharingCodeRepository
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
 import com.soyvictorherrera.nosedive.data.repository.userScore.UserScoreRepository
 import com.soyvictorherrera.nosedive.data.repository.userStats.UserStatsRepository
 import com.soyvictorherrera.nosedive.data.source.friend.firebase.FriendEntity
+import com.soyvictorherrera.nosedive.data.source.rating.RatingEntity
 import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeEntity
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
 import com.soyvictorherrera.nosedive.data.source.userScore.UserScoreEntity
@@ -16,6 +18,7 @@ import com.soyvictorherrera.nosedive.domain.model.*
 import com.soyvictorherrera.nosedive.domain.usecase.authentication.SignInUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.authentication.SignUpUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.friend.AddUserFriendUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.rating.RateUserUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.sharing.*
 import com.soyvictorherrera.nosedive.domain.usecase.user.*
 import com.soyvictorherrera.nosedive.util.FileUtil
@@ -202,6 +205,18 @@ class UseCaseModule {
         return AddUserFriendUseCase(
             friendRepository,
             friendEntityMapper
+        )
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideRateUserUseCase(
+        ratingRepository: RatingRepository,
+        ratingEntityMapper: DomainMapper<RatingEntity, RatingModel>
+    ): RateUserUseCase {
+        return RateUserUseCase(
+            ratingRepository = ratingRepository,
+            ratingEntityMapper = ratingEntityMapper
         )
     }
 
