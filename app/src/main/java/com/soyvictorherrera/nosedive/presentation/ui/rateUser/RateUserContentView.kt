@@ -16,41 +16,58 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.soyvictorherrera.nosedive.R
+import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.presentation.component.common.NoTitleTopAppBar
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserPhoto
 import com.soyvictorherrera.nosedive.presentation.component.rate.RatingBar
 import com.soyvictorherrera.nosedive.presentation.theme.Grey
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
-import timber.log.Timber
 import kotlin.math.roundToInt
+
+sealed class RateUserEvent {
+    object NavigateBack : RateUserEvent()
+    data class RateChanged(val newRate: Int) : RateUserEvent()
+    object SubmitRating : RateUserEvent()
+}
 
 @Composable
 fun RateUserContentView(
-    modifier: Modifier = Modifier
+    user: UserModel,
+    currentRating: Int,
+    modifier: Modifier = Modifier,
+    onRateUserEvent: (event: RateUserEvent) -> Unit
 ) = Scaffold(modifier = modifier,
     topBar = {
         NoTitleTopAppBar(onNavigateBack = { /*TODO*/ })
     },
     content = {
         RateUserContent(
+            user = user,
+            currentRating = currentRating,
             modifier = Modifier.padding(
                 start = 32.dp,
                 end = 32.dp,
                 top = 16.dp,
                 bottom = 64.dp
-            )
+            ),
+            onRateUserEvent = onRateUserEvent
         )
     }
 )
 
 @Composable
 fun RateUserContent(
-    modifier: Modifier = Modifier
+    user: UserModel,
+    currentRating: Int,
+    modifier: Modifier = Modifier,
+    onRateUserEvent: (event: RateUserEvent) -> Unit
 ) = Column(
     modifier = modifier,
     horizontalAlignment = Alignment.CenterHorizontally
@@ -63,22 +80,23 @@ fun RateUserContent(
     Spacer(modifier = Modifier.height(16.dp))
 
     Text(
-        text = "¿Cómo calificas a Jessica?",
+        text = stringResource(R.string.rate_user_rate_description, user.name),
+        textAlign = TextAlign.Center,
         fontSize = 24.sp
     )
 
     Spacer(modifier = Modifier.weight(1f))
 
-    var rating by remember { mutableStateOf(0) }
+    var rating by remember { mutableStateOf(currentRating) }
     RateUserBar(
         rating = rating,
         onRateChange = { newRate ->
             rating = newRate.also {
-                Timber.d("new rate is [$it]")
+                onRateUserEvent(RateUserEvent.RateChanged(it))
             }
         },
         onRateSubmit = {
-            Timber.d("Submit new rate here")
+            onRateUserEvent(RateUserEvent.SubmitRating)
         }
     )
 }
@@ -126,7 +144,7 @@ fun RateUserBar(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Selecciona y desliza hacia arriba",
+            text = stringResource(R.string.rate_user_rating_description),
             fontSize = 12.sp,
             color = Grey,
             modifier = Modifier.alpha(hintAlpha)
@@ -158,6 +176,12 @@ fun RateUserBar(
 @Composable
 fun RateUserContentViewPreview() {
     NosediveTheme {
-        RateUserContentView()
+        RateUserContentView(
+            user = UserModel(
+                name = "Jessica Herrera",
+                email = ""
+            ),
+            currentRating = 2
+        ) {}
     }
 }

@@ -42,10 +42,14 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         viewModel.navigateTo.observe(viewLifecycleOwner) { navigateToEvent ->
-            navigateToEvent.getContentIfNotHandled()?.let { navigateTo ->
+            navigateToEvent.getContentIfNotHandled()?.let { screen ->
+                val args: Bundle? = if (screen is Screen.RateUser) Bundle().apply {
+                    putSerializable("user-id", screen.userId)
+                } else null
                 navigateInTo(
-                    to = navigateTo,
-                    from = Screen.Home
+                    to = screen,
+                    from = Screen.Home,
+                    args = args
                 )
             }
         }
