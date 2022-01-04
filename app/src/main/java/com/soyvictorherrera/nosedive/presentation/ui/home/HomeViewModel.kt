@@ -37,16 +37,24 @@ class HomeViewModel @Inject constructor(
         _bottomSheetEvent.value = Event(BottomSheetEvent.ShowAddFriendBottomSheet)
     }
 
+    fun rateFriend() {
+        _bottomSheetEvent.value = Event(BottomSheetEvent.ShowRateFriendBottomSheet)
+    }
+
     fun codeShare() {
+        _bottomSheetEvent.value = Event(BottomSheetEvent.HideBottomSheet)
         _navigateTo.value = Event(Screen.CodeSharing)
     }
 
     fun codeScan() {
+        _bottomSheetEvent.value = Event(BottomSheetEvent.HideBottomSheet)
         _navigateTo.value = Event(Screen.CodeScanning)
     }
 
     fun viewFriendList() {
+        _bottomSheetEvent.value = Event(BottomSheetEvent.HideBottomSheet)
         _navigateTo.value = Event(Screen.FriendList)
+
     }
 
 }

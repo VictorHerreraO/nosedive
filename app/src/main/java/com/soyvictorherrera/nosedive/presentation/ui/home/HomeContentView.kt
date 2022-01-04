@@ -14,9 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import com.soyvictorherrera.nosedive.domain.model.FriendModel
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
 import com.soyvictorherrera.nosedive.presentation.component.bottomSheet.AddContactSheetContent
+import com.soyvictorherrera.nosedive.presentation.component.bottomSheet.RecentlyRatedSheetContent
+import com.soyvictorherrera.nosedive.presentation.component.bottomSheet.RecentlyRatedSheetEvent
 import com.soyvictorherrera.nosedive.presentation.component.card.NewAccountAlertCard
 import com.soyvictorherrera.nosedive.presentation.component.common.DefaultBottomAppBar
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserDetails
@@ -32,9 +35,10 @@ sealed class HomeEvent {
     object ViewNotifications : HomeEvent()
     object ViewFriends : HomeEvent()
     object NewRate : HomeEvent()
-    object AddFriend: HomeEvent()
+    object AddFriend : HomeEvent()
     object CodeScan : HomeEvent()
     object CodeShare : HomeEvent()
+    data class RateFriend(val friend: FriendModel) : HomeEvent()
 }
 
 @Composable
@@ -43,20 +47,20 @@ fun HomeContentView(
     user: UserModel,
     userStats: UserStatsModel,
     sheetState: ModalBottomSheetState,
+    sheetType: BottomSheetType?,
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     onNavigationEvent: (HomeEvent) -> Unit
-) {
-    ModalBottomSheetLayout(
-        sheetState = sheetState,
-        sheetShape = modalBottomSheetShape,
-        sheetContent = {
-            AddContactSheetContent(
-                onScanCodeSelected = { onNavigationEvent(HomeEvent.CodeScan) },
-                onShowCodeSelected = { onNavigationEvent(HomeEvent.CodeShare) }
-            )
-        },
-        scrimColor = Black_32
-    ) {
+) = ModalBottomSheetLayout(
+    sheetState = sheetState,
+    sheetShape = modalBottomSheetShape,
+    sheetContent = {
+        BottomSheetContent(
+            sheetType = sheetType,
+            onNavigationEvent = onNavigationEvent
+        )
+    },
+    scrimColor = Black_32,
+    content = {
         Scaffold(
             scaffoldState = scaffoldState,
             topBar = {
@@ -80,7 +84,7 @@ fun HomeContentView(
             }
         )
     }
-}
+)
 
 @Composable
 fun HomeTopBar(
@@ -171,6 +175,39 @@ fun HomeBottomBar(
     )
 }
 
+@Composable
+fun BottomSheetContent(
+    sheetType: BottomSheetType?,
+    onNavigationEvent: (HomeEvent) -> Unit
+) {
+    // Prevents java.lang.IllegalArgumentException: The initial value must have an associated anchor.
+    Spacer(modifier = Modifier.height(1.dp))
+
+    when (sheetType) {
+        BottomSheetType.AddFriendSheet -> {
+            AddContactSheetContent(
+                onScanCodeSelected = { onNavigationEvent(HomeEvent.CodeScan) },
+                onShowCodeSelected = { onNavigationEvent(HomeEvent.CodeShare) }
+            )
+        }
+        is BottomSheetType.RecentlyRatedFriendsSheet -> {
+            RecentlyRatedSheetContent(
+                recentlyRatedFriends = sheetType.friendList,
+                onSheetEvent = { event ->
+                    when (event) {
+                        is RecentlyRatedSheetEvent.RateFriend -> {
+                            onNavigationEvent(HomeEvent.RateFriend(event.friend))
+                        }
+                        RecentlyRatedSheetEvent.ViewAllFriends -> {
+                            onNavigationEvent(HomeEvent.ViewFriends)
+                        }
+                    }
+                }
+            )
+        }
+    }
+}
+
 @Preview
 @Composable
 @ExperimentalMaterialApi
@@ -182,7 +219,8 @@ fun HomeContentPreviewDark() {
                 email = ""
             ),
             userStats = UserStatsModel(),
-            sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+            sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+            sheetType = null
         ) {}
     }
 }
