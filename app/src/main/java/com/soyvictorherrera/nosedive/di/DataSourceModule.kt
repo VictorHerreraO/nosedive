@@ -9,6 +9,8 @@ import com.soyvictorherrera.nosedive.data.source.authentication.AuthenticationDa
 import com.soyvictorherrera.nosedive.data.source.authentication.firebase.FirebaseAuthenticationDataSource
 import com.soyvictorherrera.nosedive.data.source.friend.FriendDataSource
 import com.soyvictorherrera.nosedive.data.source.friend.firebase.FirebaseFriendDataSource
+import com.soyvictorherrera.nosedive.data.source.rating.RatingDataSource
+import com.soyvictorherrera.nosedive.data.source.rating.firebase.FirebaseRatingDataSource
 import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeDataSource
 import com.soyvictorherrera.nosedive.data.source.sharingCode.firebase.FirebaseSharingCodeDataSource
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
@@ -35,6 +37,7 @@ class DataSourceModule {
         const val UserStatsRef = "userStatsRef"
         const val UserScoreRef = "userScoreRef"
         const val FriendRef = "friendRef"
+        const val RatingRef = "ratingRef"
     }
 
     private object FirebasePaths {
@@ -44,6 +47,7 @@ class DataSourceModule {
         const val UserStats = "userStats"
         const val UserScore = "userScore"
         const val Friend = "friend"
+        const val Rating = "rating"
     }
 
     //region Firebase instances
@@ -108,6 +112,13 @@ class DataSourceModule {
     fun provideFriendDatabaseReference(database: FirebaseDatabase): DatabaseReference {
         return database.getReference(FirebasePaths.Friend)
     }
+
+    @Provides
+    @Singleton
+    @Named(Names.RatingRef)
+    fun provideRatingDatabaseReference(database: FirebaseDatabase): DatabaseReference {
+        return database.getReference(FirebasePaths.Rating)
+    }
     //endregion
 
     //region Data sources
@@ -166,6 +177,16 @@ class DataSourceModule {
     ): FriendDataSource {
         return FirebaseFriendDataSource(
             friends = friends
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideRatingDataSource(
+        @Named(Names.RatingRef) ratings: DatabaseReference
+    ): RatingDataSource {
+        return FirebaseRatingDataSource(
+            ratings = ratings
         )
     }
     //endregion

@@ -1,6 +1,7 @@
 package com.soyvictorherrera.nosedive.di
 
 import com.soyvictorherrera.nosedive.data.source.friend.firebase.FriendEntity
+import com.soyvictorherrera.nosedive.data.source.rating.RatingEntity
 import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeEntity
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
 import com.soyvictorherrera.nosedive.data.source.userScore.UserScoreEntity
@@ -45,6 +46,12 @@ class MapperModule {
     @Singleton
     fun provideFriendEntityMapper(): DomainMapper<FriendEntity, FriendModel> {
         return FriendEntityMapper()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRatingEntityMapper(): DomainMapper<RatingEntity, RatingModel> {
+        return RatingEntityMapper()
     }
 
 }
