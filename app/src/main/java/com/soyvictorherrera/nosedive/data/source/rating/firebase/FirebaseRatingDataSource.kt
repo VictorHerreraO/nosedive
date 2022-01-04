@@ -13,6 +13,7 @@ class FirebaseRatingDataSource(
     override suspend fun saveRating(ratedUserId: String, rating: RatingEntity): Result<Unit> {
         return try {
             ratings.child(ratedUserId)
+                .push()
                 .setValue(rating)
                 .await()
             Result.Success(Unit)

@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.domain.model.UserModel
@@ -15,11 +16,13 @@ import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import com.soyvictorherrera.nosedive.presentation.ui.navigateInTo
 import com.soyvictorherrera.nosedive.presentation.ui.popUpTo
+import com.soyvictorherrera.nosedive.presentation.ui.shared.SessionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RateUserFragment : Fragment() {
 
+    private val sessionViewModel: SessionViewModel by activityViewModels()
     private val viewModel: RateUserViewModel by viewModels()
     private val stubUser = UserModel(name = "", email = "")
 
@@ -37,6 +40,10 @@ class RateUserFragment : Fragment() {
                 if (screen == Screen.Home) popUpTo(screen)
                 else navigateInTo(to = screen, from = Screen.RateUser(""))
             }
+        }
+
+        sessionViewModel.user.observe(viewLifecycleOwner) { user ->
+            viewModel.onCurrentUserChanged(user)
         }
 
         return ComposeView(requireContext()).apply {
