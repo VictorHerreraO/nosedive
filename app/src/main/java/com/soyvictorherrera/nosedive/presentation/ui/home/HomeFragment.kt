@@ -73,7 +73,6 @@ class HomeFragment : Fragment() {
                     val closeSheet = {
                         scope.launch {
                             sheetState.hide()
-                            currentBottomSheet = null
                         }
                     }
 

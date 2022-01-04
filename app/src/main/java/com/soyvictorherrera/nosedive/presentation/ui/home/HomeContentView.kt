@@ -24,7 +24,7 @@ import com.soyvictorherrera.nosedive.presentation.component.card.NewAccountAlert
 import com.soyvictorherrera.nosedive.presentation.component.common.DefaultBottomAppBar
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserDetails
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserStats
-import com.soyvictorherrera.nosedive.presentation.extensions.getPhotoUri
+import com.soyvictorherrera.nosedive.presentation.extensions.toUri
 import com.soyvictorherrera.nosedive.presentation.theme.Black_32
 import com.soyvictorherrera.nosedive.presentation.theme.Forest_Green_07
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
@@ -60,6 +60,7 @@ fun HomeContentView(
         )
     },
     scrimColor = Black_32,
+    sheetElevation = 4.dp,
     content = {
         Scaffold(
             scaffoldState = scaffoldState,
@@ -133,8 +134,8 @@ fun HomeContent(
         UserDetails(
             userName = user.name,
             userPhotoBackgroundColor = Forest_Green_07,
-            userPhotoPainter = user.getPhotoUri()?.let { uri ->
-                rememberImagePainter(uri)
+            userPhotoPainter = user.photoUrl?.let { url ->
+                rememberImagePainter(url.toUri())
             }
         )
 

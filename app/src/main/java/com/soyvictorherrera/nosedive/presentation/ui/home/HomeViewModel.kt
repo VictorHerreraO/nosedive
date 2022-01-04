@@ -3,9 +3,12 @@ package com.soyvictorherrera.nosedive.presentation.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.soyvictorherrera.nosedive.presentation.ui.Event
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,25 +41,33 @@ class HomeViewModel @Inject constructor(
     }
 
     fun rateFriend() {
-        // TODO: 04/01/2022 remove this
-        // _bottomSheetEvent.value = Event(BottomSheetEvent.ShowRateFriendBottomSheet)
-        _navigateTo.value = Event(Screen.RateUser(""))
+        _bottomSheetEvent.value = Event(BottomSheetEvent.ShowRateFriendBottomSheet)
     }
 
     fun codeShare() {
-        _bottomSheetEvent.value = Event(BottomSheetEvent.HideBottomSheet)
-        _navigateTo.value = Event(Screen.CodeSharing)
+        hideBottomSheetAndNavigateTo(Screen.CodeSharing)
     }
 
     fun codeScan() {
-        _bottomSheetEvent.value = Event(BottomSheetEvent.HideBottomSheet)
-        _navigateTo.value = Event(Screen.CodeScanning)
+        hideBottomSheetAndNavigateTo(Screen.CodeScanning)
+
     }
 
     fun viewFriendList() {
-        _bottomSheetEvent.value = Event(BottomSheetEvent.HideBottomSheet)
-        _navigateTo.value = Event(Screen.FriendList)
+        hideBottomSheetAndNavigateTo(Screen.FriendList)
+    }
 
+    /**
+     * Hide the bottom sheet and waits 500 ms to navigate to the destination
+     *
+     * The delay is required so the hidden state of the sheet gets saved
+     */
+    private fun hideBottomSheetAndNavigateTo(destination: Screen) {
+        _bottomSheetEvent.value = Event(BottomSheetEvent.HideBottomSheet)
+        viewModelScope.launch {
+            delay(500)
+            _navigateTo.value = Event(destination)
+        }
     }
 
 }

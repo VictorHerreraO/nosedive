@@ -26,7 +26,7 @@ fun RateFriendItem(
 ): Unit = Card(
     modifier = modifier.clickable(onClick = onItemClick),
     backgroundColor = MaterialTheme.colors.surface,
-    elevation = 2.dp,
+    elevation = 6.dp,
     shape = MaterialTheme.shapes.medium
 ) {
     ListItem(
