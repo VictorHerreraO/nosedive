@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.soyvictorherrera.nosedive.R
-import com.soyvictorherrera.nosedive.domain.model.FriendModel
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
@@ -23,6 +22,7 @@ import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import com.soyvictorherrera.nosedive.presentation.ui.navigateInTo
 import com.soyvictorherrera.nosedive.presentation.ui.navigateOutTo
 import com.soyvictorherrera.nosedive.presentation.ui.shared.SessionViewModel
+import com.soyvictorherrera.nosedive.presentation.ui.shared.UserDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -31,6 +31,7 @@ import timber.log.Timber
 class HomeFragment : Fragment() {
 
     private val sessionViewModel: SessionViewModel by activityViewModels()
+    private val userDetailsViewModel: UserDetailsViewModel by activityViewModels()
     private val viewModel: HomeViewModel by viewModels()
     private val stubUser = UserModel(name = "", email = "")
 
@@ -47,6 +48,10 @@ class HomeFragment : Fragment() {
                     from = Screen.Home
                 )
             }
+        }
+
+        userDetailsViewModel.friendList.observe(viewLifecycleOwner) { friendList ->
+            viewModel.onFriendListChange(friendList)
         }
 
         return ComposeView(requireContext()).apply {
@@ -85,12 +90,7 @@ class HomeFragment : Fragment() {
                                 }
                                 BottomSheetEvent.ShowRateFriendBottomSheet -> {
                                     currentBottomSheet = BottomSheetType.RecentlyRatedFriendsSheet(
-                                        friendList = listOf(
-                                            FriendModel(
-                                                id = "",
-                                                name = "Jessica Herrera"
-                                            )
-                                        )
+                                        friendList = viewModel.recentlyRatedFriends
                                     )
                                     openSheet()
                                 }
@@ -147,7 +147,7 @@ class HomeFragment : Fragment() {
                 viewModel.codeShare()
             }
             is HomeEvent.RateFriend -> {
-
+                viewModel.rateFriend(event.friend.id)
             }
         }
     }

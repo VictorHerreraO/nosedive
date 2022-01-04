@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.soyvictorherrera.nosedive.domain.model.FriendModel
 import com.soyvictorherrera.nosedive.presentation.ui.Event
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,6 +33,10 @@ class HomeViewModel @Inject constructor(
     val bottomSheetEvent: LiveData<Event<BottomSheetEvent>>
         get() = _bottomSheetEvent
 
+    private var _recentlyRatedFriends = emptyList<FriendModel>()
+    val recentlyRatedFriends: List<FriendModel>
+        get() = _recentlyRatedFriends
+
     fun viewProfile() {
         _navigateTo.value = Event(Screen.Profile)
     }
@@ -55,6 +60,24 @@ class HomeViewModel @Inject constructor(
 
     fun viewFriendList() {
         hideBottomSheetAndNavigateTo(Screen.FriendList)
+    }
+
+    fun rateFriend(userId: String) {
+        hideBottomSheetAndNavigateTo(
+            Screen.RateUser(
+                userId = userId
+            )
+        )
+    }
+
+    fun onFriendListChange(friendList: List<FriendModel>) {
+        // TODO: 04/01/2022 sort by rated date and slice
+        _recentlyRatedFriends = with(friendList) {
+            subList(
+                fromIndex = 0,
+                toIndex = 3.coerceAtMost(size)
+            )
+        }
     }
 
     /**
