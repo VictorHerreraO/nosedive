@@ -1,14 +1,19 @@
 const functions = require("firebase-functions");
 
+/**
+ * On user rated callbacks
+ */
 exports.onNewRating = functions.database.ref('/rating/{userId}/{ratingId}').onCreate((snapshot, context) => {
     const params = context.params;
     const userId = params.userId;
     const rating = snapshot.val();
+    const raterId = rating.who;
 
-    functions.logger.log('user rated with id = ', userId);
+    functions.logger.log(raterId, ' rated: ', userId);
 
     const root = snapshot.ref.root
     const statsRef = root.child('userStats').child(userId);
+    const friendRef = root.child('friend').child(raterId).child(userId);
 
     return statsRef.once('value')
         .then(snap => {
@@ -39,6 +44,16 @@ exports.onNewRating = functions.database.ref('/rating/{userId}/{ratingId}').onCr
                 ratings: (ratingInt + 1),
                 scoreSum: (sumFloat + (ratingValue * multiplier))
             });
+        })
+        .then(() => {
+            // Update friend last rated date
+            const ratingDate = rating.date;
+
+            if (typeof ratingDate !== 'number' || typeof raterId !== 'string') {
+                throw new Error('illegal [rating.date] or [rated.who]')
+            }
+
+            return friendRef.child('lastRated').set(ratingDate);
         })
         .catch(ex => {
             functions.logger.warn('unable to update ', userId, ' rating stats: ', ex);
