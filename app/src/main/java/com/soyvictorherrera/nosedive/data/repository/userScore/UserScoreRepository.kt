@@ -4,6 +4,7 @@ import com.soyvictorherrera.nosedive.data.source.userScore.UserScoreEntity
 import com.soyvictorherrera.nosedive.util.Result
 import kotlinx.coroutines.flow.Flow
 
+@Deprecated("Use UserStatsRepository instead")
 interface UserScoreRepository {
 
     fun observeUserScore(userId: String): Flow<Result<UserScoreEntity>>

@@ -9,7 +9,8 @@ class UserStatsEntityMapper : DomainMapper<UserStatsEntity, UserStatsModel>() {
         return UserStatsModel(
             followers = followers ?: 0,
             following = following ?: 0,
-            ratings = ratings ?: 0
+            ratings = ratings ?: 0,
+            scoreSum = (scoreSum ?: 0f).toDouble()
         )
     }
 
@@ -17,7 +18,8 @@ class UserStatsEntityMapper : DomainMapper<UserStatsEntity, UserStatsModel>() {
         return UserStatsEntity(
             following = following,
             followers = followers,
-            ratings = ratings
+            ratings = ratings,
+            scoreSum = scoreSum.toFloat()
         )
     }
 

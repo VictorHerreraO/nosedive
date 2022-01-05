@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
+@Deprecated("User ObserveUserStatsUseCase")
 class ObserveUserScoreUseCase(
     private val scoreRepository: UserScoreRepository,
     private val scoreEntityMapper: DomainMapper<UserScoreEntity, UserScoreModel>

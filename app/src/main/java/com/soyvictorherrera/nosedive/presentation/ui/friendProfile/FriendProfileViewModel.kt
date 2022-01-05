@@ -6,11 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.soyvictorherrera.nosedive.domain.model.FriendModel
 import com.soyvictorherrera.nosedive.domain.model.UserModel
-import com.soyvictorherrera.nosedive.domain.model.UserScoreModel
 import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
 import com.soyvictorherrera.nosedive.domain.usecase.friend.AddUserFriendUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.user.ObserveUserProfileUseCase
-import com.soyvictorherrera.nosedive.domain.usecase.user.ObserveUserScoreUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.user.ObserveUserStatsUseCase
 import com.soyvictorherrera.nosedive.presentation.extensions.toFriendModel
 import com.soyvictorherrera.nosedive.presentation.ui.Event
@@ -27,7 +25,7 @@ class FriendProfileViewModel @Inject constructor(
     private val preferences: PreferenceUtil,
     private val observeUserProfileUseCase: ObserveUserProfileUseCase,
     private val observeUserStatsUseCase: ObserveUserStatsUseCase,
-    private val observeUserScoreUseCase: ObserveUserScoreUseCase,
+    //private val observeUserScoreUseCase: ObserveUserScoreUseCase,
     private val addUserFriendUseCase: AddUserFriendUseCase
 ) : ViewModel() {
 
@@ -63,7 +61,9 @@ class FriendProfileViewModel @Inject constructor(
 
         observeFriendUserProfile(userId)
         observeFriendUserStats(userId)
+        /*
         observeFriendUserScore(userId)
+        */
     }
 
     fun onCurrentUserFriendListChanged(friendList: List<FriendModel>) {
@@ -107,15 +107,19 @@ class FriendProfileViewModel @Inject constructor(
                 when (result) {
                     is Result.Error -> Timber.e(result.exception)
                     Result.Loading -> Unit
-                    is Result.Success -> {
+                    is Result.Success -> result.data.let { stats ->
                         Timber.i("friend stats updated")
-                        _friendStats.value = result.data!!
+                        _friendStats.value = stats
+                        _friendAvgScore.value = if (stats.hasRequiredRatingsCount) {
+                            stats.averageScore
+                        } else null
                     }
                 }
             }
         }
     }
 
+    /*
     private fun observeFriendUserScore(userId: String) {
         viewModelScope.launch {
             observeUserScoreUseCase.apply {
@@ -140,6 +144,7 @@ class FriendProfileViewModel @Inject constructor(
             }
         }
     }
+    */
 
     private fun onCurrentUserFriendListUpdated(friendList: List<FriendModel>) {
         friendList.firstOrNull {
