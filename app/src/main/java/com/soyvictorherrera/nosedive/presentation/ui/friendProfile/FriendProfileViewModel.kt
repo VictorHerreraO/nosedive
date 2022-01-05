@@ -71,7 +71,7 @@ class FriendProfileViewModel @Inject constructor(
     }
 
     fun onRateUser() {
-
+        _navigateTo.value = Event(Screen.RateUser(userId = friendUserId))
     }
 
     fun onFollowUser() {

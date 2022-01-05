@@ -84,7 +84,12 @@ class FriendProfileFragment : Fragment() {
                 if (screen == Screen.Home) popUpTo(screen)
                 else navigateInTo(
                     to = screen,
-                    from = Screen.FriendProfile("")
+                    from = Screen.FriendProfile(""),
+                    args = if (screen is Screen.RateUser) {
+                        Bundle().apply {
+                            putString("user-id", screen.userId)
+                        }
+                    } else null
                 )
             }
         }
