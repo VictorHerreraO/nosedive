@@ -4,7 +4,6 @@ import com.soyvictorherrera.nosedive.data.source.friend.firebase.FriendEntity
 import com.soyvictorherrera.nosedive.data.source.rating.RatingEntity
 import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeEntity
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
-import com.soyvictorherrera.nosedive.data.source.userScore.UserScoreEntity
 import com.soyvictorherrera.nosedive.data.source.userStats.UserStatsEntity
 import com.soyvictorherrera.nosedive.domain.mapper.*
 import com.soyvictorherrera.nosedive.domain.model.*
@@ -34,12 +33,6 @@ class MapperModule {
     @Singleton
     fun provideUserStatsEntityMapper(): DomainMapper<UserStatsEntity, UserStatsModel> {
         return UserStatsEntityMapper()
-    }
-
-    @Provides
-    @Singleton
-    fun provideUserScoreEntityMapper(): DomainMapper<UserScoreEntity, UserScoreModel> {
-        return UserScoreEntityMapper()
     }
 
     @Provides

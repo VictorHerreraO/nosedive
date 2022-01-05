@@ -15,8 +15,6 @@ import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeDataSour
 import com.soyvictorherrera.nosedive.data.source.sharingCode.firebase.FirebaseSharingCodeDataSource
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
 import com.soyvictorherrera.nosedive.data.source.user.firebase.FirebaseUserDataSource
-import com.soyvictorherrera.nosedive.data.source.userScore.UserScoreDataSource
-import com.soyvictorherrera.nosedive.data.source.userScore.firebase.FirebaseUserScoreDataSource
 import com.soyvictorherrera.nosedive.data.source.userStats.UserStatsDataSource
 import com.soyvictorherrera.nosedive.data.source.userStats.firebase.FirebaseUserStatsDataSource
 import dagger.Module
@@ -157,16 +155,6 @@ class DataSourceModule {
     ): UserStatsDataSource {
         return FirebaseUserStatsDataSource(
             stats = stats
-        )
-    }
-
-    @Provides
-    @Singleton
-    fun provideUserScoreDataSource(
-        @Named(Names.UserScoreRef) scores: DatabaseReference
-    ): UserScoreDataSource {
-        return FirebaseUserScoreDataSource(
-            scores = scores
         )
     }
 

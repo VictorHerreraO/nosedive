@@ -5,13 +5,11 @@ import com.soyvictorherrera.nosedive.data.repository.friend.FriendRepository
 import com.soyvictorherrera.nosedive.data.repository.rating.RatingRepository
 import com.soyvictorherrera.nosedive.data.repository.sharingCode.SharingCodeRepository
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
-import com.soyvictorherrera.nosedive.data.repository.userScore.UserScoreRepository
 import com.soyvictorherrera.nosedive.data.repository.userStats.UserStatsRepository
 import com.soyvictorherrera.nosedive.data.source.friend.firebase.FriendEntity
 import com.soyvictorherrera.nosedive.data.source.rating.RatingEntity
 import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeEntity
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
-import com.soyvictorherrera.nosedive.data.source.userScore.UserScoreEntity
 import com.soyvictorherrera.nosedive.data.source.userStats.UserStatsEntity
 import com.soyvictorherrera.nosedive.domain.mapper.DomainMapper
 import com.soyvictorherrera.nosedive.domain.model.*
@@ -169,18 +167,6 @@ class UseCaseModule {
         return ObserveUserStatsUseCase(
             statsRepository = statsRepository,
             statsEntityMapper = statsEntityMapper
-        )
-    }
-
-    @Provides
-    @ViewModelScoped
-    fun provideObserveUserScoreUseCase(
-        scoreRepository: UserScoreRepository,
-        scoreEntityMapper: DomainMapper<UserScoreEntity, UserScoreModel>
-    ): ObserveUserScoreUseCase {
-        return ObserveUserScoreUseCase(
-            scoreRepository,
-            scoreEntityMapper
         )
     }
 

@@ -25,7 +25,6 @@ class FriendProfileViewModel @Inject constructor(
     private val preferences: PreferenceUtil,
     private val observeUserProfileUseCase: ObserveUserProfileUseCase,
     private val observeUserStatsUseCase: ObserveUserStatsUseCase,
-    //private val observeUserScoreUseCase: ObserveUserScoreUseCase,
     private val addUserFriendUseCase: AddUserFriendUseCase
 ) : ViewModel() {
 
@@ -61,9 +60,6 @@ class FriendProfileViewModel @Inject constructor(
 
         observeFriendUserProfile(userId)
         observeFriendUserStats(userId)
-        /*
-        observeFriendUserScore(userId)
-        */
     }
 
     fun onCurrentUserFriendListChanged(friendList: List<FriendModel>) {
@@ -118,33 +114,6 @@ class FriendProfileViewModel @Inject constructor(
             }
         }
     }
-
-    /*
-    private fun observeFriendUserScore(userId: String) {
-        viewModelScope.launch {
-            observeUserScoreUseCase.apply {
-                this.userId = userId
-            }.execute { result ->
-                when (result) {
-                    is Result.Error -> result.exception.let { ex ->
-                        Timber.e(ex)
-                        if (ex is RuntimeException) {
-                            Timber.e("friend may not have an score yet")
-                            _friendAvgScore.value = null
-                        }
-                    }
-                    Result.Loading -> Unit
-                    is Result.Success -> result.data.let { score ->
-                        Timber.i("friend score updated")
-                        _friendAvgScore.value = if (score.count >= UserScoreModel.REQUIRED_COUNT) {
-                            score.average
-                        } else null
-                    }
-                }
-            }
-        }
-    }
-    */
 
     private fun onCurrentUserFriendListUpdated(friendList: List<FriendModel>) {
         friendList.firstOrNull {
