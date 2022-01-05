@@ -26,7 +26,7 @@ exports.onNewRating = functions.database.ref('/rating/{userId}/{ratingId}').onCr
             if (stats) {
                 try {
                     ratingInt = +stats.ratings || 0;
-                    sumFloat = +stats.sum || 0;
+                    sumFloat = +stats.scoreSum || 0;
                 } catch (ex) { }
             }
 
