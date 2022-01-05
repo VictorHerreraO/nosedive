@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.soyvictorherrera.nosedive.domain.model.FriendModel
+import com.soyvictorherrera.nosedive.domain.model.UserStatsModel
 import com.soyvictorherrera.nosedive.domain.usecase.user.ObserveUserFriendListUseCase
+import com.soyvictorherrera.nosedive.domain.usecase.user.ObserveUserStatsUseCase
 import com.soyvictorherrera.nosedive.util.PreferenceUtil
 import com.soyvictorherrera.nosedive.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,12 +24,15 @@ import javax.inject.Inject
 @HiltViewModel
 class UserDetailsViewModel @Inject constructor(
     private val preferences: PreferenceUtil,
-    private val observeUserFriendListUseCase: ObserveUserFriendListUseCase
+    private val observeUserFriendListUseCase: ObserveUserFriendListUseCase,
+    private val observeUserStatsUseCase: ObserveUserStatsUseCase
 ) : ViewModel() {
 
     private val _friendList = MutableLiveData<List<FriendModel>>()
-    val friendList: LiveData<List<FriendModel>>
-        get() = _friendList
+    val friendList: LiveData<List<FriendModel>> get() = _friendList
+
+    private val _stats = MutableLiveData<UserStatsModel>()
+    val stats: LiveData<UserStatsModel> get() = _stats
 
     private val jobs = mutableListOf<Job>()
 
@@ -53,6 +58,7 @@ class UserDetailsViewModel @Inject constructor(
     private fun onUserIdChanged(userId: String) {
         Timber.i("user id changed")
         observeUserFriendList(userId).also { jobs.add(it) }
+        observeUserStats(userId).also { jobs.add(it) }
     }
 
     private fun observeUserFriendList(userId: String): Job = viewModelScope.launch {
@@ -65,6 +71,21 @@ class UserDetailsViewModel @Inject constructor(
                 is Result.Success -> {
                     Timber.i("user friend list updated")
                     _friendList.value = result.data!!
+                }
+            }
+        }
+    }
+
+    private fun observeUserStats(userId: String): Job = viewModelScope.launch {
+        observeUserStatsUseCase.apply {
+            this.userId = userId
+        }.execute { result ->
+            when (result) {
+                is Result.Error -> Timber.e(result.exception)
+                Result.Loading -> Unit
+                is Result.Success -> result.data.let { stats ->
+                    Timber.i("user stats updated")
+                    _stats.value = stats
                 }
             }
         }

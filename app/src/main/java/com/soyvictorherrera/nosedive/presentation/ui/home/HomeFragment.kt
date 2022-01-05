@@ -69,6 +69,7 @@ class HomeFragment : Fragment() {
             setContent {
                 NosediveTheme {
                     val userState by sessionViewModel.user.observeAsState(stubUser)
+                    val userStats by userDetailsViewModel.stats.observeAsState(UserStatsModel())
                     val scaffoldState = rememberScaffoldState()
 
                     var currentBottomSheet: BottomSheetType? by remember { mutableStateOf(null) }
@@ -105,7 +106,7 @@ class HomeFragment : Fragment() {
 
                     HomeContentView(
                         user = userState,
-                        userStats = UserStatsModel(),
+                        userStats = userStats,
                         sheetState = sheetState,
                         sheetType = currentBottomSheet,
                         scaffoldState = scaffoldState,
