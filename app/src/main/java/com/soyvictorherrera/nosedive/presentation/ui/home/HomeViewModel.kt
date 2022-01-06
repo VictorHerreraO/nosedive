@@ -71,13 +71,11 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onFriendListChange(friendList: List<FriendModel>) {
-        // TODO: 04/01/2022 sort by rated date and slice
-        _recentlyRatedFriends = with(friendList) {
-            subList(
-                fromIndex = 0,
-                toIndex = 3.coerceAtMost(size)
-            )
-        }
+        _recentlyRatedFriends = friendList.asSequence()
+            .filter { it.lastRatedParsed != null }
+            .sortedBy { it.lastRatedParsed }
+            .take(3)
+            .toList()
     }
 
     /**

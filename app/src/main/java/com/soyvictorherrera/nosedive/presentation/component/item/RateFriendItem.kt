@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -14,6 +15,7 @@ import coil.compose.rememberImagePainter
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.domain.model.FriendModel
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserPhoto
+import com.soyvictorherrera.nosedive.presentation.extensions.describeDuration
 import com.soyvictorherrera.nosedive.presentation.extensions.toUri
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 
@@ -46,7 +48,9 @@ fun RateFriendItem(
             Text(text = friend.name)
         },
         secondaryText = {
-
+            friend.lastRatedParsed?.let { date ->
+                Text(date.describeDuration(LocalContext.current))
+            }
         },
         trailing = {
             IconButton(
@@ -70,7 +74,8 @@ fun RateFriendItemPreview() {
         RateFriendItem(
             friend = FriendModel(
                 id = "",
-                name = "Jessica Herrera"
+                name = "Jessica Herrera",
+                lastRated = 1641016800000L
             ),
             onItemClick = {}
         )

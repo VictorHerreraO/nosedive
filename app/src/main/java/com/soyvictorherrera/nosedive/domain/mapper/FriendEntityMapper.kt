@@ -10,7 +10,8 @@ class FriendEntityMapper : DomainMapper<FriendEntity, FriendModel>() {
         return FriendModel(
             id = id!!,
             name = name!!,
-            photoUrl = photoUrl?.let { URI(it) }
+            photoUrl = photoUrl?.let { URI(it) },
+            lastRated = lastRated
         )
     }
 
@@ -18,7 +19,8 @@ class FriendEntityMapper : DomainMapper<FriendEntity, FriendModel>() {
         return FriendEntity(
             id = id,
             name = name,
-            photoUrl = photoUrl?.toString()
+            photoUrl = photoUrl?.toString(),
+            lastRated = lastRated
         )
     }
 }

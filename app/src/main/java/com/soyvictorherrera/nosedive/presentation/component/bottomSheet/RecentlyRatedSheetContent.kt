@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.People
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,7 +45,18 @@ fun RecentlyRatedSheetContent(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        LazyColumn(
+        if (recentlyRatedFriends.isEmpty()) Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 72.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = stringResource(R.string.message_no_recently_rated_friend),
+                style = MaterialTheme.typography.caption
+            )
+        } else LazyColumn(
             verticalArrangement = Arrangement.spacedBy(1.dp)
         ) {
             items(recentlyRatedFriends) { friend ->
@@ -73,7 +85,7 @@ fun RecentlyRatedSheetContent(
     }
 }
 
-@Preview
+@Preview("With friend list")
 @Composable
 private fun RecentlyRatedSheetContentPreview() {
     NosediveTheme {
@@ -82,6 +94,17 @@ private fun RecentlyRatedSheetContentPreview() {
                 FriendModel(id = "", name = "Jessica Herrera"),
                 FriendModel(id = "", name = "Irais Herrera"),
                 FriendModel(id = "", name = "Antonio Martinez")
-            )        ) {}
+            )
+        ) {}
+    }
+}
+
+@Preview("With empty friend list")
+@Composable
+private fun RecentlyRatedSheetContentPreviewEmpty() {
+    NosediveTheme {
+        RecentlyRatedSheetContent(
+            recentlyRatedFriends = emptyList()
+        ) {}
     }
 }

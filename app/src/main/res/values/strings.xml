@@ -59,4 +59,12 @@
     <string name="sheet_action_all_contacts">Todos los contactos</string>
     <string name="rate_user_rate_description">¿Cómo calificas a %s?</string>
     <string name="rate_user_rating_description">Selecciona y desliza hacia arriba</string>
+    <string name="duration_since_days">Hace %d días</string>
+    <string name="duration_since_days_singular">Hace 1 día</string>
+    <string name="duration_since_hours">Hace %d horas</string>
+    <string name="duration_since_hours_singular">Hace 1 hora</string>
+    <string name="duration_since_minutes">Hace %d minutos</string>
+    <string name="duration_since_minutes_singular">Hace 1 minuto</string>
+    <string name="duration_short_ago">Hace poco</string>
+    <string name="message_no_recently_rated_friend">No has calificado a nadie recientemente</string>
 </resources>
