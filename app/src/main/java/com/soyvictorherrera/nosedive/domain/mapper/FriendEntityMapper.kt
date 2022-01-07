@@ -2,15 +2,17 @@ package com.soyvictorherrera.nosedive.domain.mapper
 
 import com.soyvictorherrera.nosedive.data.source.friend.firebase.FriendEntity
 import com.soyvictorherrera.nosedive.domain.model.FriendModel
-import java.net.URI
+import com.soyvictorherrera.nosedive.domain.resource.BaseUrl
 
-class FriendEntityMapper : DomainMapper<FriendEntity, FriendModel>() {
+class FriendEntityMapper(
+    private val baseUrl: BaseUrl
+) : DomainMapper<FriendEntity, FriendModel>() {
 
     override fun toDomainModel(value: FriendEntity): FriendModel = with(value) {
         return FriendModel(
             id = id!!,
             name = name ?: "",
-            photoUrl = photoUrl?.let { URI(it) },
+            photoUrl = baseUrl.append("/serveUserPhoto?uid=$id"),
             lastRated = lastRated
         )
     }
@@ -19,7 +21,7 @@ class FriendEntityMapper : DomainMapper<FriendEntity, FriendModel>() {
         return FriendEntity(
             id = id,
             name = name,
-            photoUrl = photoUrl?.toString(),
+            photoUrl = null,
             lastRated = lastRated
         )
     }

@@ -7,6 +7,7 @@ import com.soyvictorherrera.nosedive.data.source.user.UserEntity
 import com.soyvictorherrera.nosedive.data.source.userStats.UserStatsEntity
 import com.soyvictorherrera.nosedive.domain.mapper.*
 import com.soyvictorherrera.nosedive.domain.model.*
+import com.soyvictorherrera.nosedive.domain.resource.BaseUrl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,8 +38,8 @@ class MapperModule {
 
     @Provides
     @Singleton
-    fun provideFriendEntityMapper(): DomainMapper<FriendEntity, FriendModel> {
-        return FriendEntityMapper()
+    fun provideFriendEntityMapper(baseUrl: BaseUrl): DomainMapper<FriendEntity, FriendModel> {
+        return FriendEntityMapper(baseUrl = baseUrl)
     }
 
     @Provides
