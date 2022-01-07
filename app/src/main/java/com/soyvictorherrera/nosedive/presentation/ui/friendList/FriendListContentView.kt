@@ -1,6 +1,9 @@
 package com.soyvictorherrera.nosedive.presentation.ui.friendList
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
@@ -8,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.ArrowBack
 import androidx.compose.material.icons.sharp.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -92,15 +96,26 @@ fun FriendListContent(
     userList: List<FriendModel>,
     onUserClick: (user: FriendModel) -> Unit,
     modifier: Modifier = Modifier
-) = LazyColumn(
-    modifier = modifier.listPadding(),
-    verticalArrangement = Arrangement.spacedBy(1.dp)
 ) {
-    items(userList) { user ->
-        FriendListItem(
-            user = user,
-            onItemClick = { onUserClick(user) }
+    if (userList.isEmpty()) Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = stringResource(R.string.friend_list_empty),
+            style = MaterialTheme.typography.caption
         )
+    } else LazyColumn(
+        modifier = modifier.listPadding(),
+        verticalArrangement = Arrangement.spacedBy(1.dp)
+    ) {
+        items(userList) { user ->
+            FriendListItem(
+                user = user,
+                onItemClick = { onUserClick(user) }
+            )
+        }
     }
 }
 
@@ -116,6 +131,17 @@ fun FriendListContentViewPreview() {
                     name = "Jessica Herrera"
                 )
             )
+        ) {}
+    }
+}
+
+@Preview("Empty list")
+@Composable
+@ExperimentalMaterialApi
+fun FriendListContentViewPreviewEmpty() {
+    NosediveTheme {
+        FriendListContentView(
+            friendList = emptyList()
         ) {}
     }
 }
