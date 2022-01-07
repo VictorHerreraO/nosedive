@@ -116,11 +116,12 @@ class FriendProfileViewModel @Inject constructor(
     }
 
     private fun onCurrentUserFriendListUpdated(friendList: List<FriendModel>) {
-        friendList.firstOrNull {
-            it.id == friendUserId
-        }.let {
-            _canFollowFriend.value = it == null
-        }
+        friendList.asSequence()
+            .filter { !it.anonymous }
+            .firstOrNull { it.id == friendUserId }
+            .let {
+                _canFollowFriend.value = it == null
+            }
     }
 
     private fun addUserFriend() {
