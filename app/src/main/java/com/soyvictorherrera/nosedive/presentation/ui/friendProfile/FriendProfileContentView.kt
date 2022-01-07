@@ -22,6 +22,7 @@ import com.soyvictorherrera.nosedive.presentation.component.button.MainButton
 import com.soyvictorherrera.nosedive.presentation.component.common.NoTitleTopAppBar
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserDetails
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserStats
+import com.soyvictorherrera.nosedive.presentation.extensions.toUri
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
 
 sealed class FriendProfileEvent {
@@ -84,7 +85,7 @@ fun FriendProfileContent(
         userName = user.name,
         userScore = userScore,
         userPhotoPainter = user.photoUrl?.let { uri ->
-            rememberImagePainter(uri)
+            rememberImagePainter(uri.toUri())
         }
     )
 
