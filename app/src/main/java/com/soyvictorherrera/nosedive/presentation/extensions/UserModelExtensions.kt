@@ -1,18 +1,7 @@
 package com.soyvictorherrera.nosedive.presentation.extensions
 
-import android.net.Uri
 import com.soyvictorherrera.nosedive.domain.model.FriendModel
 import com.soyvictorherrera.nosedive.domain.model.UserModel
-
-/**
- * Devolver photoUrl como [android.net.Uri]
- */
-@Deprecated("Use [URI.toUri()] instead")
-fun UserModel.getPhotoUri(): Uri? {
-    return this.photoUrl?.let { uri ->
-        Uri.parse(uri.toString())
-    }
-}
 
 /**
  * Create a [FriendModel] from this [UserModel]
