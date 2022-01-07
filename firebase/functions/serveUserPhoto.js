@@ -2,7 +2,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
 const cacheMaxAge = 86400; // 1 day
-const fallbackUrl = 'https://firebasestorage.googleapis.com/v0/b/nosedive-sandbox.appspot.com/o/userPhoto%2Fplaceholder%2Fplaceholder.png?alt=media&token=51c55f38-2999-4497-9044-9460771a0906';
+const fallbackUrl = 'https://firebasestorage.googleapis.com/v0/b/nosedive-sandbox.appspot.com/o/userPhoto%2Fplaceholder%2Fic_launcher-playstore.png?alt=media&token=4be681c9-a01d-4d54-89f0-7e3868fe5e04';
 
 admin.initializeApp(functions.config().firebase);
 
