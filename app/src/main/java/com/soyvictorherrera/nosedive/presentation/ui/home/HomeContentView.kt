@@ -22,6 +22,7 @@ import com.soyvictorherrera.nosedive.presentation.component.bottomSheet.Recently
 import com.soyvictorherrera.nosedive.presentation.component.bottomSheet.RecentlyRatedSheetEvent
 import com.soyvictorherrera.nosedive.presentation.component.card.NewAccountAlertCard
 import com.soyvictorherrera.nosedive.presentation.component.common.DefaultBottomAppBar
+import com.soyvictorherrera.nosedive.presentation.component.dialog.LoadingDialog
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserDetails
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserStats
 import com.soyvictorherrera.nosedive.presentation.extensions.toUri
@@ -49,6 +50,7 @@ fun HomeContentView(
     sheetState: ModalBottomSheetState,
     sheetType: BottomSheetType?,
     scaffoldState: ScaffoldState = rememberScaffoldState(),
+    homeState: HomeState = HomeState.Idle,
     onNavigationEvent: (HomeEvent) -> Unit
 ) = ModalBottomSheetLayout(
     sheetState = sheetState,
@@ -75,6 +77,9 @@ fun HomeContentView(
                     user = user,
                     userStats = userStats
                 )
+                if (homeState == HomeState.Loading) {
+                    LoadingDialog()
+                }
             },
             bottomBar = {
                 HomeBottomBar(
@@ -221,7 +226,8 @@ fun HomeContentPreviewDark() {
             ),
             userStats = UserStatsModel(),
             sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
-            sheetType = null
+            sheetType = null,
+            homeState = HomeState.Loading
         ) {}
     }
 }

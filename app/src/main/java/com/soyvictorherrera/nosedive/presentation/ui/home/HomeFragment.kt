@@ -54,6 +54,10 @@ class HomeFragment : Fragment() {
             }
         }
 
+        sessionViewModel.user.observe(viewLifecycleOwner) { user ->
+            viewModel.onUserChanged(user)
+        }
+
         userDetailsViewModel.friendList.observe(viewLifecycleOwner) { friendList ->
             viewModel.onFriendListChange(friendList)
         }
@@ -70,6 +74,7 @@ class HomeFragment : Fragment() {
                 NosediveTheme {
                     val userState by sessionViewModel.user.observeAsState(stubUser)
                     val userStats by userDetailsViewModel.stats.observeAsState(UserStatsModel())
+                    val homeState by viewModel.homeState.observeAsState(initial = HomeState.Loading)
                     val scaffoldState = rememberScaffoldState()
 
                     var currentBottomSheet: BottomSheetType? by remember { mutableStateOf(null) }
@@ -110,6 +115,7 @@ class HomeFragment : Fragment() {
                         sheetState = sheetState,
                         sheetType = currentBottomSheet,
                         scaffoldState = scaffoldState,
+                        homeState = homeState,
                         onNavigationEvent = ::onNavigationEvent
                     )
                 }

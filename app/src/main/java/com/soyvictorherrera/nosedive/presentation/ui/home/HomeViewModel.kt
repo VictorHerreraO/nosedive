@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.soyvictorherrera.nosedive.domain.model.FriendModel
+import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.presentation.ui.Event
 import com.soyvictorherrera.nosedive.presentation.ui.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -68,6 +69,10 @@ class HomeViewModel @Inject constructor(
                 userId = userId
             )
         )
+    }
+
+    fun onUserChanged(user: UserModel) {
+        _homeState.value = HomeState.Idle
     }
 
     fun onFriendListChange(friendList: List<FriendModel>) {
