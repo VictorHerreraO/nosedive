@@ -9,7 +9,7 @@ class FriendEntityMapper : DomainMapper<FriendEntity, FriendModel>() {
     override fun toDomainModel(value: FriendEntity): FriendModel = with(value) {
         return FriendModel(
             id = id!!,
-            name = name!!,
+            name = name ?: "",
             photoUrl = photoUrl?.let { URI(it) },
             lastRated = lastRated
         )

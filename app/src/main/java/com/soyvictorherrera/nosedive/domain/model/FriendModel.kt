@@ -17,4 +17,6 @@ class FriendModel(
         lastRated?.toLocalDateTime()
     }
 
+    val anonymous: Boolean get() = name.isEmpty()
+
 }

@@ -23,7 +23,9 @@ class FriendListViewModel @Inject constructor(
         get() = _friendList
 
     fun onFriendListChanged(friendList: List<FriendModel>) {
-        _friendList.value = friendList.sortedBy { it.name }
+        _friendList.value = friendList
+            .filter { !it.anonymous }
+            .sortedBy { it.name }
     }
 
     fun onNavigateBack() {

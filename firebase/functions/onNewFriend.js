@@ -2,8 +2,10 @@ const functions = require("firebase-functions");
 
 /**
  * On friend added callbacks
+ * 
+ * Listen on /name to prevent callback being called after rating a non-following user
  */
- exports.onNewFriend = functions.database.ref('/friend/{userId}/{friendId}').onCreate((snapshot, context) => {
+ exports.onNewFriend = functions.database.ref('/friend/{userId}/{friendId}/name').onCreate((snapshot, context) => {
     const params = context.params;
     const userId = params.userId;
     const friendId = params.friendId;

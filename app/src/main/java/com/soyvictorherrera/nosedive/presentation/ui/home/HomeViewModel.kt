@@ -73,6 +73,7 @@ class HomeViewModel @Inject constructor(
     fun onFriendListChange(friendList: List<FriendModel>) {
         _recentlyRatedFriends = friendList.asSequence()
             .filter { it.lastRatedParsed != null }
+            .filter { !it.anonymous }
             .sortedBy { it.lastRatedParsed }
             .take(3)
             .toList()
