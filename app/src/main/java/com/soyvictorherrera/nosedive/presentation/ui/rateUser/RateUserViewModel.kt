@@ -32,6 +32,9 @@ class RateUserViewModel @Inject constructor(
     private val _currentRating = MutableLiveData<Int>()
     val currentRating: LiveData<Int> get() = _currentRating
 
+    private val _rateUserState = MutableLiveData<RateUserState>()
+    val rateUserState: LiveData<RateUserState> get() = _rateUserState
+
     private lateinit var userId: String
     private lateinit var currentUser: UserModel
 
@@ -67,14 +70,16 @@ class RateUserViewModel @Inject constructor(
 
     private fun observeUserProfile(userId: String) {
         viewModelScope.launch {
+            _rateUserState.value = RateUserState.Loading
             observeUserProfileUseCase.apply {
                 this.userId = userId
             }.execute { result ->
                 when (result) {
                     is Result.Error -> Timber.e(result.exception)
-                    Result.Loading -> Unit
-                    is Result.Success -> {
-                        _user.value = result.data!!
+                    Result.Loading -> _rateUserState.value = RateUserState.Loading
+                    is Result.Success -> result.data.let {
+                        _user.value = it
+                        _rateUserState.value = RateUserState.Idle
                     }
                 }
             }
@@ -86,6 +91,7 @@ class RateUserViewModel @Inject constructor(
         currentUserId: String,
         rating: Int
     ) {
+        _rateUserState.value = RateUserState.Loading
         viewModelScope.launch {
             rateUserUseCase.apply {
                 this.ratedUserId = ratedUserId
@@ -97,6 +103,7 @@ class RateUserViewModel @Inject constructor(
                     multiplier = 1f
                 )
             }.execute().let { result ->
+                _rateUserState.value = RateUserState.Idle
                 when (result) {
                     is Result.Error -> Timber.e(result.exception)
                     Result.Loading -> Unit

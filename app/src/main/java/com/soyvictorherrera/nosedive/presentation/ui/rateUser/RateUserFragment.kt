@@ -57,11 +57,13 @@ class RateUserFragment : Fragment() {
             setContent {
                 val user by viewModel.user.observeAsState(initial = stubUser)
                 val currentRating by viewModel.currentRating.observeAsState(initial = 0)
+                val rateUserState by viewModel.rateUserState.observeAsState(initial = RateUserState.Loading)
 
                 NosediveTheme {
                     RateUserContentView(
                         user = user,
                         currentRating = currentRating,
+                        state = rateUserState,
                         onRateUserEvent = ::onRateUserEvent
                     )
                 }

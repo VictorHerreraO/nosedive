@@ -26,6 +26,7 @@ import coil.compose.rememberImagePainter
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.presentation.component.common.NoTitleTopAppBar
+import com.soyvictorherrera.nosedive.presentation.component.dialog.LoadingDialog
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserPhoto
 import com.soyvictorherrera.nosedive.presentation.component.rate.RatingBar
 import com.soyvictorherrera.nosedive.presentation.extensions.toUri
@@ -44,6 +45,7 @@ fun RateUserContentView(
     user: UserModel,
     currentRating: Int,
     modifier: Modifier = Modifier,
+    state: RateUserState = RateUserState.Idle,
     onRateUserEvent: (event: RateUserEvent) -> Unit
 ) = Scaffold(modifier = modifier,
     topBar = {
@@ -61,6 +63,9 @@ fun RateUserContentView(
             ),
             onRateUserEvent = onRateUserEvent
         )
+        if (state == RateUserState.Loading) {
+            LoadingDialog()
+        }
     }
 )
 
