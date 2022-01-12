@@ -15,7 +15,10 @@ exports.onNewRating = functions.database.ref('/rating/{userId}/{ratingId}').onCr
     const ratingNotification = {
         who: raterId,
         type: "NEW_RATING",
-        date: serverValue.TIMESTAMP
+        date: serverValue.TIMESTAMP,
+        data: {
+            rating: rating.value
+        }
     };
 
     log.debug(raterId, 'rated: ', userId);
