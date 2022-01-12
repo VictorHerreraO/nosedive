@@ -1,46 +1,41 @@
 const functions = require("firebase-functions");
+const admin = require('firebase-admin');
+const serverValue = admin.database.ServerValue;
+const log = functions.logger;
 
 /**
  * On friend added callbacks
  * 
  * Listen on /name to prevent callback being called after rating a non-following user
  */
- exports.onNewFriend = functions.database.ref('/friend/{userId}/{friendId}/name').onCreate((snapshot, context) => {
+exports.onNewFriend = functions.database.ref('/friend/{userId}/{friendId}/name').onCreate((snapshot, context) => {
     const params = context.params;
     const userId = params.userId;
     const friendId = params.friendId;
+    const followNotification = {
+        who: userId,
+        type: "NEW_FOLLOW",
+        date: serverValue.TIMESTAMP
+    };
 
-    functions.logger.log(userId, ' added: ', friendId);
+    log.info(userId, ' added: ', friendId);
 
     const root = snapshot.ref.root
     const followingRef = root.child('userStats').child(userId).child('following');
     const followersRef = root.child('userStats').child(friendId).child('followers');
+    const notificationsRef = root.child('notification').child(friendId);
 
-    const incrementCount = function(snap, ref) {
-        var count = snap.val() || 0;
-
-        if (typeof count !== 'number' || count <= 0) {
-            count = 0;
-        }
-
-        functions.logger.log('count is = ', count);
-
-        return ref.set(count + 1);
-    }
-
-    return followingRef.once('value')
-        .then(snap => {
-            // Update following count
-            return incrementCount(snap, followingRef);
-        })
+    return followingRef.set(serverValue.increment(1))
         .then(() => {
-            return followersRef.once('value');
-        })
-        .then((snap) => {
-            // Update followers count
-            return incrementCount(snap, followersRef);
+            return followersRef.set(serverValue.increment(1))
         })
         .catch(ex => {
-            functions.logger.warn('unable to update ', userId, ' friend stats: ', ex);
+            log.warn('unable to update ', userId, ' friend stats: ', ex);
         })
+        .then(() => {
+            return notificationsRef.push(followNotification);
+        })
+        .catch(ex => {
+            log.warn('unable to push user notification', ex);
+        });
 });
