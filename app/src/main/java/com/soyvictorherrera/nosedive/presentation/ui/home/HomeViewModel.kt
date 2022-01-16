@@ -84,6 +84,10 @@ class HomeViewModel @Inject constructor(
             .toList()
     }
 
+    fun viewNotifications() {
+        _navigateTo.value = Event(Screen.Notification)
+    }
+
     /**
      * Hide the bottom sheet and waits 500 ms to navigate to the destination
      *

@@ -147,6 +147,7 @@ class HomeFragment : Fragment() {
                 viewModel.viewFriendList()
             }
             HomeEvent.ViewNotifications -> {
+                viewModel.viewNotifications()
             }
             HomeEvent.ViewProfile -> {
                 viewModel.viewProfile()
