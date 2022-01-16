@@ -42,6 +42,24 @@ fun RatingBar(
 }
 
 @Composable
+fun SmallRatingBar(
+    rating: Int,
+    modifier: Modifier = Modifier,
+    maxValue: Int = 5
+) = Row(modifier = modifier) {
+    (1..maxValue).forEach { step ->
+        RatingStar(
+            filled = step <= rating,
+            modifier = Modifier
+                .aspectRatio(
+                    ratio = 1f,
+                    matchHeightConstraintsFirst = true
+                )
+        )
+    }
+}
+
+@Composable
 fun RatingStar(
     filled: Boolean,
     modifier: Modifier
@@ -63,5 +81,13 @@ fun RatingBarPreview() {
             maxValue = 10,
             onRateChange = {}
         )
+    }
+}
+
+@Preview(name = "SmallRatingBar")
+@Composable
+fun SmallRatingBarPreview() {
+    NosediveTheme {
+        SmallRatingBar(rating = 4)
     }
 }

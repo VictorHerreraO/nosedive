@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -19,11 +22,16 @@ class NotificationFragment : Fragment() {
     private val sessionViewModel: SessionViewModel by activityViewModels()
     private val viewModel: NotificationViewModel by viewModels()
 
+    @ExperimentalMaterialApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        sessionViewModel.user.observe(viewLifecycleOwner) { user ->
+            viewModel.onUserChanged(user)
+        }
+
         return ComposeView(requireContext()).apply {
             id = R.id.notificationFragment
 
@@ -34,7 +42,15 @@ class NotificationFragment : Fragment() {
 
             setContent {
                 NosediveTheme {
-                    // TODO: 16/01/2022 write ui
+
+                    val notificationList by viewModel.notificationList.observeAsState(
+                        initial = emptyList()
+                    )
+
+                    NotificationContentView(
+                        notificationList = notificationList,
+                        onNotificationEvent = {}
+                    )
                 }
             }
         }

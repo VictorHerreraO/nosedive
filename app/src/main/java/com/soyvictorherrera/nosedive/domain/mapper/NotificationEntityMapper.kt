@@ -5,10 +5,13 @@ import com.soyvictorherrera.nosedive.domain.model.NewFollowNotificationModel
 import com.soyvictorherrera.nosedive.domain.model.NewRatingNotificationModel
 import com.soyvictorherrera.nosedive.domain.model.NotificationModel
 import com.soyvictorherrera.nosedive.domain.model.NotificationType
+import com.soyvictorherrera.nosedive.domain.resource.BaseUrl
 import com.soyvictorherrera.nosedive.presentation.extensions.toEpochMilli
 import com.soyvictorherrera.nosedive.presentation.extensions.toLocalDateTime
 
-class NotificationEntityMapper : DomainMapper<NotificationEntity, NotificationModel>() {
+class NotificationEntityMapper(
+    private val baseUrl: BaseUrl
+) : DomainMapper<NotificationEntity, NotificationModel>() {
 
     override fun toDomainModel(value: NotificationEntity): NotificationModel = with(value) {
         return when (type) {
@@ -17,7 +20,8 @@ class NotificationEntityMapper : DomainMapper<NotificationEntity, NotificationMo
                 date = date!!.toLocalDateTime(),
                 who = who ?: "",
                 seen = seen?.toLocalDateTime(),
-                followerName = data?.get("name")?.toString() ?: ""
+                followerName = data?.get("name")?.toString() ?: "",
+                photoUrl = baseUrl.append("/serveUserPhoto?uid=$who")
             )
             NotificationType.NEW_RATING.toString() -> NewRatingNotificationModel(
                 id = id!!,
@@ -25,7 +29,8 @@ class NotificationEntityMapper : DomainMapper<NotificationEntity, NotificationMo
                 who = who ?: "",
                 seen = seen?.toLocalDateTime(),
                 raterName = data?.get("name")?.toString() ?: "",
-                ratingValue = data?.get("rating")?.toString()?.toDouble() ?: 0.0
+                ratingValue = data?.get("rating")?.toString()?.toInt() ?: 0,
+                photoUrl = baseUrl.append("/serveUserPhoto?uid=$who")
             )
             else -> throw UnsupportedOperationException("can't map from type $type")
         }

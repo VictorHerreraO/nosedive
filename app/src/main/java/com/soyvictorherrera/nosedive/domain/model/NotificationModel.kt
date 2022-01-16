@@ -1,6 +1,7 @@
 package com.soyvictorherrera.nosedive.domain.model
 
 import java.io.Serializable
+import java.net.URI
 import java.time.LocalDateTime
 
 enum class NotificationType {
@@ -22,7 +23,8 @@ class NewFollowNotificationModel(
     date: LocalDateTime,
     who: String,
     seen: LocalDateTime? = null,
-    val followerName: String
+    val followerName: String,
+    val photoUrl: URI?
 ) : NotificationModel(
     id = id,
     date = date,
@@ -37,7 +39,8 @@ class NewRatingNotificationModel(
     who: String,
     seen: LocalDateTime? = null,
     val raterName: String,
-    val ratingValue: Double
+    val ratingValue: Int,
+    val photoUrl: URI?
 ) : NotificationModel(
     id = id,
     date = date,

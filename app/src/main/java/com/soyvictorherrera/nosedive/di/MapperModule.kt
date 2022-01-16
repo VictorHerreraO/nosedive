@@ -51,8 +51,8 @@ class MapperModule {
 
     @Provides
     @Singleton
-    fun provideNotificationEntityMapper(): DomainMapper<NotificationEntity, NotificationModel> {
-        return NotificationEntityMapper()
+    fun provideNotificationEntityMapper(baseUrl: BaseUrl): DomainMapper<NotificationEntity, NotificationModel> {
+        return NotificationEntityMapper(baseUrl = baseUrl)
     }
 
 }

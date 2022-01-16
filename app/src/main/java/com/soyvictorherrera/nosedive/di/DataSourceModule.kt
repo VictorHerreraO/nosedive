@@ -192,7 +192,7 @@ class DataSourceModule {
     @Provides
     @Singleton
     fun provideNotificationDataSource(
-        @Named(Names.RatingRef) notifications: DatabaseReference
+        @Named(Names.NotificationRef) notifications: DatabaseReference
     ): NotificationDataSource {
         return FirebaseNotificationDataSource(
             notifications = notifications
