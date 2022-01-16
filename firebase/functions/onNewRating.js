@@ -17,6 +17,7 @@ exports.onNewRating = functions.database.ref('/rating/{userId}/{ratingId}').onCr
         type: "NEW_RATING",
         date: serverValue.TIMESTAMP,
         data: {
+            name: "TBD",
             rating: rating.value
         }
     };

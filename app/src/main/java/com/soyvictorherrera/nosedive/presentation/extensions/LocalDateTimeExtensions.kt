@@ -21,9 +21,20 @@ fun LocalDateTime.describeDuration(
             duration.toDays() == 1L -> getString(R.string.duration_since_days_singular)
             duration.toHours() > 1L -> getString(R.string.duration_since_hours, duration.toHours())
             duration.toHours() == 1L -> getString(R.string.duration_since_hours_singular)
-            duration.toMinutes() > 1L -> getString(R.string.duration_since_minutes, duration.toMinutes())
+            duration.toMinutes() > 1L -> getString(
+                R.string.duration_since_minutes,
+                duration.toMinutes()
+            )
             duration.toMinutes() == 1L -> getString(R.string.duration_since_minutes_singular)
             else -> getString(R.string.duration_short_ago)
         }
     }
+}
+
+fun LocalDateTime.toEpochMilli(
+    zoneId: ZoneId = ZoneId.systemDefault()
+): Long {
+    return this.atZone(zoneId)
+        .toInstant()
+        .toEpochMilli()
 }
