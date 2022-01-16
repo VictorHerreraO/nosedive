@@ -4,6 +4,8 @@ import com.soyvictorherrera.nosedive.data.repository.authentication.Authenticati
 import com.soyvictorherrera.nosedive.data.repository.authentication.AuthenticationRepositoryImpl
 import com.soyvictorherrera.nosedive.data.repository.friend.FriendRepository
 import com.soyvictorherrera.nosedive.data.repository.friend.FriendRepositoryImpl
+import com.soyvictorherrera.nosedive.data.repository.notification.NotificationRepository
+import com.soyvictorherrera.nosedive.data.repository.notification.NotificationRepositoryImpl
 import com.soyvictorherrera.nosedive.data.repository.rating.RatingRepository
 import com.soyvictorherrera.nosedive.data.repository.rating.RatingRepositoryImpl
 import com.soyvictorherrera.nosedive.data.repository.sharingCode.SharingCodeRepository
@@ -14,6 +16,7 @@ import com.soyvictorherrera.nosedive.data.repository.userStats.UserStatsReposito
 import com.soyvictorherrera.nosedive.data.repository.userStats.UserStatsRepositoryImpl
 import com.soyvictorherrera.nosedive.data.source.authentication.AuthenticationDataSource
 import com.soyvictorherrera.nosedive.data.source.friend.FriendDataSource
+import com.soyvictorherrera.nosedive.data.source.notification.NotificationDataSource
 import com.soyvictorherrera.nosedive.data.source.rating.RatingDataSource
 import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeDataSource
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
@@ -62,6 +65,12 @@ class RepositoryModule {
     @Singleton
     fun provideRatingRepository(ratingDataSource: RatingDataSource): RatingRepository {
         return RatingRepositoryImpl(ratingDataSource = ratingDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNotificationRepository(notificationDataSource: NotificationDataSource): NotificationRepository {
+        return NotificationRepositoryImpl(notificationDataSource = notificationDataSource)
     }
 
 }

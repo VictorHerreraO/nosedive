@@ -1,6 +1,7 @@
 package com.soyvictorherrera.nosedive.di
 
 import com.soyvictorherrera.nosedive.data.source.friend.firebase.FriendEntity
+import com.soyvictorherrera.nosedive.data.source.notification.NotificationEntity
 import com.soyvictorherrera.nosedive.data.source.rating.RatingEntity
 import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeEntity
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
@@ -46,6 +47,12 @@ class MapperModule {
     @Singleton
     fun provideRatingEntityMapper(): DomainMapper<RatingEntity, RatingModel> {
         return RatingEntityMapper()
+    }
+
+    @Provides
+    @Singleton
+    fun provideNotificationEntityMapper(): DomainMapper<NotificationEntity, NotificationModel> {
+        return NotificationEntityMapper()
     }
 
 }
