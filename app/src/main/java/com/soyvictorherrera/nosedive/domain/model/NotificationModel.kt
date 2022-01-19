@@ -16,31 +16,31 @@ sealed class NotificationModel(
     val type: NotificationType,
     val who: String,
     val seen: LocalDateTime? = null
-) : Serializable
+) : Serializable {
+    var user: UserModel? = null
+}
 
 class NewFollowNotificationModel(
     id: String,
     date: LocalDateTime,
     who: String,
-    seen: LocalDateTime? = null,
-    val followerName: String,
-    val photoUrl: URI?
+    seen: LocalDateTime? = null
 ) : NotificationModel(
     id = id,
     date = date,
     who = who,
     seen = seen,
     type = NotificationType.NEW_FOLLOW
-)
+) {
+    var canFollowBack: Boolean = false
+}
 
 class NewRatingNotificationModel(
     id: String,
     date: LocalDateTime,
     who: String,
     seen: LocalDateTime? = null,
-    val raterName: String,
-    val ratingValue: Int,
-    val photoUrl: URI?
+    val ratingValue: Int
 ) : NotificationModel(
     id = id,
     date = date,

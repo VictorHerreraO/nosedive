@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.soyvictorherrera.nosedive.domain.model.NewFollowNotificationModel
 import com.soyvictorherrera.nosedive.domain.model.NewRatingNotificationModel
 import com.soyvictorherrera.nosedive.domain.model.NotificationModel
+import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.presentation.component.common.DefaultProminentTopAppBar
 import com.soyvictorherrera.nosedive.presentation.component.item.NewFollowerNotificationListItem
 import com.soyvictorherrera.nosedive.presentation.component.item.NewRatingNotificationItemList
@@ -115,18 +116,26 @@ private fun NotificationContentViewPreview() {
                     id = "",
                     date = LocalDateTime.now(),
                     who = "",
-                    raterName = "Jessica Herrera",
-                    ratingValue = 1,
-                    photoUrl = null
-                ),
+                    ratingValue = 1
+                ).apply {
+                    user = UserModel(
+                        id = "",
+                        name = "Jessica Herrera",
+                        email = ""
+                    )
+                },
                 NewFollowNotificationModel(
                     id = "",
                     date = LocalDateTime.now(),
                     who = "",
-                    seen = LocalDateTime.now(),
-                    followerName = "Jessica Herrera",
-                    photoUrl = null
-                )
+                    seen = LocalDateTime.now()
+                ).apply {
+                    user = UserModel(
+                        id = "",
+                        name = "Jessica Herrera",
+                        email = ""
+                    )
+                }
             )
         ) {}
     }

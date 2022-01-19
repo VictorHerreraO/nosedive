@@ -9,12 +9,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.domain.model.NewFollowNotificationModel
+import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserPhoto
 import com.soyvictorherrera.nosedive.presentation.extensions.describeDuration
 import com.soyvictorherrera.nosedive.presentation.extensions.toUri
@@ -31,13 +33,15 @@ fun NewFollowerNotificationListItem(
     modifier = modifier,
     shape = MaterialTheme.shapes.medium,
     backgroundColor = MaterialTheme.colors.surface,
-    elevation = 2.dp
+    elevation = 2.dp,
+    onClick = { onFollowBackClick(notification) }
 ) {
+    val who = notification.user!!
     ListItem(
         icon = {
             UserPhoto(
                 modifier = Modifier.height(40.dp),
-                painter = notification.photoUrl.let { url ->
+                painter = who.photoUrl.let { url ->
                     if (url != null) rememberImagePainter(url.toUri())
                     else painterResource(R.drawable.ic_launcher_foreground)
                 },
@@ -47,10 +51,14 @@ fun NewFollowerNotificationListItem(
         },
         text = {
             val dismissed = notification.seen != null
-            val name = if (dismissed) notification.followerName
-            else "* ${notification.followerName}"
+            val name = if (dismissed) who.name
+            else "* ${who.name}"
 
-            Text(text = "$name ha comenzado a seguirte")
+            Text(
+                text = "$name ha comenzado a seguirte",
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
         },
         secondaryText = {
             // Keep for format
@@ -58,21 +66,14 @@ fun NewFollowerNotificationListItem(
         trailing = {
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.End
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = notification.date.describeDuration(
                         context = LocalContext.current
-                    )
+                    ),
+                    fontSize = 10.sp
                 )
-                TextButton(
-                    onClick = { onFollowBackClick(notification) }
-                ) {
-                    Text(
-                        text = "Seguir",
-                        fontSize = 10.sp
-                    )
-                }
             }
         }
     )
@@ -88,10 +89,14 @@ fun NewFollowerNotificationListItemPreview() {
                 id = "",
                 date = LocalDateTime.now(),
                 who = "",
-                seen = LocalDateTime.now(),
-                followerName = "Jessica Herrera",
-                photoUrl = null
-            )
+                seen = LocalDateTime.now()
+            ).apply {
+                user = UserModel(
+                    id = "",
+                    name = "Jessica Herrera",
+                    email = ""
+                )
+            }
         ) {}
     }
 }
@@ -107,9 +112,13 @@ fun NewFollowerNotificationListItemPendingPreview() {
                 date = LocalDateTime.now(),
                 who = "",
                 seen = null,
-                followerName = "Jessica Herrera",
-                photoUrl = null
-            )
+            ).apply {
+                user = UserModel(
+                    id = "",
+                    name = "Jessica Herrera",
+                    email = ""
+                )
+            }
         ) {}
     }
 }

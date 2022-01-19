@@ -12,6 +12,8 @@ interface UserRepository {
 
     suspend fun observeUser(userId: String): Flow<Result<UserEntity>>
 
+    suspend fun getUser(userId: String): Result<UserEntity>
+
     suspend fun updateUserPhoto(userId: String, photo: File): Flow<Result<URI>>
 
 }

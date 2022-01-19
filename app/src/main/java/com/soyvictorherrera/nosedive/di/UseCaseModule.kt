@@ -214,11 +214,15 @@ class UseCaseModule {
     @ViewModelScoped
     fun provideObserveUserNotificationListUseCase(
         notificationRepository: NotificationRepository,
-        notificationMapper: DomainMapper<NotificationEntity, NotificationModel>
+        notificationMapper: DomainMapper<NotificationEntity, NotificationModel>,
+        userRepository: UserRepository,
+        userMapper: DomainMapper<UserEntity, UserModel>
     ): ObserveUserNotificationListUseCase {
         return ObserveUserNotificationListUseCase(
             notificationRepository = notificationRepository,
-            notificationMapper = notificationMapper
+            notificationMapper = notificationMapper,
+            userRepository = userRepository,
+            userMapper = userMapper
         )
     }
 

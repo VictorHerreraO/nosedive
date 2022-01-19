@@ -4,6 +4,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.storage.StorageReference
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
@@ -67,6 +68,19 @@ class FirebaseUserDataSource(
 
         awaitClose {
             userRef.removeEventListener(userListener)
+        }
+    }
+
+    override suspend fun getUser(userId: String): Result<UserEntity> {
+        return try {
+            val user = users.child(userId)
+                .get()
+                .await()
+                .getValue<UserEntity>()!!
+
+            Result.Success(user)
+        } catch (ex: Exception) {
+            Result.Error(ex)
         }
     }
 

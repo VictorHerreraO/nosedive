@@ -19,18 +19,14 @@ class NotificationEntityMapper(
                 id = id!!,
                 date = date!!.toLocalDateTime(),
                 who = who ?: "",
-                seen = seen?.toLocalDateTime(),
-                followerName = data?.get("name")?.toString() ?: "",
-                photoUrl = baseUrl.append("/serveUserPhoto?uid=$who")
+                seen = seen?.toLocalDateTime()
             )
             NotificationType.NEW_RATING.toString() -> NewRatingNotificationModel(
                 id = id!!,
                 date = date!!.toLocalDateTime(),
                 who = who ?: "",
                 seen = seen?.toLocalDateTime(),
-                raterName = data?.get("name")?.toString() ?: "",
-                ratingValue = data?.get("rating")?.toString()?.toInt() ?: 0,
-                photoUrl = baseUrl.append("/serveUserPhoto?uid=$who")
+                ratingValue = data?.get("rating")?.toString()?.toInt() ?: 0
             )
             else -> throw UnsupportedOperationException("can't map from type $type")
         }
@@ -44,14 +40,8 @@ class NotificationEntityMapper(
             who = who,
             seen = seen?.toEpochMilli(),
             data = mutableMapOf<String, Any>().apply {
-                when (model) {
-                    is NewFollowNotificationModel -> {
-                        put("name", model.followerName)
-                    }
-                    is NewRatingNotificationModel -> {
-                        put("name", model.raterName)
-                        put("rating", model.ratingValue)
-                    }
+                if (model is NewRatingNotificationModel) {
+                    put("rating", model.ratingValue)
                 }
             }
         )

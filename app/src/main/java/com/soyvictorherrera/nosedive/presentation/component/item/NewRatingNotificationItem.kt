@@ -10,12 +10,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.domain.model.NewRatingNotificationModel
+import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserPhoto
 import com.soyvictorherrera.nosedive.presentation.component.rate.SmallRatingBar
 import com.soyvictorherrera.nosedive.presentation.extensions.describeDuration
@@ -33,13 +35,15 @@ fun NewRatingNotificationItemList(
     modifier = modifier,
     shape = MaterialTheme.shapes.medium,
     backgroundColor = MaterialTheme.colors.surface,
-    elevation = 2.dp
+    elevation = 2.dp,
+    onClick = { onRateBackClick(notification) }
 ) {
+    val who = notification.user!!
     ListItem(
         icon = {
             UserPhoto(
                 modifier = Modifier.height(40.dp),
-                painter = notification.photoUrl.let { url ->
+                painter = who.photoUrl.let { url ->
                     if (url != null) rememberImagePainter(url.toUri())
                     else painterResource(R.drawable.ic_launcher_foreground)
                 },
@@ -49,10 +53,14 @@ fun NewRatingNotificationItemList(
         },
         text = {
             val dismissed = notification.seen != null
-            val name = if (dismissed) notification.raterName
-            else "* ${notification.raterName}"
+            val name = if (dismissed) who.name
+            else "* ${who.name}"
 
-            Text(text = "$name te ha calificado")
+            Text(
+                text = "$name te ha calificado",
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         },
         secondaryText = {
             SmallRatingBar(
@@ -65,12 +73,13 @@ fun NewRatingNotificationItemList(
         trailing = {
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.End
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = notification.date.describeDuration(
                         context = LocalContext.current
-                    )
+                    ),
+                    fontSize = 10.sp
                 )
                 TextButton(
                     onClick = { onRateBackClick(notification) }
@@ -96,10 +105,14 @@ fun NewRatingNotificationItemListPreview() {
                 date = LocalDateTime.now(),
                 who = "",
                 seen = LocalDateTime.now(),
-                raterName = "Jessica Herrera",
                 ratingValue = 1,
-                photoUrl = null
-            )
+            ).apply {
+                user = UserModel(
+                    id = "",
+                    name = "Jessica Herrera",
+                    email = ""
+                )
+            }
         ) {}
     }
 }
@@ -115,10 +128,14 @@ fun NewRatingNotificationItemListPendingPreview() {
                 date = LocalDateTime.now(),
                 who = "",
                 seen = null,
-                raterName = "Jessica Herrera",
-                ratingValue = 1,
-                photoUrl = null
-            )
+                ratingValue = 1
+            ).apply {
+                user = UserModel(
+                    id = "",
+                    name = "Jessica Herrera",
+                    email = ""
+                )
+            }
         ) {}
     }
 }
