@@ -28,6 +28,7 @@ sealed class NotificationEvent {
     object NavigateBack : NotificationEvent()
     data class FollowBack(val notification: NewFollowNotificationModel) : NotificationEvent()
     data class RateBack(val notification: NewRatingNotificationModel) : NotificationEvent()
+    data class NotificationClick(val notification: NotificationModel) : NotificationEvent()
 }
 
 @Composable
@@ -96,6 +97,9 @@ fun NotificationContent(
             is NewRatingNotificationModel -> {
                 NewRatingNotificationItemList(
                     notification = notification,
+                    onItemClick = {
+                        onNotificationEvent(NotificationEvent.NotificationClick(it))
+                    },
                     onRateBackClick = {
                         onNotificationEvent(NotificationEvent.RateBack(it))
                     }

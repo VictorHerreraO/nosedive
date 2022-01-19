@@ -7,8 +7,8 @@ class DismissNotificationUseCase(
     private val notificationRepository: NotificationRepository
 ) {
 
-    private var userId: String? = null
-    private var notificationId: String? = null
+    var userId: String? = null
+    var notificationId: String? = null
 
     suspend fun execute(): Result<Unit> {
         val safeId = userId

@@ -13,6 +13,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.presentation.theme.NosediveTheme
+import com.soyvictorherrera.nosedive.presentation.ui.Screen
+import com.soyvictorherrera.nosedive.presentation.ui.navigateInTo
+import com.soyvictorherrera.nosedive.presentation.ui.popUpTo
 import com.soyvictorherrera.nosedive.presentation.ui.shared.SessionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,6 +31,24 @@ class NotificationFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewModel.navigateTo.observe(viewLifecycleOwner) { navigateToEvent ->
+            navigateToEvent.getContentIfNotHandled()?.let { screen ->
+                if (screen == Screen.Home) {
+                    popUpTo(screen)
+                } else navigateInTo(
+                    to = screen,
+                    from = Screen.Notification,
+                    args = Bundle().apply {
+                        if (screen is Screen.FriendProfile) {
+                            putString("user-id", screen.userId)
+                        } else if (screen is Screen.RateUser) {
+                            putString("user-id", screen.userId)
+                        }
+                    }
+                )
+            }
+        }
+
         sessionViewModel.user.observe(viewLifecycleOwner) { user ->
             viewModel.onUserChanged(user)
         }
@@ -49,9 +70,26 @@ class NotificationFragment : Fragment() {
 
                     NotificationContentView(
                         notificationList = notificationList,
-                        onNotificationEvent = {}
+                        onNotificationEvent = ::onNotificationEvent
                     )
                 }
+            }
+        }
+    }
+
+    private fun onNotificationEvent(event: NotificationEvent) {
+        when (event) {
+            NotificationEvent.NavigateBack -> {
+                viewModel.navigateBack()
+            }
+            is NotificationEvent.FollowBack -> {
+                viewModel.onFollowBack(event.notification)
+            }
+            is NotificationEvent.RateBack -> {
+                viewModel.onRateBack(event.notification)
+            }
+            is NotificationEvent.NotificationClick -> {
+                viewModel.onNotificationClick(event.notification)
             }
         }
     }

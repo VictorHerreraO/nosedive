@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.soyvictorherrera.nosedive.R
 import com.soyvictorherrera.nosedive.domain.model.NewRatingNotificationModel
+import com.soyvictorherrera.nosedive.domain.model.NotificationModel
 import com.soyvictorherrera.nosedive.domain.model.UserModel
 import com.soyvictorherrera.nosedive.presentation.component.profile.UserPhoto
 import com.soyvictorherrera.nosedive.presentation.component.rate.SmallRatingBar
@@ -30,13 +31,14 @@ import java.time.LocalDateTime
 fun NewRatingNotificationItemList(
     notification: NewRatingNotificationModel,
     modifier: Modifier = Modifier,
+    onItemClick: (notification: NotificationModel) -> Unit,
     onRateBackClick: (notification: NewRatingNotificationModel) -> Unit,
 ) = Card(
     modifier = modifier,
     shape = MaterialTheme.shapes.medium,
     backgroundColor = MaterialTheme.colors.surface,
     elevation = 2.dp,
-    onClick = { onRateBackClick(notification) }
+    onClick = { onItemClick(notification) }
 ) {
     val who = notification.user!!
     ListItem(
@@ -112,8 +114,10 @@ fun NewRatingNotificationItemListPreview() {
                     name = "Jessica Herrera",
                     email = ""
                 )
-            }
-        ) {}
+            },
+            onItemClick = {},
+            onRateBackClick = {}
+        )
     }
 }
 
@@ -135,7 +139,9 @@ fun NewRatingNotificationItemListPendingPreview() {
                     name = "Jessica Herrera",
                     email = ""
                 )
-            }
-        ) {}
+            },
+            onItemClick = {},
+            onRateBackClick = {}
+        )
     }
 }
