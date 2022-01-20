@@ -10,6 +10,8 @@ import com.soyvictorherrera.nosedive.data.repository.rating.RatingRepository
 import com.soyvictorherrera.nosedive.data.repository.rating.RatingRepositoryImpl
 import com.soyvictorherrera.nosedive.data.repository.sharingCode.SharingCodeRepository
 import com.soyvictorherrera.nosedive.data.repository.sharingCode.SharingCodeRepositoryImpl
+import com.soyvictorherrera.nosedive.data.repository.token.TokenRepository
+import com.soyvictorherrera.nosedive.data.repository.token.TokenRepositoryImpl
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepositoryImpl
 import com.soyvictorherrera.nosedive.data.repository.userStats.UserStatsRepository
@@ -19,6 +21,7 @@ import com.soyvictorherrera.nosedive.data.source.friend.FriendDataSource
 import com.soyvictorherrera.nosedive.data.source.notification.NotificationDataSource
 import com.soyvictorherrera.nosedive.data.source.rating.RatingDataSource
 import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeDataSource
+import com.soyvictorherrera.nosedive.data.source.token.TokenDataSource
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
 import com.soyvictorherrera.nosedive.data.source.userStats.UserStatsDataSource
 import dagger.Module
@@ -71,6 +74,12 @@ class RepositoryModule {
     @Singleton
     fun provideNotificationRepository(notificationDataSource: NotificationDataSource): NotificationRepository {
         return NotificationRepositoryImpl(notificationDataSource = notificationDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTokenRepository(tokenDataSource: TokenDataSource): TokenRepository {
+        return TokenRepositoryImpl(tokenDataSource = tokenDataSource)
     }
 
 }

@@ -15,6 +15,8 @@ import com.soyvictorherrera.nosedive.data.source.rating.RatingDataSource
 import com.soyvictorherrera.nosedive.data.source.rating.firebase.FirebaseRatingDataSource
 import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeDataSource
 import com.soyvictorherrera.nosedive.data.source.sharingCode.firebase.FirebaseSharingCodeDataSource
+import com.soyvictorherrera.nosedive.data.source.token.TokenDataSource
+import com.soyvictorherrera.nosedive.data.source.token.firebase.FirebaseTokenDataSource
 import com.soyvictorherrera.nosedive.data.source.user.UserDataSource
 import com.soyvictorherrera.nosedive.data.source.user.firebase.FirebaseUserDataSource
 import com.soyvictorherrera.nosedive.data.source.userStats.UserStatsDataSource
@@ -39,6 +41,7 @@ class DataSourceModule {
         const val FriendRef = "friendRef"
         const val RatingRef = "ratingRef"
         const val NotificationRef = "notificationRef"
+        const val TokenRef = "tokenRef"
     }
 
     private object FirebasePaths {
@@ -50,6 +53,7 @@ class DataSourceModule {
         const val Friend = "friend"
         const val Rating = "rating"
         const val Notification = "notification"
+        const val Token = "token"
     }
 
     //region Firebase instances
@@ -128,6 +132,13 @@ class DataSourceModule {
     fun provideNotificationDatabaseReference(database: FirebaseDatabase): DatabaseReference {
         return database.getReference(FirebasePaths.Notification)
     }
+
+    @Provides
+    @Singleton
+    @Named(Names.TokenRef)
+    fun provideTokenDatabaseReference(database: FirebaseDatabase): DatabaseReference {
+        return database.getReference(FirebasePaths.Token)
+    }
     //endregion
 
     //region Data sources
@@ -196,6 +207,16 @@ class DataSourceModule {
     ): NotificationDataSource {
         return FirebaseNotificationDataSource(
             notifications = notifications
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideTokenDataSource(
+        @Named(Names.TokenRef) tokens: DatabaseReference
+    ): TokenDataSource {
+        return FirebaseTokenDataSource(
+            tokens = tokens
         )
     }
     //endregion

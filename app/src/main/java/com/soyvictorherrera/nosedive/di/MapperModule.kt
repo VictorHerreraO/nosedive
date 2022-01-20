@@ -4,6 +4,7 @@ import com.soyvictorherrera.nosedive.data.source.friend.firebase.FriendEntity
 import com.soyvictorherrera.nosedive.data.source.notification.NotificationEntity
 import com.soyvictorherrera.nosedive.data.source.rating.RatingEntity
 import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeEntity
+import com.soyvictorherrera.nosedive.data.source.token.TokenEntity
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
 import com.soyvictorherrera.nosedive.data.source.userStats.UserStatsEntity
 import com.soyvictorherrera.nosedive.domain.mapper.*
@@ -53,6 +54,12 @@ class MapperModule {
     @Singleton
     fun provideNotificationEntityMapper(baseUrl: BaseUrl): DomainMapper<NotificationEntity, NotificationModel> {
         return NotificationEntityMapper(baseUrl = baseUrl)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTokenEntityMapper(): DomainMapper<TokenEntity, TokenModel> {
+        return TokenEntityMapper()
     }
 
 }
