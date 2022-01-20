@@ -68,4 +68,5 @@
     <string name="duration_since_minutes_singular">Hace 1 minuto</string>
     <string name="duration_short_ago">Hace poco</string>
     <string name="message_no_recently_rated_friend">No has calificado a nadie recientemente</string>
+    <string name="channel_id_default">App</string>
 </resources>
