@@ -22,13 +22,18 @@ class AppMessagingService : FirebaseMessagingService() {
     private val job: CompletableJob = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.IO + job)
 
-    override fun onNewToken(token: String) {
-        Timber.i("new token created: $token")
-        addUserToken(token)
+    override fun onNewToken(newToken: String) {
+        Timber.i("new token created: $newToken")
+        cacheToken(newToken)
+        addUserToken(newToken)
+    }
+
+    private fun cacheToken(token: String) {
+        preferenceUtil.setFcmToken(token)
     }
 
     private fun addUserToken(token: String) {
-        preferenceUtil.getUserId(null)?.let { uid ->
+        preferenceUtil.getUserId()?.let { uid ->
             Timber.i("adding FCM token to user: $uid")
             scope.launch {
                 val model = TokenModel(string = token)
