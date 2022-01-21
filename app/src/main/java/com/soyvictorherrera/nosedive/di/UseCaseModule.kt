@@ -5,12 +5,14 @@ import com.soyvictorherrera.nosedive.data.repository.friend.FriendRepository
 import com.soyvictorherrera.nosedive.data.repository.notification.NotificationRepository
 import com.soyvictorherrera.nosedive.data.repository.rating.RatingRepository
 import com.soyvictorherrera.nosedive.data.repository.sharingCode.SharingCodeRepository
+import com.soyvictorherrera.nosedive.data.repository.token.TokenRepository
 import com.soyvictorherrera.nosedive.data.repository.user.UserRepository
 import com.soyvictorherrera.nosedive.data.repository.userStats.UserStatsRepository
 import com.soyvictorherrera.nosedive.data.source.friend.firebase.FriendEntity
 import com.soyvictorherrera.nosedive.data.source.notification.NotificationEntity
 import com.soyvictorherrera.nosedive.data.source.rating.RatingEntity
 import com.soyvictorherrera.nosedive.data.source.sharingCode.SharingCodeEntity
+import com.soyvictorherrera.nosedive.data.source.token.TokenEntity
 import com.soyvictorherrera.nosedive.data.source.user.UserEntity
 import com.soyvictorherrera.nosedive.data.source.userStats.UserStatsEntity
 import com.soyvictorherrera.nosedive.domain.mapper.DomainMapper
@@ -22,6 +24,7 @@ import com.soyvictorherrera.nosedive.domain.usecase.notification.DismissNotifica
 import com.soyvictorherrera.nosedive.domain.usecase.notification.ObserveUserNotificationListUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.rating.RateUserUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.sharing.*
+import com.soyvictorherrera.nosedive.domain.usecase.token.AddUserTokenUseCase
 import com.soyvictorherrera.nosedive.domain.usecase.user.*
 import com.soyvictorherrera.nosedive.util.FileUtil
 import com.soyvictorherrera.nosedive.util.PreferenceUtil
@@ -40,11 +43,13 @@ class UseCaseModule {
     fun provideSignInUseCase(
         authRepository: AuthenticationRepository,
         userRepository: UserRepository,
-        preferenceUtil: PreferenceUtil
+        preferenceUtil: PreferenceUtil,
+        addUserTokenUseCase: AddUserTokenUseCase
     ): SignInUseCase {
         return SignInUseCase(
             authRepository = authRepository,
-            preferences = preferenceUtil
+            preferences = preferenceUtil,
+            addUserTokenUseCase = addUserTokenUseCase
         )
     }
 
@@ -53,12 +58,14 @@ class UseCaseModule {
     fun provideSignUpUseCase(
         authRepository: AuthenticationRepository,
         userRepository: UserRepository,
-        preferenceUtil: PreferenceUtil
+        preferenceUtil: PreferenceUtil,
+        addUserTokenUseCase: AddUserTokenUseCase
     ): SignUpUseCase {
         return SignUpUseCase(
             authRepository = authRepository,
             userRepository = userRepository,
-            preferences = preferenceUtil
+            preferences = preferenceUtil,
+            addUserTokenUseCase = addUserTokenUseCase
         )
     }
 
@@ -233,6 +240,18 @@ class UseCaseModule {
     ): DismissNotificationUseCase {
         return DismissNotificationUseCase(
             notificationRepository = notificationRepository
+        )
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideAddUserTokenUseCase(
+        tokenRepository: TokenRepository,
+        tokenMapper: DomainMapper<TokenEntity, TokenModel>
+    ): AddUserTokenUseCase {
+        return AddUserTokenUseCase(
+            tokenRepository,
+            tokenMapper
         )
     }
 

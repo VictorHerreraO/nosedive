@@ -5,6 +5,7 @@ import com.soyvictorherrera.nosedive.data.source.token.TokenDataSource
 import com.soyvictorherrera.nosedive.data.source.token.TokenEntity
 import com.soyvictorherrera.nosedive.util.Result
 import kotlinx.coroutines.tasks.await
+import java.time.Instant
 
 class FirebaseTokenDataSource(
     private val tokens: DatabaseReference
@@ -19,6 +20,9 @@ class FirebaseTokenDataSource(
                 IllegalArgumentException("[token.string] must not be null or empty")
             )
             else -> try {
+                token.apply {
+                    registration = registration ?: Instant.now().toEpochMilli()
+                }
                 tokens.child(userId)
                     .push()
                     .setValue(token)
