@@ -15,10 +15,7 @@ exports.onNewFriend = functions.database.ref('/friend/{userId}/{friendId}/name')
     const followNotification = {
         who: userId,
         type: "NEW_FOLLOW",
-        date: serverValue.TIMESTAMP,
-        data: {
-            name: "TBD"
-        }
+        date: serverValue.TIMESTAMP
     };
 
     log.info(userId, ' added: ', friendId);
