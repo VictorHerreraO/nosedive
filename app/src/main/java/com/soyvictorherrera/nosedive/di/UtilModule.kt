@@ -5,6 +5,7 @@ import androidx.preference.PreferenceManager
 import com.fredporciuncula.flow.preferences.FlowSharedPreferences
 import com.soyvictorherrera.nosedive.BaseApplication
 import com.soyvictorherrera.nosedive.util.FileUtil
+import com.soyvictorherrera.nosedive.util.NotificationUtil
 import com.soyvictorherrera.nosedive.util.PreferenceUtil
 import dagger.Module
 import dagger.Provides
@@ -43,6 +44,16 @@ class UtilModule {
         return PreferenceUtil(
             sharedPreferences = preferences,
             flowSharedPreferences = flowPreferences
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideNotificationUtil(
+        app: BaseApplication
+    ): NotificationUtil {
+        return NotificationUtil(
+            application = app
         )
     }
 
