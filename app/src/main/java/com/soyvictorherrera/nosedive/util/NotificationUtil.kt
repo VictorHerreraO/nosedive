@@ -19,11 +19,6 @@ class NotificationUtil @Inject constructor(
         const val PROFILE = "id_profile"
     }
 
-    object NotificationId {
-        const val NEW_RATING = 10101
-        const val NEW_FOLLOW = 10102
-    }
-
     @RequiresApi(Build.VERSION_CODES.O)
     data class ChannelInfo(
         val id: String,
@@ -58,19 +53,47 @@ class NotificationUtil @Inject constructor(
         channels.forEach(this::createNotificationChannel)
     }
 
-    fun displayNewRatingNotification(): Unit = with(application) {
-        NotificationCompat.Builder(this, ChannelId.RATINGS)
+    fun displayNewRatingNotification(notificationId: String, rating: Int): Unit =
+        with(application) {
+            NotificationCompat.Builder(this, ChannelId.RATINGS)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle(
+                    "⭐ Alguien te ha calificado"
+                )
+                .setContentText(
+                    if (rating == 1) "Has sido calificado con $rating estrella 👏"
+                    else "Has sido calificado con $rating estrellas 👏"
+                )
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .build()
+                .let { notification ->
+                    NotificationManagerCompat.from(this).notify(
+                        notificationId.hashCode(),
+                        notification
+                    )
+                }
+        }
+
+    fun displayNewFollowerNotification(
+        notificationId: String,
+        followerName: String? = null
+    ): Unit = with(application) {
+        NotificationCompat.Builder(this, ChannelId.PROFILE)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(
-                "Alguien te ha calificado"
+                "😎 Tienes un nuevo seguidor"
             )
-            .setContentText("Entra a tu app para saber más detalles")
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentText(followerName.let { name ->
+                if (name.isNullOrEmpty()) "Alguien ha comenzado a seguirte"
+                else "$name ha comenzado a seguirte"
+            })
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
             .build()
             .let { notification ->
                 NotificationManagerCompat.from(this).notify(
-                    NotificationId.NEW_RATING,
+                    notificationId.hashCode(),
                     notification
                 )
             }

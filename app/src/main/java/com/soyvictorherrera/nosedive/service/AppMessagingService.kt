@@ -2,6 +2,10 @@ package com.soyvictorherrera.nosedive.service
 
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.soyvictorherrera.nosedive.domain.mapper.DomainMapper
+import com.soyvictorherrera.nosedive.domain.model.NewFollowNotificationModel
+import com.soyvictorherrera.nosedive.domain.model.NewRatingNotificationModel
+import com.soyvictorherrera.nosedive.domain.model.NotificationModel
 import com.soyvictorherrera.nosedive.domain.model.TokenModel
 import com.soyvictorherrera.nosedive.domain.usecase.token.AddUserTokenUseCase
 import com.soyvictorherrera.nosedive.util.NotificationUtil
@@ -24,6 +28,9 @@ class AppMessagingService : FirebaseMessagingService() {
 
     @Inject
     lateinit var notifications: NotificationUtil
+
+    @Inject
+    lateinit var notificationMapper: DomainMapper<JSONObject, NotificationModel>
 
     private val job: CompletableJob = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.IO + job)
@@ -60,8 +67,25 @@ class AppMessagingService : FirebaseMessagingService() {
     }
 
     private fun handleMessagePayload(payload: String) {
-        // TODO: 21/01/2022 leer el tipo de notificación y mostrar el mensaje correspondiente
-        notifications.displayNewRatingNotification()
+        try {
+            val jsonPayload = JSONObject(payload)
+            val notification = notificationMapper.toDomainModel(jsonPayload)
+            val notificationId = notification.id
+
+            if (notification.seen != null) return
+
+            when (notification) {
+                is NewFollowNotificationModel -> notifications.displayNewFollowerNotification(
+                    notificationId = notificationId
+                )
+                is NewRatingNotificationModel -> notifications.displayNewRatingNotification(
+                    notificationId = notificationId,
+                    rating = notification.ratingValue
+                )
+            }
+        } catch (ex: Exception) {
+            Timber.e("Unable to read notification payload. Expected a JSON, was: $payload")
+        }
     }
 
     override fun onDestroy() {

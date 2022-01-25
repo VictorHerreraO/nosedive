@@ -14,6 +14,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import org.json.JSONObject
 import javax.inject.Singleton
 
 @Module
@@ -60,6 +61,12 @@ class MapperModule {
     @Singleton
     fun provideTokenEntityMapper(): DomainMapper<TokenEntity, TokenModel> {
         return TokenEntityMapper()
+    }
+
+    @Provides
+    @Singleton
+    fun provideNotificationJSONMapper(): DomainMapper<JSONObject, NotificationModel> {
+        return NotificationJSONMapper()
     }
 
 }
