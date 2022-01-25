@@ -5,7 +5,9 @@ const log = functions.logger;
 
 exports.onNewNotification = functions.database.ref('/notification/{userId}/{notificationId}').onCreate((snapshot, context) => {
     const userId = context.params.userId;
-    const payload = JSON.stringify(snapshot.val()); // Prevent FirebaseMessagingError: data must only contain string values
+    const value = snapshot.val();
+    value["id"] = context.params.notificationId;
+    const payload = JSON.stringify(value); // Prevent FirebaseMessagingError: data must only contain string values
 
     log.debug('new notification for user: ' + userId);
 
