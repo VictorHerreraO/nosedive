@@ -80,6 +80,7 @@ class AppMessagingService : FirebaseMessagingService() {
                 )
                 is NewRatingNotificationModel -> notifications.displayNewRatingNotification(
                     notificationId = notificationId,
+                    raterId = notification.who,
                     rating = notification.ratingValue
                 )
             }

@@ -3,12 +3,17 @@ package com.soyvictorherrera.nosedive.util
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
+import android.os.Bundle
+import androidx.annotation.IdRes
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.navigation.NavDeepLinkBuilder
 import com.soyvictorherrera.nosedive.R
+import com.soyvictorherrera.nosedive.presentation.ui.MainActivity
 import javax.inject.Inject
 
 class NotificationUtil @Inject constructor(
@@ -53,42 +58,59 @@ class NotificationUtil @Inject constructor(
         channels.forEach(this::createNotificationChannel)
     }
 
-    fun displayNewRatingNotification(notificationId: String, rating: Int): Unit =
-        with(application) {
-            NotificationCompat.Builder(this, ChannelId.RATINGS)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle(
-                    "⭐ Alguien te ha calificado"
+    fun displayNewRatingNotification(
+        notificationId: String,
+        rating: Int,
+        raterId: String,
+        raterName: String? = null
+    ): Unit = with(application) {
+        val pendingIntent: PendingIntent = defaultPendingIntent(
+            destination = R.id.friendProfileFragment,
+            extras = Bundle().apply {
+                putString("user-id", raterId)
+            }
+        )
+
+        NotificationCompat.Builder(this, ChannelId.RATINGS)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle(
+                if (raterName.isNullOrEmpty()) "⭐ Alguien te ha calificado"
+                else "⭐ $raterName te ha calificado"
+            )
+            .setContentText(
+                if (rating == 1) "Has sido calificado con $rating estrella 👏"
+                else "Has sido calificado con $rating estrellas 👏"
+            )
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .build()
+            .let { notification ->
+                NotificationManagerCompat.from(this).notify(
+                    notificationId.hashCode(),
+                    notification
                 )
-                .setContentText(
-                    if (rating == 1) "Has sido calificado con $rating estrella 👏"
-                    else "Has sido calificado con $rating estrellas 👏"
-                )
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true)
-                .build()
-                .let { notification ->
-                    NotificationManagerCompat.from(this).notify(
-                        notificationId.hashCode(),
-                        notification
-                    )
-                }
-        }
+            }
+    }
 
     fun displayNewFollowerNotification(
         notificationId: String,
         followerName: String? = null
     ): Unit = with(application) {
+        val pendingIntent = defaultPendingIntent(
+            destination = R.id.notificationFragment
+        )
         NotificationCompat.Builder(this, ChannelId.PROFILE)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(
                 "😎 Tienes un nuevo seguidor"
             )
-            .setContentText(followerName.let { name ->
-                if (name.isNullOrEmpty()) "Alguien ha comenzado a seguirte"
-                else "$name ha comenzado a seguirte"
-            })
+            .setContentText(
+                if (followerName.isNullOrEmpty()) "Alguien ha comenzado a seguirte"
+                else "$followerName ha comenzado a seguirte"
+            )
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .build()
             .let { notification ->
@@ -111,5 +133,16 @@ class NotificationUtil @Inject constructor(
         notificationManager.createNotificationChannel(channel)
     }
 
+    private fun defaultPendingIntent(
+        @IdRes destination: Int,
+        extras: Bundle? = null
+    ): PendingIntent = with(application) {
+        return NavDeepLinkBuilder(this)
+            .setComponentName(MainActivity::class.java)
+            .setGraph(R.navigation.nav_graph)
+            .setDestination(destination)
+            .setArguments(extras)
+            .createPendingIntent()
+    }
 
 }
