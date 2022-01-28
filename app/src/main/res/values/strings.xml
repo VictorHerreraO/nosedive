@@ -73,4 +73,11 @@
     <string name="notification_channel_ratings_description">Alertas importantes acerca de tu calificación</string>
     <string name="notification_channel_profile_title">Perfil</string>
     <string name="notification_channel_profile_description">Eventos importantes sobre tu perfil</string>
+    <string name="notification_rating_title_anon">⭐ Alguien te ha calificado</string>
+    <string name="notification_rating_title_user">⭐ %s te ha calificado</string>
+    <string name="notification_rating_content_rating_singular">Has sido calificado con %d estrella 👏</string>
+    <string name="notification_rating_content_rating_plural">Has sido calificado con %d estrellas 👏</string>
+    <string name="notification_new_follower_title">😎 Tienes un nuevo seguidor</string>
+    <string name="notification_new_follower_content_anon">Alguien ha comenzado a seguirte</string>
+    <string name="notification_new_follower_content_user">%s ha comenzado a seguirte</string>
 </resources>

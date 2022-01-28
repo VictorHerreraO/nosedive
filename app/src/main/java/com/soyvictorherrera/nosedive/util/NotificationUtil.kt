@@ -74,12 +74,14 @@ class NotificationUtil @Inject constructor(
         NotificationCompat.Builder(this, ChannelId.RATINGS)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(
-                if (raterName.isNullOrEmpty()) "⭐ Alguien te ha calificado"
-                else "⭐ $raterName te ha calificado"
+                if (raterName.isNullOrEmpty()) getString(R.string.notification_rating_title_anon)
+                else getString(R.string.notification_rating_title_user, raterName)
             )
             .setContentText(
-                if (rating == 1) "Has sido calificado con $rating estrella 👏"
-                else "Has sido calificado con $rating estrellas 👏"
+                if (rating == 1) getString(
+                    R.string.notification_rating_content_rating_singular,
+                    rating
+                ) else getString(R.string.notification_rating_content_rating_plural, rating)
             )
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)
@@ -103,11 +105,11 @@ class NotificationUtil @Inject constructor(
         NotificationCompat.Builder(this, ChannelId.PROFILE)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(
-                "😎 Tienes un nuevo seguidor"
+                getString(R.string.notification_new_follower_title)
             )
             .setContentText(
-                if (followerName.isNullOrEmpty()) "Alguien ha comenzado a seguirte"
-                else "$followerName ha comenzado a seguirte"
+                if (followerName.isNullOrEmpty()) getString(R.string.notification_new_follower_content_anon)
+                else getString(R.string.notification_new_follower_content_user, followerName)
             )
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
