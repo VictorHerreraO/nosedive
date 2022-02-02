@@ -3,6 +3,7 @@ package com.soyvictorherrera.nosedive.presentation.component.rate
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
@@ -88,6 +89,9 @@ fun RatingBarPreview() {
 @Composable
 fun SmallRatingBarPreview() {
     NosediveTheme {
-        SmallRatingBar(rating = 4)
+        SmallRatingBar(
+            rating = 4,
+            Modifier.height(16.dp)
+        )
     }
 }
